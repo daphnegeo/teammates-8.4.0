@@ -12,6 +12,8 @@ import teammates.common.datatransfer.attributes.FeedbackSessionAttributes;
 import teammates.common.datatransfer.attributes.InstructorAttributes;
 import teammates.common.datatransfer.attributes.StudentAttributes;
 import teammates.common.datatransfer.attributes.StudentProfileAttributes;
+import teammates.logic.core.FeedbackResponseCommentsLogicTest;
+import teammates.test.BaseTestCase;
 
 /**
  * Holds a bundle of *Attributes data transfer objects.
@@ -29,4 +31,17 @@ public class DataBundle {
     public Map<String, FeedbackResponseAttributes> feedbackResponses = new LinkedHashMap<>();
     public Map<String, FeedbackResponseCommentAttributes> feedbackResponseComments = new LinkedHashMap<>();
     public Map<String, StudentProfileAttributes> profiles = new LinkedHashMap<>();
+	@Test
+	public void testDeleteFeedbackResponseComments_deleteByResponseId(FeedbackResponseCommentsLogicTest feedbackResponseCommentsLogicTest) {
+	
+	    BaseTestCase.______TS("typical success case");
+	
+	    FeedbackResponseCommentAttributes frComment = feedbackResponseCommentsLogicTest.restoreFrCommentFromDataBundle("comment1FromT1C1ToR1Q3S1C1");
+	    feedbackResponseCommentsLogicTest.verifyPresentInDatabase(frComment);
+	    feedbackResponseCommentsLogicTest.frcLogic.deleteFeedbackResponseComments(
+	            AttributesDeletionQuery.builder()
+	                    .withResponseId(frComment.getFeedbackResponseId())
+	                    .build());
+	    feedbackResponseCommentsLogicTest.verifyAbsentInDatabase(frComment);
+	}
 }

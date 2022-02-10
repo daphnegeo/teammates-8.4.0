@@ -35,7 +35,7 @@ public abstract class BaseTestCaseWithDatabaseAccess extends BaseTestCase {
         data.students.values().forEach(this::verifyPresentInDatabase);
     }
 
-    protected void verifyPresentInDatabase(EntityAttributes<?> expected) {
+    public void verifyPresentInDatabase(EntityAttributes<?> expected) {
         int retryLimit = VERIFICATION_RETRY_COUNT;
         EntityAttributes<?> actual = getEntity(expected);
         while (actual == null && retryLimit > 0) {
@@ -79,7 +79,7 @@ public abstract class BaseTestCaseWithDatabaseAccess extends BaseTestCase {
         }
     }
 
-    protected void verifyAbsentInDatabase(EntityAttributes<?> entity) {
+    public void verifyAbsentInDatabase(EntityAttributes<?> entity) {
         int retryLimit = VERIFICATION_RETRY_COUNT;
         EntityAttributes<?> actual = getEntity(entity);
         while (actual != null && retryLimit > 0) {

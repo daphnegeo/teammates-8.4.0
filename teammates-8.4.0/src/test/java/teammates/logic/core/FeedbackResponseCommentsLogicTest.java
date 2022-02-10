@@ -33,7 +33,7 @@ import teammates.common.exception.InvalidParametersException;
  */
 public class FeedbackResponseCommentsLogicTest extends BaseLogicTest {
 
-    private final FeedbackResponseCommentsLogic frcLogic = FeedbackResponseCommentsLogic.inst();
+    public final FeedbackResponseCommentsLogic frcLogic = FeedbackResponseCommentsLogic.inst();
     private final FeedbackQuestionsLogic fqLogic = FeedbackQuestionsLogic.inst();
     private final FeedbackResponsesLogic frLogic = FeedbackResponsesLogic.inst();
 
@@ -268,19 +268,13 @@ public class FeedbackResponseCommentsLogicTest extends BaseLogicTest {
         verifyAbsentInDatabase(actualFrComment);
     }
 
-    @Test
-    public void testDeleteFeedbackResponseComments_deleteByResponseId() {
-
-        ______TS("typical success case");
-
-        FeedbackResponseCommentAttributes frComment = restoreFrCommentFromDataBundle("comment1FromT1C1ToR1Q3S1C1");
-        verifyPresentInDatabase(frComment);
-        frcLogic.deleteFeedbackResponseComments(
-                AttributesDeletionQuery.builder()
-                        .withResponseId(frComment.getFeedbackResponseId())
-                        .build());
-        verifyAbsentInDatabase(frComment);
-    }
+    /**
+	 * @deprecated Use {@link teammates.common.datatransfer.DataBundle#testDeleteFeedbackResponseComments_deleteByResponseId(teammates.logic.core.FeedbackResponseCommentsLogicTest)} instead
+	 */
+	@Test
+	public void testDeleteFeedbackResponseComments_deleteByResponseId() {
+		courseRosterDataBundle.testDeleteFeedbackResponseComments_deleteByResponseId(this);
+	}
 
     @Test
     public void testDeleteFeedbackResponseComments_deleteByCourseId() {
@@ -821,7 +815,7 @@ public class FeedbackResponseCommentsLogicTest extends BaseLogicTest {
         assertNull(frCommentGot);
     }
 
-    private FeedbackResponseCommentAttributes restoreFrCommentFromDataBundle(String existingFrCommentInDataBundle) {
+    public FeedbackResponseCommentAttributes restoreFrCommentFromDataBundle(String existingFrCommentInDataBundle) {
 
         FeedbackResponseCommentAttributes existingFrComment =
                 dataBundle.feedbackResponseComments.get(existingFrCommentInDataBundle);
