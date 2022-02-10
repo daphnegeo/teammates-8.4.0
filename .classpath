@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="src" path="teammates-8.4.0/src/client/java"/>
+	<classpathentry kind="src" path="teammates-8.4.0/src/e2e/java"/>
+	<classpathentry kind="src" path="teammates-8.4.0/src/lnp/java"/>
+	<classpathentry kind="src" path="teammates-8.4.0/src/main/java"/>
+	<classpathentry kind="src" path="teammates-8.4.0/src/test/java"/>
+	<classpathentry kind="lib" path="teammates-8.4.0/gradle/wrapper/gradle-wrapper.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
