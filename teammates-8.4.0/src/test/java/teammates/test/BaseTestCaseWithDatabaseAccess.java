@@ -223,7 +223,7 @@ public abstract class BaseTestCaseWithDatabaseAccess extends BaseTestCase {
 
     protected abstract StudentAttributes getStudent(StudentAttributes student);
 
-    protected void removeAndRestoreDataBundle(DataBundle testData) {
+    public void removeAndRestoreDataBundle(DataBundle testData) {
         int retryLimit = OPERATION_RETRY_COUNT;
         boolean isOperationSuccess = doRemoveAndRestoreDataBundle(testData);
         while (!isOperationSuccess && retryLimit > 0) {

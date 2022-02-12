@@ -41,9 +41,9 @@ import teammates.test.ThreadHelper;
  */
 public abstract class BaseE2ETestCase extends BaseTestCaseWithDatabaseAccess {
 
-    static final BackDoor BACKDOOR = BackDoor.getInstance();
+    public static final BackDoor BACKDOOR = BackDoor.getInstance();
 
-    DataBundle testData;
+    public DataBundle testData;
     private Browser browser;
 
     @BeforeClass
@@ -80,7 +80,14 @@ public abstract class BaseE2ETestCase extends BaseTestCaseWithDatabaseAccess {
 
     @AfterClass
     public void baseClassTearDown(ITestContext context) {
-        if (browser == null) {
+        browserSuccess(context);
+    }
+
+	/**
+	 * @param context
+	 */
+	private void browserSuccess(ITestContext context) {
+		if (browser == null) {
             return;
         }
         boolean isSuccess = context.getFailedTests().getAllMethods()
@@ -89,21 +96,21 @@ public abstract class BaseE2ETestCase extends BaseTestCaseWithDatabaseAccess {
         if (isSuccess || TestProperties.CLOSE_BROWSER_ON_FAILURE) {
             browser.close();
         }
-    }
+	}
 
     /**
      * Creates an {@link AppUrl} for the supplied {@code relativeUrl} parameter.
      * The base URL will be the value of test.app.url in test.properties.
      * {@code relativeUrl} must start with a "/".
      */
-    protected static AppUrl createUrl(String relativeUrl) {
+    public static AppUrl createUrl(String relativeUrl) {
         return new AppUrl(TestProperties.TEAMMATES_URL + relativeUrl);
     }
 
     /**
      * Logs in to a page using the given credentials.
      */
-    protected <T extends AppPage> T loginToPage(AppUrl url, Class<T> typeOfPage, String userId) {
+    public <T extends AppPage> T loginToPage(AppUrl url, Class<T> typeOfPage, String userId) {
         // When not using dev server, Google blocks log in by automation.
         // To work around that, we inject the user cookie directly into the browser session.
         if (!TestProperties.isDevServer()) {
@@ -136,7 +143,7 @@ public abstract class BaseE2ETestCase extends BaseTestCaseWithDatabaseAccess {
     /**
      * Equivalent to clicking the 'logout' link in the top menu of the page.
      */
-    protected void logout() {
+    public void logout() {
         browser.goToUrl(createUrl(Const.WebPageURIs.LOGOUT).toAbsoluteString());
         AppPage.getNewPageInstance(browser, HomePage.class).waitForPageToLoad();
     }

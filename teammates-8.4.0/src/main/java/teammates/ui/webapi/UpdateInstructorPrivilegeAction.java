@@ -16,7 +16,7 @@ import teammates.ui.request.InvalidHttpRequestBodyException;
 /**
  * Update instructor privilege by instructors with instructor modify permission.
  */
-class UpdateInstructorPrivilegeAction extends Action {
+public class UpdateInstructorPrivilegeAction extends Action {
 
     private static final Logger log = Logger.getLogger();
 

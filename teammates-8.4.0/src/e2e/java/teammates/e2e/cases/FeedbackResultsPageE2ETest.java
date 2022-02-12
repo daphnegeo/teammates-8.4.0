@@ -16,7 +16,6 @@ import teammates.common.datatransfer.attributes.FeedbackSessionAttributes;
 import teammates.common.datatransfer.attributes.InstructorAttributes;
 import teammates.common.datatransfer.attributes.StudentAttributes;
 import teammates.common.datatransfer.questions.FeedbackRubricQuestionDetails;
-import teammates.common.util.AppUrl;
 import teammates.common.util.Const;
 import teammates.e2e.pageobjects.FeedbackResultsPage;
 
@@ -24,9 +23,9 @@ import teammates.e2e.pageobjects.FeedbackResultsPage;
  * SUT: {@link Const.WebPageURIs#SESSION_RESULTS_PAGE}.
  */
 public class FeedbackResultsPageE2ETest extends BaseE2ETestCase {
-    private FeedbackResultsPage resultsPage;
+    public FeedbackResultsPage resultsPage;
     private FeedbackSessionAttributes openSession;
-    private List<FeedbackQuestionAttributes> questions = new ArrayList<>();
+    public List<FeedbackQuestionAttributes> questions = new ArrayList<>();
 
     @Override
     protected void prepareTestData() {
@@ -43,76 +42,17 @@ public class FeedbackResultsPageE2ETest extends BaseE2ETestCase {
     @Override
     public void testAll() {
 
-        ______TS("unregistered student: can access results");
-        StudentAttributes unregistered = testData.students.get("Unregistered");
-        AppUrl url = createUrl(Const.WebPageURIs.SESSION_RESULTS_PAGE)
-                .withCourseId(unregistered.getCourse())
-                .withStudentEmail(unregistered.getEmail())
-                .withSessionName(openSession.getFeedbackSessionName())
-                .withRegistrationKey(getKeyForStudent(unregistered));
-        resultsPage = getNewPageInstance(url, FeedbackResultsPage.class);
-
-        resultsPage.verifyFeedbackSessionDetails(openSession);
-
-        ______TS("unregistered student: questions with responses loaded");
-        verifyLoadedQuestions(unregistered);
-
-        ______TS("registered student: can access results");
-        StudentAttributes student = testData.students.get("Alice");
-        url = createUrl(Const.WebPageURIs.STUDENT_SESSION_RESULTS_PAGE)
-                .withCourseId(openSession.getCourseId())
-                .withSessionName(openSession.getFeedbackSessionName());
-        resultsPage = loginToPage(url, FeedbackResultsPage.class, student.getGoogleId());
-
-        resultsPage.verifyFeedbackSessionDetails(openSession);
-
-        ______TS("registered student: questions with responses loaded");
-        verifyLoadedQuestions(student);
-
-        ______TS("verify responses");
-        questions.forEach(question -> verifyResponseDetails(student, question));
-
-        ______TS("verify statistics - numscale");
-        String[] expectedNumScaleStats = { student.getTeam(), "You", "3.83", "4.5", "3", "3.5" };
-
-        resultsPage.verifyNumScaleStatistics(5, expectedNumScaleStats);
-
-        ______TS("verify statistics - rubric");
-        verifyExpectedRubricStats();
-
-        ______TS("verify statistics - contribution");
-        String[] expectedContribStats = {
-                "of me: E +20%",
-                "of others:  E +50%, E -50%",
-                "of me: E +71%",
-                "of others:  E -20%, E -31%",
-        };
-
-        resultsPage.verifyContributionStatistics(11, expectedContribStats);
-
-        ______TS("verify comments");
-        verifyCommentDetails(2, testData.feedbackResponseComments.get("qn2Comment1"), student);
-        verifyCommentDetails(2, testData.feedbackResponseComments.get("qn2Comment2"), student);
-        verifyCommentDetails(3, testData.feedbackResponseComments.get("qn3Comment1"), student);
-        verifyCommentDetails(3, testData.feedbackResponseComments.get("qn3Comment2"), student);
-
-        ______TS("registered instructor: can access results");
-        logout();
-        InstructorAttributes instructor = testData.instructors.get("FRes.instr");
-        url = createUrl(Const.WebPageURIs.INSTRUCTOR_SESSION_RESULTS_PAGE)
-                .withCourseId(openSession.getCourseId())
-                .withSessionName(openSession.getFeedbackSessionName());
-        resultsPage = loginToPage(url, FeedbackResultsPage.class, instructor.getGoogleId());
-
-        resultsPage.verifyFeedbackSessionDetails(openSession);
-
-        ______TS("registered instructor: questions with responses loaded");
-        verifyLoadedQuestions(instructor);
-
-        ______TS("verify responses");
-        questions.forEach(question -> verifyResponseDetails(instructor, question));
+        testAllTSmethod();
 
     }
+
+	/**
+	 * @deprecated Use {@link teammates.common.datatransfer.attributes.FeedbackSessionAttributes#testAllTSmethod(teammates.e2e.cases.FeedbackResultsPageE2ETest)} instead
+	 * 
+	 */
+	private void testAllTSmethod() {
+		openSession.testAllTSmethod(this);
+	}
 
     private void verifyLoadedQuestions(StudentAttributes currentStudent) {
         Set<FeedbackQuestionAttributes> qnsWithResponse = getQnsWithResponses(currentStudent);
@@ -136,7 +76,7 @@ public class FeedbackResultsPageE2ETest extends BaseE2ETestCase {
         });
     }
 
-    private void verifyResponseDetails(StudentAttributes currentStudent, FeedbackQuestionAttributes question) {
+    public void verifyResponseDetails(StudentAttributes currentStudent, FeedbackQuestionAttributes question) {
         List<FeedbackResponseAttributes> givenResponses = getGivenResponses(currentStudent, question);
         List<FeedbackResponseAttributes> otherResponses = getOtherResponses(currentStudent, question);
         Set<String> visibleGivers = getVisibleGivers(currentStudent, question);
@@ -144,7 +84,7 @@ public class FeedbackResultsPageE2ETest extends BaseE2ETestCase {
         resultsPage.verifyResponseDetails(question, givenResponses, otherResponses, visibleGivers, visibleRecipients);
     }
 
-    private void verifyResponseDetails(InstructorAttributes currentInstructor, FeedbackQuestionAttributes question) {
+    public void verifyResponseDetails(InstructorAttributes currentInstructor, FeedbackQuestionAttributes question) {
         List<FeedbackResponseAttributes> givenResponses = getGivenResponses(currentInstructor, question);
         List<FeedbackResponseAttributes> otherResponses = getOtherResponses(currentInstructor, question);
         Set<String> visibleGivers = getVisibleGivers(currentInstructor, question);
@@ -224,7 +164,7 @@ public class FeedbackResultsPageE2ETest extends BaseE2ETestCase {
                     .collect(Collectors.toList());
         }
 
-        List<FeedbackResponseAttributes> otherResponses = new ArrayList<>();
+        List<FeedbackResponseAttributes> otherResponses = otherResponsesMethod();
         otherResponses.addAll(selfEvaluationResponses);
         otherResponses.addAll(responsesByOthers);
         otherResponses.addAll(responsesToSelf);
@@ -259,13 +199,21 @@ public class FeedbackResultsPageE2ETest extends BaseE2ETestCase {
                     .collect(Collectors.toList());
         }
 
-        List<FeedbackResponseAttributes> otherResponses = new ArrayList<>();
+        List<FeedbackResponseAttributes> otherResponses = otherResponsesMethod();
         otherResponses.addAll(selfEvaluationResponses);
         otherResponses.addAll(responsesByOthers);
         otherResponses.addAll(responsesToSelf);
 
         return editIdentifiers(currentInstructor, otherResponses);
     }
+
+	/**
+	 * @return
+	 * @deprecated Use {@link teammates.common.datatransfer.attributes.FeedbackSessionAttributes#otherResponsesMethod()} instead
+	 */
+	private List<FeedbackResponseAttributes> otherResponsesMethod() {
+		return openSession.otherResponsesMethod();
+	}
 
     private Set<String> getVisibleGivers(StudentAttributes currentStudent, FeedbackQuestionAttributes question) {
         return getRelevantUsers(currentStudent, question.getShowGiverNameTo()).stream()
@@ -320,19 +268,19 @@ public class FeedbackResultsPageE2ETest extends BaseE2ETestCase {
         return relevantUsers;
     }
 
-    private Set<StudentAttributes> getOtherTeammates(StudentAttributes currentStudent) {
-        return testData.students.values().stream()
-                .filter(s -> s.getTeam().equals(currentStudent.getTeam())
-                && !s.equals(currentStudent))
-                .collect(Collectors.toSet());
-    }
+    /**
+	 * @deprecated Use {@link teammates.common.datatransfer.attributes.FeedbackSessionAttributes#getOtherTeammates(teammates.e2e.cases.FeedbackResultsPageE2ETest,StudentAttributes)} instead
+	 */
+	private Set<StudentAttributes> getOtherTeammates(StudentAttributes currentStudent) {
+		return openSession.getOtherTeammates(this, currentStudent);
+	}
 
-    private Set<StudentAttributes> getOtherStudents(StudentAttributes currentStudent) {
-        return testData.students.values().stream()
-                .filter(s -> s.getCourse().equals(currentStudent.getCourse())
-                && !s.equals(currentStudent))
-                .collect(Collectors.toSet());
-    }
+    /**
+	 * @deprecated Use {@link teammates.common.datatransfer.attributes.FeedbackSessionAttributes#getOtherStudents(teammates.e2e.cases.FeedbackResultsPageE2ETest,StudentAttributes)} instead
+	 */
+	private Set<StudentAttributes> getOtherStudents(StudentAttributes currentStudent) {
+		return openSession.getOtherStudents(this, currentStudent);
+	}
 
     private List<FeedbackResponseAttributes> editIdentifiers(StudentAttributes currentStudent,
                                                              List<FeedbackResponseAttributes> responses) {
@@ -375,23 +323,20 @@ public class FeedbackResultsPageE2ETest extends BaseE2ETestCase {
     }
 
     private String getIdentifier(InstructorAttributes currentInstructor, String user) {
-        if (currentInstructor.getEmail().equals(user)) {
-            return "You";
-        }
-        if (Const.GENERAL_QUESTION.equals(user)) {
-            return Const.USER_NOBODY_TEXT;
-        }
-        String identifier = getInstructorName(user);
-        if (identifier == null) {
-            identifier = getStudentName(user);
-        }
-        if (identifier == null) {
-            identifier = user;
-        }
-        return identifier;
+        return identifierMethod(currentInstructor, user);
     }
 
-    private String getStudentName(String studentEmail) {
+	/**
+	 * @param currentInstructor
+	 * @param user
+	 * @return
+	 * @deprecated Use {@link teammates.common.datatransfer.attributes.FeedbackSessionAttributes#identifierMethod(teammates.e2e.cases.FeedbackResultsPageE2ETest,InstructorAttributes,String)} instead
+	 */
+	private String identifierMethod(InstructorAttributes currentInstructor, String user) {
+		return openSession.identifierMethod(this, currentInstructor, user);
+	}
+
+    public String getStudentName(String studentEmail) {
         return testData.students.values().stream()
                .filter(s -> s.getEmail().equals(studentEmail))
                .map(StudentAttributes::getName)
@@ -399,7 +344,7 @@ public class FeedbackResultsPageE2ETest extends BaseE2ETestCase {
                .orElse(null);
     }
 
-    private String getInstructorName(String instructorEmail) {
+    public String getInstructorName(String instructorEmail) {
         return testData.instructors.values().stream()
                 .filter(s -> s.getEmail()
                         .equals(instructorEmail))
@@ -420,84 +365,14 @@ public class FeedbackResultsPageE2ETest extends BaseE2ETestCase {
         FeedbackRubricQuestionDetails rubricsQnDetails =
                 (FeedbackRubricQuestionDetails) testData.feedbackQuestions.get("qn10").getQuestionDetailsCopy();
         List<String> subQns = rubricsQnDetails.getRubricSubQuestions();
-        String[] formattedSubQns = { "a) " + subQns.get(0), "b) " + subQns.get(1), "c) " + subQns.get(2) };
-
-        String[][] expectedRubricStats = {
-                {
-                        formattedSubQns[0],
-                        "33.33% (1) [1]",
-                        "33.33% (1) [2]",
-                        "0% (0) [3]",
-                        "0% (0) [4]",
-                        "33.33% (1) [5]",
-                        "2.67",
-                },
-                {
-                        formattedSubQns[1],
-                        "0% (0) [0.01]",
-                        "0% (0) [0.02]",
-                        "33.33% (1) [0.03]",
-                        "0% (0) [0.04]",
-                        "66.67% (2) [0.05]",
-                        "0.04",
-                },
-                {
-                        formattedSubQns[2],
-                        "0% (0) [2]",
-                        "0% (0) [1]",
-                        "0% (0) [0]",
-                        "66.67% (2) [-1]",
-                        "33.33% (1) [-2]",
-                        "-1.33",
-                },
-        };
-
-        String[][] expectedRubricStatsExcludingSelf = {
-                {
-                        formattedSubQns[0],
-                        "50% (1) [1]",
-                        "0% (0) [2]",
-                        "0% (0) [3]",
-                        "0% (0) [4]",
-                        "50% (1) [5]",
-                        "3",
-                },
-                {
-                        formattedSubQns[1],
-                        "0% (0) [0.01]",
-                        "0% (0) [0.02]",
-                        "0% (0) [0.03]",
-                        "0% (0) [0.04]",
-                        "100% (2) [0.05]",
-                        "0.05",
-                },
-                {
-                        formattedSubQns[2],
-                        "0% (0) [2]",
-                        "0% (0) [1]",
-                        "0% (0) [0]",
-                        "50% (1) [-1]",
-                        "50% (1) [-2]",
-                        "-1.5",
-                },
-        };
-
-        String[] studentNames = { "Anonymous student", "Benny Charles", "Charlie Davis", "You" };
-        String[] studentTeams = { "", "Team 1", "Team 1", "Team 1" };
-
-        String[][] expectedRubricStatsPerRecipient = new String[studentNames.length * formattedSubQns.length][3];
-        // The actual calculated stats are not verified for this table
-        // Checking the recipient presence in the table is sufficient for E2E purposes
-        for (int i = 0; i < studentNames.length; i++) {
-            for (int j = 0; j < formattedSubQns.length; j++) {
-                int index = i * formattedSubQns.length + j;
-                expectedRubricStatsPerRecipient[index][0] = studentTeams[i];
-                expectedRubricStatsPerRecipient[index][1] = studentNames[i];
-                expectedRubricStatsPerRecipient[index][2] = formattedSubQns[j];
-            }
-        }
-
-        resultsPage.verifyRubricStatistics(10, expectedRubricStats, expectedRubricStatsExcludingSelf,
-                expectedRubricStatsPerRecipient);
+        statsList(subQns);
     }
+
+	/**
+	 * @param subQns
+	 * @deprecated Use {@link teammates.common.datatransfer.attributes.FeedbackSessionAttributes#statsList(teammates.e2e.cases.FeedbackResultsPageE2ETest,List<String>)} instead
+	 */
+	private void statsList(List<String> subQns) {
+		openSession.statsList(this, subQns);
+	}
 }

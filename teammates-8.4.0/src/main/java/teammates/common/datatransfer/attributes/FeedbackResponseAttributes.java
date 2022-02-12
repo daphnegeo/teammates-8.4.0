@@ -2,15 +2,20 @@ package teammates.common.datatransfer.attributes;
 
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
 
+import teammates.common.datatransfer.FeedbackParticipantType;
 import teammates.common.datatransfer.questions.FeedbackQuestionType;
 import teammates.common.datatransfer.questions.FeedbackResponseDetails;
 import teammates.common.datatransfer.questions.FeedbackTextResponseDetails;
 import teammates.common.util.Const;
 import teammates.common.util.FieldValidator;
 import teammates.common.util.JsonUtils;
+import teammates.e2e.cases.InstructorFeedbackReportPageE2ETest;
 import teammates.storage.entity.FeedbackResponse;
 
 /**
@@ -258,7 +263,45 @@ public class FeedbackResponseAttributes extends EntityAttributes<FeedbackRespons
         updateOptions.responseDetailsUpdateOption.ifPresent(this::setResponseDetails);
     }
 
-    /**
+    public List<FeedbackQuestionAttributes> getQuestionsByCourse(InstructorFeedbackReportPageE2ETest instructorFeedbackReportPageE2ETest, String courseId) {
+	    return instructorFeedbackReportPageE2ETest.testData.feedbackQuestions.values().stream()
+	            .filter(question -> question.getCourseId().equals(courseId))
+	            .collect(Collectors.toList());
+	}
+
+	public List<StudentAttributes> getNotRespondedStudents(InstructorFeedbackReportPageE2ETest instructorFeedbackReportPageE2ETest, String courseId) {
+	    Set<String> responders = instructorFeedbackReportPageE2ETest.testData.feedbackResponses.values().stream()
+	            .filter(response -> response.getCourseId().equals(courseId))
+	            .map(FeedbackResponseAttributes::getGiver)
+	            .collect(Collectors.toSet());
+	
+	    return instructorFeedbackReportPageE2ETest.testData.students.values().stream()
+	            .filter(student -> !responders.contains(student.getEmail()) && student.getCourse().equals(courseId))
+	            .collect(Collectors.toList());
+	}
+
+	public String getTeamName(FeedbackParticipantType type, String participant, Collection<StudentAttributes> students) {
+	    if (type.equals(FeedbackParticipantType.NONE)) {
+	        return "No Specific Team";
+	    } else if (type.equals(FeedbackParticipantType.TEAMS)) {
+	        return participant;
+	    } else if (type.equals(FeedbackParticipantType.INSTRUCTORS)) {
+	        return "Instructors";
+	    }
+	    String teamName = students.stream()
+	            .filter(student -> student.getEmail().equals(participant))
+	            .findFirst()
+	            .map(StudentAttributes::getTeam)
+	            .orElse(null);
+	
+	    if (teamName == null) {
+	        throw new RuntimeException("cannot find section name");
+	    }
+	
+	    return teamName;
+	}
+
+	/**
      * Returns a {@link UpdateOptions.Builder} to build {@link UpdateOptions} for a response.
      */
     public static UpdateOptions.Builder updateOptionsBuilder(String feedbackResponseId) {
@@ -377,7 +420,7 @@ public class FeedbackResponseAttributes extends EntityAttributes<FeedbackRespons
      * @param <T> type to be built
      * @param <B> type of the builder
      */
-    private abstract static class BasicBuilder<T, B extends BasicBuilder<T, B>> {
+    abstract static class BasicBuilder<T, B extends BasicBuilder<T, B>> {
 
         UpdateOptions updateOptions;
         B thisBuilder;

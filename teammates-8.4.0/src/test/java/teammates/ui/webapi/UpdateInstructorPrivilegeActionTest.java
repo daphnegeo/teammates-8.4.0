@@ -1,8 +1,5 @@
 package teammates.ui.webapi;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 import org.testng.annotations.Test;
 
 import teammates.common.datatransfer.InstructorPermissionSet;
@@ -170,87 +167,13 @@ public class UpdateInstructorPrivilegeActionTest extends BaseActionTest<UpdateIn
                 "TUT1", Const.InstructorPermissions.CAN_MODIFY_SESSION_COMMENT_IN_SECTIONS));
     }
 
-    @Test
-    protected void testExecute_validSessionLevelInput_shouldSucceed() {
-        InstructorAttributes helper1OfCourse1 = typicalBundle.instructors.get("helperOfCourse1");
-
-        assertFalse(helper1OfCourse1.getPrivileges().isAllowedForPrivilege("Tutorial1", "Session1",
-                Const.InstructorPermissions.CAN_SUBMIT_SESSION_IN_SECTIONS));
-        assertFalse(helper1OfCourse1.getPrivileges().isAllowedForPrivilege("Tutorial1", "Session1",
-                Const.InstructorPermissions.CAN_VIEW_SESSION_IN_SECTIONS));
-        assertFalse(helper1OfCourse1.getPrivileges().isAllowedForPrivilege("Tutorial1", "Session1",
-                Const.InstructorPermissions.CAN_MODIFY_SESSION_COMMENT_IN_SECTIONS));
-
-        String[] submissionParams = new String[] {
-                Const.ParamsNames.INSTRUCTOR_EMAIL, helper1OfCourse1.getEmail(),
-                Const.ParamsNames.COURSE_ID, helper1OfCourse1.getCourseId(),
-        };
-
-        InstructorPrivilegeUpdateRequest reqBody = new InstructorPrivilegeUpdateRequest();
-        InstructorPrivileges privilege = new InstructorPrivileges();
-        privilege.updatePrivilege("Tutorial1", "Session1",
-                Const.InstructorPermissions.CAN_VIEW_STUDENT_IN_SECTIONS, true);
-        privilege.updatePrivilege("Tutorial1", "Session1",
-                Const.InstructorPermissions.CAN_SUBMIT_SESSION_IN_SECTIONS, true);
-        privilege.updatePrivilege("Tutorial1", "Session1",
-                Const.InstructorPermissions.CAN_VIEW_SESSION_IN_SECTIONS, true);
-        privilege.updatePrivilege("Tutorial1", "Session1",
-                Const.InstructorPermissions.CAN_MODIFY_SESSION_COMMENT_IN_SECTIONS, true);
-        reqBody.setPrivileges(privilege);
-
-        UpdateInstructorPrivilegeAction action = getAction(reqBody, submissionParams);
-
-        JsonResult result = getJsonResult(action);
-
-        InstructorPrivilegeData response = (InstructorPrivilegeData) result.getOutput();
-        InstructorPermissionSet sessionLevelPrivilege = response.getPrivileges().getSessionLevelPrivileges()
-                .get("Tutorial1").get("Session1");
-        assertFalse(sessionLevelPrivilege.isCanModifyCourse());
-        assertFalse(sessionLevelPrivilege.isCanModifySession());
-        assertFalse(sessionLevelPrivilege.isCanModifyStudent());
-        assertFalse(sessionLevelPrivilege.isCanModifyInstructor());
-        assertFalse(sessionLevelPrivilege.isCanViewStudentInSections());
-        assertTrue(sessionLevelPrivilege.isCanSubmitSessionInSections());
-        assertTrue(sessionLevelPrivilege.isCanViewSessionInSections());
-        assertTrue(sessionLevelPrivilege.isCanModifySessionCommentsInSections());
-
-        // verify the privilege has indeed been updated
-        InstructorAttributes instructor = logic.getInstructorForGoogleId(
-                helper1OfCourse1.getCourseId(), helper1OfCourse1.getGoogleId());
-
-        assertFalse(instructor.getPrivileges().isAllowedForPrivilege(
-                Const.InstructorPermissions.CAN_MODIFY_COURSE));
-        assertFalse(instructor.getPrivileges().isAllowedForPrivilege(
-                Const.InstructorPermissions.CAN_MODIFY_SESSION));
-        assertFalse(instructor.getPrivileges().isAllowedForPrivilege(
-                Const.InstructorPermissions.CAN_MODIFY_INSTRUCTOR));
-        assertFalse(instructor.getPrivileges().isAllowedForPrivilege(
-                Const.InstructorPermissions.CAN_MODIFY_STUDENT));
-        assertFalse(instructor.getPrivileges().isAllowedForPrivilege(
-                Const.InstructorPermissions.CAN_VIEW_STUDENT_IN_SECTIONS));
-        assertFalse(instructor.getPrivileges().isAllowedForPrivilege(
-                Const.InstructorPermissions.CAN_SUBMIT_SESSION_IN_SECTIONS));
-        assertFalse(instructor.getPrivileges().isAllowedForPrivilege(
-                Const.InstructorPermissions.CAN_VIEW_SESSION_IN_SECTIONS));
-        assertFalse(instructor.getPrivileges().isAllowedForPrivilege(
-                Const.InstructorPermissions.CAN_MODIFY_SESSION_COMMENT_IN_SECTIONS));
-
-        assertFalse(instructor.getPrivileges().isAllowedForPrivilege(
-                "Tutorial1", Const.InstructorPermissions.CAN_VIEW_STUDENT_IN_SECTIONS));
-        assertFalse(instructor.getPrivileges().isAllowedForPrivilege(
-                "Tutorial1", Const.InstructorPermissions.CAN_SUBMIT_SESSION_IN_SECTIONS));
-        assertFalse(instructor.getPrivileges().isAllowedForPrivilege(
-                "Tutorial1", Const.InstructorPermissions.CAN_VIEW_SESSION_IN_SECTIONS));
-        assertFalse(instructor.getPrivileges().isAllowedForPrivilege(
-                "Tutorial1", Const.InstructorPermissions.CAN_MODIFY_SESSION_COMMENT_IN_SECTIONS));
-
-        assertTrue(instructor.getPrivileges().isAllowedForPrivilege(
-                "Tutorial1", "Session1", Const.InstructorPermissions.CAN_SUBMIT_SESSION_IN_SECTIONS));
-        assertTrue(instructor.getPrivileges().isAllowedForPrivilege(
-                "Tutorial1", "Session1", Const.InstructorPermissions.CAN_VIEW_SESSION_IN_SECTIONS));
-        assertTrue(instructor.getPrivileges().isAllowedForPrivilege(
-                "Tutorial1", "Session1", Const.InstructorPermissions.CAN_MODIFY_SESSION_COMMENT_IN_SECTIONS));
-    }
+    /**
+	 * @deprecated Use {@link teammates.common.datatransfer.DataBundle#testExecute_validSessionLevelInput_shouldSucceed(teammates.ui.webapi.UpdateInstructorPrivilegeActionTest)} instead
+	 */
+	@Test
+	protected void testExecute_validSessionLevelInput_shouldSucceed() {
+		typicalBundle.testExecute_validSessionLevelInput_shouldSucceed(this);
+	}
 
     @Test
     protected void testExecute_requestPrivilegesInconsistent_shouldBeAutoFixed() {
@@ -285,59 +208,13 @@ public class UpdateInstructorPrivilegeActionTest extends BaseActionTest<UpdateIn
         assertTrue(courseLevelPrivilegesAfterUpdate.isCanModifySessionCommentsInSections());
     }
 
-    @Test
-    protected void testExecute_lastInstructorWithModifyInstructorPrivilege_shouldPreserve() {
-        InstructorAttributes instructor1OfCourse4 = typicalBundle.instructors.get("instructor1OfCourse4");
-
-        assertTrue(instructor1OfCourse4.getPrivileges().isAllowedForPrivilege(
-                Const.InstructorPermissions.CAN_MODIFY_COURSE));
-        assertFalse(instructor1OfCourse4.getPrivileges().isAllowedForPrivilege(
-                Const.InstructorPermissions.CAN_MODIFY_SESSION));
-        assertTrue(instructor1OfCourse4.getPrivileges().isAllowedForPrivilege(
-                Const.InstructorPermissions.CAN_MODIFY_INSTRUCTOR));
-        assertTrue(instructor1OfCourse4.getPrivileges().isAllowedForPrivilege(
-                Const.InstructorPermissions.CAN_MODIFY_STUDENT));
-        assertTrue(instructor1OfCourse4.getPrivileges().isAllowedForPrivilege(
-                Const.InstructorPermissions.CAN_VIEW_STUDENT_IN_SECTIONS));
-        assertTrue(instructor1OfCourse4.getPrivileges().isAllowedForPrivilege(
-                Const.InstructorPermissions.CAN_SUBMIT_SESSION_IN_SECTIONS));
-        assertTrue(instructor1OfCourse4.getPrivileges().isAllowedForPrivilege(
-                Const.InstructorPermissions.CAN_VIEW_SESSION_IN_SECTIONS));
-        assertTrue(instructor1OfCourse4.getPrivileges().isAllowedForPrivilege(
-                Const.InstructorPermissions.CAN_MODIFY_SESSION_COMMENT_IN_SECTIONS));
-
-        List<InstructorAttributes> instructorsWithModifyInstructorPrivilege =
-                logic.getInstructorsForCourse(instructor1OfCourse4.getCourseId()).stream().filter(
-                        instructor -> instructor.getPrivileges().isAllowedForPrivilege(
-                        Const.InstructorPermissions.CAN_MODIFY_INSTRUCTOR)).collect(Collectors.toList());
-        assertEquals(1, instructorsWithModifyInstructorPrivilege.size());
-        assertEquals(instructor1OfCourse4.getGoogleId(), instructorsWithModifyInstructorPrivilege.get(0).getGoogleId());
-
-        String[] submissionParams = new String[] {
-                Const.ParamsNames.INSTRUCTOR_EMAIL, instructor1OfCourse4.getEmail(),
-                Const.ParamsNames.COURSE_ID, instructor1OfCourse4.getCourseId(),
-        };
-
-        InstructorPrivilegeUpdateRequest reqBody = new InstructorPrivilegeUpdateRequest();
-        InstructorPrivileges privileges = instructor1OfCourse4.getPrivileges();
-        privileges.getCourseLevelPrivileges().setCanModifyInstructor(false);
-        reqBody.setPrivileges(privileges);
-
-        UpdateInstructorPrivilegeAction action = getAction(reqBody, submissionParams);
-
-        JsonResult result = getJsonResult(action);
-
-        InstructorPrivilegeData response = (InstructorPrivilegeData) result.getOutput();
-        InstructorPermissionSet courseLevelPrivilegesAfterUpdate = response.getPrivileges().getCourseLevelPrivileges();
-        assertTrue(courseLevelPrivilegesAfterUpdate.isCanModifyCourse());
-        assertFalse(courseLevelPrivilegesAfterUpdate.isCanModifySession());
-        assertTrue(courseLevelPrivilegesAfterUpdate.isCanModifyStudent());
-        assertTrue(courseLevelPrivilegesAfterUpdate.isCanModifyInstructor());
-        assertTrue(courseLevelPrivilegesAfterUpdate.isCanViewStudentInSections());
-        assertTrue(courseLevelPrivilegesAfterUpdate.isCanSubmitSessionInSections());
-        assertTrue(courseLevelPrivilegesAfterUpdate.isCanViewSessionInSections());
-        assertTrue(courseLevelPrivilegesAfterUpdate.isCanModifySessionCommentsInSections());
-    }
+    /**
+	 * @deprecated Use {@link teammates.common.datatransfer.DataBundle#testExecute_lastInstructorWithModifyInstructorPrivilege_shouldPreserve(teammates.ui.webapi.UpdateInstructorPrivilegeActionTest)} instead
+	 */
+	@Test
+	protected void testExecute_lastInstructorWithModifyInstructorPrivilege_shouldPreserve() {
+		typicalBundle.testExecute_lastInstructorWithModifyInstructorPrivilege_shouldPreserve(this);
+	}
 
     @Test
     protected void testExecute_withNullPrivileges_shouldFail() {

@@ -10,10 +10,17 @@ import teammates.common.datatransfer.InstructorPrivileges;
 import teammates.common.datatransfer.InstructorPrivilegesLegacy;
 import teammates.common.util.Config;
 import teammates.common.util.Const;
+import teammates.common.util.Const.ParamsNames;
 import teammates.common.util.FieldValidator;
 import teammates.common.util.JsonUtils;
 import teammates.common.util.SanitizationHelper;
 import teammates.storage.entity.Instructor;
+import teammates.test.BaseTestCase;
+import teammates.test.TestProperties;
+import teammates.ui.output.InstructorsData;
+import teammates.ui.webapi.JsonResult;
+import teammates.ui.webapi.SearchInstructorsAction;
+import teammates.ui.webapi.SearchInstructorsActionTest;
 
 /**
  * The data transfer class for Instructor entities.
@@ -383,7 +390,81 @@ public class InstructorAttributes extends EntityAttributes<Instructor> {
         updateOptions.displayedNameOption.ifPresent(s -> displayedName = s);
     }
 
-    /**
+    @Test
+	public void testExecute_searchName_shouldSucceed(SearchInstructorsActionTest searchInstructorsActionTest) {
+	    if (!TestProperties.isSearchServiceActive()) {
+	        return;
+	    }
+	
+	    searchInstructorsActionTest.loginAsAdmin();
+	    String[] submissionParams = new String[] { ParamsNames.SEARCH_KEY, getName() };
+	    SearchInstructorsAction action = searchInstructorsActionTest.getAction(submissionParams);
+	    JsonResult result = searchInstructorsActionTest.getJsonResult(action);
+	    InstructorsData response = (InstructorsData) result.getOutput();
+	    BaseTestCase.assertTrue(response.getInstructors().stream()
+	            .filter(i -> i.getName().equals(getName()))
+	            .findAny()
+	            .isPresent());
+	    BaseTestCase.assertTrue(response.getInstructors().get(0).getKey() != null);
+	    BaseTestCase.assertTrue(response.getInstructors().get(0).getInstitute() != null);
+	}
+
+	@Test
+	public void testExecute_searchGoogleId_shouldSucceed(SearchInstructorsActionTest searchInstructorsActionTest) {
+	    if (!TestProperties.isSearchServiceActive()) {
+	        return;
+	    }
+	
+	    searchInstructorsActionTest.loginAsAdmin();
+	    String[] submissionParams = new String[] { ParamsNames.SEARCH_KEY, getGoogleId() };
+	    SearchInstructorsAction action = searchInstructorsActionTest.getAction(submissionParams);
+	    JsonResult result = searchInstructorsActionTest.getJsonResult(action);
+	    InstructorsData response = (InstructorsData) result.getOutput();
+	    BaseTestCase.assertTrue(response.getInstructors().stream()
+	            .filter(i -> i.getName().equals(getName()))
+	            .findAny()
+	            .isPresent());
+	    BaseTestCase.assertTrue(response.getInstructors().get(0).getKey() != null);
+	    BaseTestCase.assertTrue(response.getInstructors().get(0).getInstitute() != null);
+	}
+
+	@Test
+	public void testExecute_searchEmail_shouldSucceed(SearchInstructorsActionTest searchInstructorsActionTest) {
+	    if (!TestProperties.isSearchServiceActive()) {
+	        return;
+	    }
+	
+	    searchInstructorsActionTest.loginAsAdmin();
+	    String[] submissionParams = new String[] { ParamsNames.SEARCH_KEY, getEmail() };
+	    SearchInstructorsAction action = searchInstructorsActionTest.getAction(submissionParams);
+	    JsonResult result = searchInstructorsActionTest.getJsonResult(action);
+	    InstructorsData response = (InstructorsData) result.getOutput();
+	    BaseTestCase.assertTrue(response.getInstructors().stream()
+	            .filter(i -> i.getName().equals(getName()))
+	            .findAny()
+	            .isPresent());
+	    BaseTestCase.assertTrue(response.getInstructors().get(0).getKey() != null);
+	    BaseTestCase.assertTrue(response.getInstructors().get(0).getInstitute() != null);
+	}
+
+	@Test
+	public void testExecute_searchCourseId_shouldSucceed(SearchInstructorsActionTest searchInstructorsActionTest) {
+	    if (!TestProperties.isSearchServiceActive()) {
+	        return;
+	    }
+	
+	    searchInstructorsActionTest.loginAsAdmin();
+	    String[] submissionParams = new String[] { ParamsNames.SEARCH_KEY, getCourseId() };
+	    SearchInstructorsAction action = searchInstructorsActionTest.getAction(submissionParams);
+	    JsonResult result = searchInstructorsActionTest.getJsonResult(action);
+	    InstructorsData response = (InstructorsData) result.getOutput();
+	    BaseTestCase.assertTrue(response.getInstructors().stream()
+	            .filter(i -> i.getName().equals(getName()))
+	            .findAny()
+	            .isPresent());
+	}
+
+	/**
      * Returns a {@link UpdateOptionsWithEmail.Builder} to build {@link UpdateOptions}
      * for an instructor with {@code courseId} and {@code email}.
      */
@@ -586,7 +667,7 @@ public class InstructorAttributes extends EntityAttributes<Instructor> {
      * @param <T> type to be built
      * @param <B> type of the builder
      */
-    private abstract static class BasicBuilder<T, B extends BasicBuilder<T, B>> {
+    abstract static class BasicBuilder<T, B extends BasicBuilder<T, B>> {
 
         UpdateOptions updateOptions;
         B thisBuilder;

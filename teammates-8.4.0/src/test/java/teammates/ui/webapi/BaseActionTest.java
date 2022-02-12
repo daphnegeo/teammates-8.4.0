@@ -57,9 +57,9 @@ public abstract class BaseActionTest<T extends Action> extends BaseTestCaseWithL
     static final String DELETE = HttpDelete.METHOD_NAME;
 
     DataBundle typicalBundle = getTypicalDataBundle();
-    LogicExtension logic = new LogicExtension();
-    MockTaskQueuer mockTaskQueuer = new MockTaskQueuer();
-    MockEmailSender mockEmailSender = new MockEmailSender();
+    public LogicExtension logic = new LogicExtension();
+    public MockTaskQueuer mockTaskQueuer = new MockTaskQueuer();
+    public MockEmailSender mockEmailSender = new MockEmailSender();
     MockFileStorage mockFileStorage = new MockFileStorage();
     MockLogsProcessor mockLogsProcessor = new MockLogsProcessor();
     MockUserProvision mockUserProvision = new MockUserProvision();
@@ -72,7 +72,7 @@ public abstract class BaseActionTest<T extends Action> extends BaseTestCaseWithL
     /**
      * Gets an action with empty request body and empty multipart config.
      */
-    protected T getAction(String... params) {
+    public T getAction(String... params) {
         return getAction(null, null, null, params);
     }
 
@@ -184,7 +184,7 @@ public abstract class BaseActionTest<T extends Action> extends BaseTestCaseWithL
     /**
      * Logs in the user to the test environment as an admin.
      */
-    protected void loginAsAdmin() {
+    public void loginAsAdmin() {
         UserInfo user = mockUserProvision.loginAsAdmin(Config.APP_ADMINS.get(0));
         assertTrue(user.isAdmin);
     }
@@ -204,7 +204,7 @@ public abstract class BaseActionTest<T extends Action> extends BaseTestCaseWithL
      * Logs in the user to the test environment as an instructor
      * (without admin rights or student rights).
      */
-    protected void loginAsInstructor(String userId) {
+    public void loginAsInstructor(String userId) {
         UserInfo user = mockUserProvision.loginUser(userId);
         assertFalse(user.isStudent);
         assertTrue(user.isInstructor);
@@ -326,7 +326,7 @@ public abstract class BaseActionTest<T extends Action> extends BaseTestCaseWithL
 
     }
 
-    void verifyInaccessibleWithoutLogin(String... params) {
+    public void verifyInaccessibleWithoutLogin(String... params) {
 
         ______TS("Non-logged-in users cannot access");
 
@@ -345,7 +345,7 @@ public abstract class BaseActionTest<T extends Action> extends BaseTestCaseWithL
 
     }
 
-    void verifyInaccessibleForUnregisteredUsers(String... params) {
+    public void verifyInaccessibleForUnregisteredUsers(String... params) {
 
         ______TS("Non-registered users cannot access");
 
@@ -373,7 +373,7 @@ public abstract class BaseActionTest<T extends Action> extends BaseTestCaseWithL
 
     }
 
-    void verifyInaccessibleForStudents(String... params) {
+    public void verifyInaccessibleForStudents(String... params) {
 
         ______TS("Students cannot access");
 
@@ -537,7 +537,7 @@ public abstract class BaseActionTest<T extends Action> extends BaseTestCaseWithL
     /**
      * Verifies that the {@link Action} matching the {@code params} is accessible to the logged in user.
      */
-    protected void verifyCanAccess(String... params) {
+    public void verifyCanAccess(String... params) {
         Action c = getAction(params);
         try {
             c.checkAccessControl();
@@ -549,7 +549,7 @@ public abstract class BaseActionTest<T extends Action> extends BaseTestCaseWithL
     /**
      * Verifies that the {@link Action} matching the {@code params} is not accessible to the user.
      */
-    protected void verifyCannotAccess(String... params) {
+    public void verifyCannotAccess(String... params) {
         Action c = getAction(params);
         assertThrows(UnauthorizedAccessException.class, c::checkAccessControl);
     }
@@ -558,7 +558,7 @@ public abstract class BaseActionTest<T extends Action> extends BaseTestCaseWithL
      * Verifies that the {@link Action} matching the {@code params} is
      * accessible to the logged in user masquerading as another user with {@code userId}.
      */
-    protected void verifyCanMasquerade(String userId, String... params) {
+    public void verifyCanMasquerade(String userId, String... params) {
         verifyCanAccess(addUserIdToParams(userId, params));
     }
 
@@ -578,7 +578,7 @@ public abstract class BaseActionTest<T extends Action> extends BaseTestCaseWithL
      *
      * <p>Assumption: The action returns a {@link JsonResult}.
      */
-    protected JsonResult getJsonResult(Action a) {
+    public JsonResult getJsonResult(Action a) {
         return getJsonResult(a, HttpStatus.SC_OK);
     }
 

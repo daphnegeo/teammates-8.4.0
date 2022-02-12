@@ -92,11 +92,24 @@ public class InstructorCourseEnrollPageE2ETest extends BaseE2ETestCase {
 
     private StudentAttributes createCourseStudent(String section, String team, String name,
                                                   String email, String comments) {
-        return StudentAttributes.builder("tm.e2e.ICEnroll.CS2104", email)
+        return studentAttributesbuilder(section, team, name, email, comments);
+    }
+
+	/**
+	 * @param section
+	 * @param team
+	 * @param name
+	 * @param email
+	 * @param comments
+	 * @return
+	 */
+	private StudentAttributes studentAttributesbuilder(String section, String team, String name, String email,
+			String comments) {
+		return StudentAttributes.builder("tm.e2e.ICEnroll.CS2104", email)
                 .withName(name)
                 .withComment(comments)
                 .withTeamName(team)
                 .withSectionName(section)
                 .build();
-    }
+	}
 }

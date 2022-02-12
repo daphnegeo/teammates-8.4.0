@@ -17,7 +17,7 @@ import teammates.ui.request.InvalidHttpRequestBodyException;
 /**
  * Updates a feedback session.
  */
-class UpdateFeedbackSessionAction extends Action {
+public class UpdateFeedbackSessionAction extends Action {
 
     private static final Logger log = Logger.getLogger();
 

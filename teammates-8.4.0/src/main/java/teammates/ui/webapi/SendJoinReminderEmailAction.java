@@ -10,7 +10,7 @@ import teammates.common.util.Const;
 /**
  * Send join reminder emails to register for a course.
  */
-class SendJoinReminderEmailAction extends Action {
+public class SendJoinReminderEmailAction extends Action {
 
     @Override
     AuthType getMinAuthLevel() {

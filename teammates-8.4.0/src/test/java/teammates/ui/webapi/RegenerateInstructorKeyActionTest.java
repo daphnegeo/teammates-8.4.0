@@ -5,9 +5,6 @@ import org.testng.annotations.Test;
 
 import teammates.common.datatransfer.attributes.InstructorAttributes;
 import teammates.common.util.Const;
-import teammates.common.util.EmailType;
-import teammates.common.util.EmailWrapper;
-import teammates.ui.output.RegenerateKeyData;
 
 /**
  * SUT: {@link RegenerateInstructorKeyAction}.
@@ -83,33 +80,13 @@ public class RegenerateInstructorKeyActionTest extends BaseActionTest<Regenerate
         verifyEntityNotFound(nonExistingParams);
     }
 
-    @Test
-    protected void testExecute_regenerateInstructorKey() {
-        InstructorAttributes instructor1OfCourse1 = typicalBundle.instructors.get("instructor1OfCourse1");
-        ______TS("Successfully sent regenerated links email");
-
-        String[] param = new String[] {
-                Const.ParamsNames.INSTRUCTOR_EMAIL, instructor1OfCourse1.getEmail(),
-                Const.ParamsNames.COURSE_ID, instructor1OfCourse1.getCourseId(),
-        };
-
-        RegenerateInstructorKeyAction a = getAction(param);
-        JsonResult result = getJsonResult(a);
-
-        RegenerateKeyData output = (RegenerateKeyData) result.getOutput();
-
-        assertEquals(RegenerateInstructorKeyAction.SUCCESSFUL_REGENERATION_WITH_EMAIL_SENT, output.getMessage());
-        assertNotEquals(instructor1OfCourse1.getKey(), output.getNewRegistrationKey());
-
-        verifyNumberOfEmailsSent(1);
-
-        EmailWrapper emailSent = mockEmailSender.getEmailsSent().get(0);
-        assertEquals(String.format(EmailType.INSTRUCTOR_COURSE_LINKS_REGENERATED.getSubject(),
-                                   typicalBundle.courses.get("typicalCourse1").getName(),
-                                   instructor1OfCourse1.getCourseId()),
-                     emailSent.getSubject());
-        assertEquals(instructor1OfCourse1.getEmail(), emailSent.getRecipient());
-    }
+    /**
+	 * @deprecated Use {@link teammates.common.datatransfer.DataBundle#testExecute_regenerateInstructorKey(teammates.ui.webapi.RegenerateInstructorKeyActionTest)} instead
+	 */
+	@Test
+	protected void testExecute_regenerateInstructorKey() {
+		typicalBundle.testExecute_regenerateInstructorKey(this);
+	}
 
     @Override
     @Test

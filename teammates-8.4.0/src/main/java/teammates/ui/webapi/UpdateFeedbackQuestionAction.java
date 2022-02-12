@@ -14,7 +14,7 @@ import teammates.ui.request.InvalidHttpRequestBodyException;
 /**
  * Updates a feedback question.
  */
-class UpdateFeedbackQuestionAction extends Action {
+public class UpdateFeedbackQuestionAction extends Action {
 
     @Override
     AuthType getMinAuthLevel() {

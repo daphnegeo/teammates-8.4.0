@@ -45,22 +45,13 @@ public class SearchInstructorsActionTest extends BaseActionTest<SearchInstructor
         verifyHttpParameterFailure();
     }
 
-    @Test
-    protected void testExecute_searchCourseId_shouldSucceed() {
-        if (!TestProperties.isSearchServiceActive()) {
-            return;
-        }
-
-        loginAsAdmin();
-        String[] submissionParams = new String[] { Const.ParamsNames.SEARCH_KEY, acc.getCourseId() };
-        SearchInstructorsAction action = getAction(submissionParams);
-        JsonResult result = getJsonResult(action);
-        InstructorsData response = (InstructorsData) result.getOutput();
-        assertTrue(response.getInstructors().stream()
-                .filter(i -> i.getName().equals(acc.getName()))
-                .findAny()
-                .isPresent());
-    }
+    /**
+	 * @deprecated Use {@link teammates.common.datatransfer.attributes.InstructorAttributes#testExecute_searchCourseId_shouldSucceed(teammates.ui.webapi.SearchInstructorsActionTest)} instead
+	 */
+	@Test
+	protected void testExecute_searchCourseId_shouldSucceed() {
+		acc.testExecute_searchCourseId_shouldSucceed(this);
+	}
 
     @Test
     protected void testExecute_searchDisplayedName_shouldSucceed() {
@@ -79,62 +70,29 @@ public class SearchInstructorsActionTest extends BaseActionTest<SearchInstructor
                 .isPresent());
     }
 
-    @Test
-    protected void testExecute_searchEmail_shouldSucceed() {
-        if (!TestProperties.isSearchServiceActive()) {
-            return;
-        }
+    /**
+	 * @deprecated Use {@link teammates.common.datatransfer.attributes.InstructorAttributes#testExecute_searchEmail_shouldSucceed(teammates.ui.webapi.SearchInstructorsActionTest)} instead
+	 */
+	@Test
+	protected void testExecute_searchEmail_shouldSucceed() {
+		acc.testExecute_searchEmail_shouldSucceed(this);
+	}
 
-        loginAsAdmin();
-        String[] submissionParams = new String[] { Const.ParamsNames.SEARCH_KEY, acc.getEmail() };
-        SearchInstructorsAction action = getAction(submissionParams);
-        JsonResult result = getJsonResult(action);
-        InstructorsData response = (InstructorsData) result.getOutput();
-        assertTrue(response.getInstructors().stream()
-                .filter(i -> i.getName().equals(acc.getName()))
-                .findAny()
-                .isPresent());
-        assertTrue(response.getInstructors().get(0).getKey() != null);
-        assertTrue(response.getInstructors().get(0).getInstitute() != null);
-    }
+    /**
+	 * @deprecated Use {@link teammates.common.datatransfer.attributes.InstructorAttributes#testExecute_searchGoogleId_shouldSucceed(teammates.ui.webapi.SearchInstructorsActionTest)} instead
+	 */
+	@Test
+	protected void testExecute_searchGoogleId_shouldSucceed() {
+		acc.testExecute_searchGoogleId_shouldSucceed(this);
+	}
 
-    @Test
-    protected void testExecute_searchGoogleId_shouldSucceed() {
-        if (!TestProperties.isSearchServiceActive()) {
-            return;
-        }
-
-        loginAsAdmin();
-        String[] submissionParams = new String[] { Const.ParamsNames.SEARCH_KEY, acc.getGoogleId() };
-        SearchInstructorsAction action = getAction(submissionParams);
-        JsonResult result = getJsonResult(action);
-        InstructorsData response = (InstructorsData) result.getOutput();
-        assertTrue(response.getInstructors().stream()
-                .filter(i -> i.getName().equals(acc.getName()))
-                .findAny()
-                .isPresent());
-        assertTrue(response.getInstructors().get(0).getKey() != null);
-        assertTrue(response.getInstructors().get(0).getInstitute() != null);
-    }
-
-    @Test
-    protected void testExecute_searchName_shouldSucceed() {
-        if (!TestProperties.isSearchServiceActive()) {
-            return;
-        }
-
-        loginAsAdmin();
-        String[] submissionParams = new String[] { Const.ParamsNames.SEARCH_KEY, acc.getName() };
-        SearchInstructorsAction action = getAction(submissionParams);
-        JsonResult result = getJsonResult(action);
-        InstructorsData response = (InstructorsData) result.getOutput();
-        assertTrue(response.getInstructors().stream()
-                .filter(i -> i.getName().equals(acc.getName()))
-                .findAny()
-                .isPresent());
-        assertTrue(response.getInstructors().get(0).getKey() != null);
-        assertTrue(response.getInstructors().get(0).getInstitute() != null);
-    }
+    /**
+	 * @deprecated Use {@link teammates.common.datatransfer.attributes.InstructorAttributes#testExecute_searchName_shouldSucceed(teammates.ui.webapi.SearchInstructorsActionTest)} instead
+	 */
+	@Test
+	protected void testExecute_searchName_shouldSucceed() {
+		acc.testExecute_searchName_shouldSucceed(this);
+	}
 
     @Test
     protected void testExecute_searchNoMatch_shouldBeEmpty() {

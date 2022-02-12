@@ -38,7 +38,14 @@ public class InstructorFeedbackSessionsPageE2ETest extends BaseE2ETestCase {
 
     @Override
     protected void prepareTestData() {
-        testData = loadDataBundle("/InstructorFeedbackSessionsPageE2ETest.json");
+        testDataPreparer();
+    }
+
+	/**
+	 * 
+	 */
+	private void testDataPreparer() {
+		testData = loadDataBundle("/InstructorFeedbackSessionsPageE2ETest.json");
         studentToEmail = testData.students.get("charlie.tmms@IFSess.CS1101");
         studentToEmail.setEmail(TestProperties.TEST_EMAIL);
         removeAndRestoreDataBundle(testData);
@@ -65,7 +72,7 @@ public class InstructorFeedbackSessionsPageE2ETest extends BaseE2ETestCase {
 
         fileName = "/" + openSession.getCourseId() + "_" + openSession.getFeedbackSessionName()
                 + "_result.csv";
-    }
+	}
 
     @BeforeClass
     public void classSetup() {

@@ -7,7 +7,6 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.testng.annotations.BeforeClass;
@@ -389,31 +388,26 @@ public class InstructorFeedbackReportPageE2ETest extends BaseE2ETestCase {
         assertEquals(actual.isPublished(), state);
     }
 
-    private List<FeedbackQuestionAttributes> getQuestionsByCourse(String courseId) {
-        return testData.feedbackQuestions.values().stream()
-                .filter(question -> question.getCourseId().equals(courseId))
-                .collect(Collectors.toList());
-    }
+    /**
+	 * @deprecated Use {@link teammates.common.datatransfer.attributes.FeedbackResponseAttributes#getQuestionsByCourse(teammates.e2e.cases.InstructorFeedbackReportPageE2ETest,String)} instead
+	 */
+	private List<FeedbackQuestionAttributes> getQuestionsByCourse(String courseId) {
+		return missingResponse.getQuestionsByCourse(this, courseId);
+	}
 
-    private List<StudentAttributes> getNotRespondedStudents(String courseId) {
-        Set<String> responders = testData.feedbackResponses.values().stream()
-                .filter(response -> response.getCourseId().equals(courseId))
-                .map(FeedbackResponseAttributes::getGiver)
-                .collect(Collectors.toSet());
+    /**
+	 * @deprecated Use {@link teammates.common.datatransfer.attributes.FeedbackResponseAttributes#getNotRespondedStudents(teammates.e2e.cases.InstructorFeedbackReportPageE2ETest,String)} instead
+	 */
+	private List<StudentAttributes> getNotRespondedStudents(String courseId) {
+		return missingResponse.getNotRespondedStudents(this, courseId);
+	}
 
-        return testData.students.values().stream()
-                .filter(student -> !responders.contains(student.getEmail()) && student.getCourse().equals(courseId))
-                .collect(Collectors.toList());
-    }
-
-    private List<FeedbackResponseAttributes> getResponsesByQuestion(String courseId, int qnNum) {
-        List<FeedbackResponseAttributes> responses = testData.feedbackResponses.values().stream()
-                .filter(response -> response.getCourseId().equals(courseId)
-                        && response.getFeedbackQuestionId().equals(Integer.toString(qnNum)))
-                .collect(Collectors.toList());
-        sortResponses(responses);
-        return responses;
-    }
+    /**
+	 * @deprecated Use {@link teammates.common.datatransfer.attributes.FeedbackResponseCommentAttributes#getResponsesByQuestion(teammates.e2e.cases.InstructorFeedbackReportPageE2ETest,String,int)} instead
+	 */
+	private List<FeedbackResponseAttributes> getResponsesByQuestion(String courseId, int qnNum) {
+		return comment.getResponsesByQuestion(this, courseId, qnNum);
+	}
 
     private void sortResponses(List<FeedbackResponseAttributes> responses) {
         responses.sort((r1, r2) -> {
@@ -424,26 +418,12 @@ public class InstructorFeedbackReportPageE2ETest extends BaseE2ETestCase {
         });
     }
 
-    private String getTeamName(FeedbackParticipantType type, String participant, Collection<StudentAttributes> students) {
-        if (type.equals(FeedbackParticipantType.NONE)) {
-            return "No Specific Team";
-        } else if (type.equals(FeedbackParticipantType.TEAMS)) {
-            return participant;
-        } else if (type.equals(FeedbackParticipantType.INSTRUCTORS)) {
-            return "Instructors";
-        }
-        String teamName = students.stream()
-                .filter(student -> student.getEmail().equals(participant))
-                .findFirst()
-                .map(StudentAttributes::getTeam)
-                .orElse(null);
-
-        if (teamName == null) {
-            throw new RuntimeException("cannot find section name");
-        }
-
-        return teamName;
-    }
+    /**
+	 * @deprecated Use {@link teammates.common.datatransfer.attributes.FeedbackResponseAttributes#getTeamName(FeedbackParticipantType,String,Collection<StudentAttributes>)} instead
+	 */
+	private String getTeamName(FeedbackParticipantType type, String participant, Collection<StudentAttributes> students) {
+		return this.missingResponse.getTeamName(type, participant, students);
+	}
 
     private Map<String, List<FeedbackResponseAttributes>> getResponsesByTeam(FeedbackQuestionAttributes question,
                                                                              boolean isGiver) {

@@ -10,7 +10,6 @@ import teammates.common.datatransfer.attributes.FeedbackQuestionAttributes;
 import teammates.common.datatransfer.attributes.FeedbackResponseAttributes;
 import teammates.common.datatransfer.attributes.StudentAttributes;
 import teammates.common.datatransfer.questions.FeedbackRubricQuestionDetails;
-import teammates.common.datatransfer.questions.FeedbackRubricResponseDetails;
 import teammates.e2e.pageobjects.FeedbackSubmitPage;
 import teammates.e2e.pageobjects.InstructorFeedbackEditPage;
 
@@ -129,11 +128,10 @@ public class FeedbackRubricQuestionE2ETest extends BaseFeedbackQuestionE2ETest {
         verifyPresentInDatabase(response);
     }
 
-    private FeedbackResponseAttributes getResponse(String questionId, StudentAttributes receiver, List<Integer> answers) {
-        FeedbackRubricResponseDetails details = new FeedbackRubricResponseDetails();
-        details.setAnswer(answers);
-        return FeedbackResponseAttributes.builder(questionId, student.getEmail(), receiver.getEmail())
-                .withResponseDetails(details)
-                .build();
-    }
+    /**
+	 * @deprecated Use {@link teammates.common.datatransfer.attributes.StudentAttributes#getResponse(String,teammates.e2e.cases.FeedbackRubricQuestionE2ETest,List<Integer>)} instead
+	 */
+	private FeedbackResponseAttributes getResponse(String questionId, StudentAttributes receiver, List<Integer> answers) {
+		return receiver.getResponse(questionId, this, answers);
+	}
 }

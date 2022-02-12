@@ -12,7 +12,7 @@ import teammates.ui.output.InstructorsData;
 /**
  * Searches for instructors.
  */
-class SearchInstructorsAction extends AdminOnlyAction {
+public class SearchInstructorsAction extends AdminOnlyAction {
 
     @Override
     public JsonResult execute() {

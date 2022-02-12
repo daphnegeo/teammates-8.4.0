@@ -84,7 +84,11 @@ public final class MockCourseWithLargeResponseScript extends DatastoreClient {
     }
 
     private static Map<String, CourseAttributes> generateCourses() {
-        Map<String, CourseAttributes> courses = new HashMap<>();
+        return courseGeneratorMethod();
+    }
+
+	private static Map<String, CourseAttributes> courseGeneratorMethod() {
+		Map<String, CourseAttributes> courses = new HashMap<>();
 
         courses.put(COURSE_NAME, CourseAttributes.builder(COURSE_ID)
                 .withName(COURSE_NAME)
@@ -92,7 +96,7 @@ public final class MockCourseWithLargeResponseScript extends DatastoreClient {
                 .build());
 
         return courses;
-    }
+	}
 
     private static Map<String, InstructorAttributes> generateInstructors() {
         Map<String, InstructorAttributes> instructors = new HashMap<>();

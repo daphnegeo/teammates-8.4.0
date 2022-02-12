@@ -324,7 +324,16 @@ public class FeedbackSubmitPage extends AppPage {
 
     public void verifyConstSumQuestion(int qnNumber, String recipient,
                                        FeedbackConstantSumQuestionDetails questionDetails) {
-        if (!questionDetails.isDistributeToRecipients()) {
+        questionsSum(qnNumber, recipient, questionDetails);
+    }
+
+	/**
+	 * @param qnNumber
+	 * @param recipient
+	 * @param questionDetails
+	 */
+	private void questionsSum(int qnNumber, String recipient, FeedbackConstantSumQuestionDetails questionDetails) {
+		if (!questionDetails.isDistributeToRecipients()) {
             List<String> constSumOptions = questionDetails.getConstSumOptions();
             List<WebElement> optionTexts = getConstSumOptions(qnNumber, recipient);
             for (int i = 0; i < constSumOptions.size(); i++) {
@@ -349,7 +358,7 @@ public class FeedbackSubmitPage extends AppPage {
                         "At least one " + entityType + " should be allocated different number of points.");
             }
         }
-    }
+	}
 
     public void submitConstSumOptionResponse(int qnNumber, String recipient, FeedbackResponseAttributes response) {
         FeedbackConstantSumResponseDetails responseDetails =

@@ -58,7 +58,7 @@ public class BaseTestCase {
         return loadDataBundle("/typicalDataBundle.json");
     }
 
-    protected DataBundle loadDataBundle(String jsonFileName) {
+    public DataBundle loadDataBundle(String jsonFileName) {
         try {
             String pathToJsonFile = getTestDataFolder() + jsonFileName;
             String jsonString = FileHelper.readFile(pathToJsonFile);
@@ -138,7 +138,7 @@ public class BaseTestCase {
      * They are copied here to prevent repetitive importing in test classes.
      */
 
-    protected static void assertTrue(boolean condition) {
+    public static void assertTrue(boolean condition) {
         Assert.assertTrue(condition);
     }
 

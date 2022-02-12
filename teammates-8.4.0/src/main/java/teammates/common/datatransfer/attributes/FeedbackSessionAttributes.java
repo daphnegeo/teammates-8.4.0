@@ -2,14 +2,29 @@ package teammates.common.datatransfer.attributes;
 
 import java.time.Duration;
 import java.time.Instant;
+import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
 
+import teammates.common.datatransfer.questions.FeedbackTextResponseDetails;
+import teammates.common.util.AppUrl;
 import teammates.common.util.Const;
+import teammates.common.util.Const.WebPageURIs;
 import teammates.common.util.FieldValidator;
 import teammates.common.util.SanitizationHelper;
+import teammates.e2e.cases.BaseE2ETestCase;
+import teammates.e2e.cases.FeedbackResultsPageE2ETest;
+import teammates.e2e.cases.FeedbackSubmitPageE2ETest;
+import teammates.e2e.cases.InstructorAuditLogsPageE2ETest;
+import teammates.e2e.pageobjects.FeedbackResultsPage;
+import teammates.e2e.pageobjects.FeedbackSubmitPage;
+import teammates.e2e.pageobjects.InstructorAuditLogsPage;
 import teammates.storage.entity.FeedbackSession;
+import teammates.test.BaseTestCase;
 
 /**
  * The data transfer object for {@link FeedbackSession} entities.
@@ -549,6 +564,387 @@ public class FeedbackSessionAttributes extends EntityAttributes<FeedbackSession>
     }
 
     /**
+	 * @param feedbackResultsPageE2ETest TODO
+	 * 
+	 */
+	public void testAllTSmethod(FeedbackResultsPageE2ETest feedbackResultsPageE2ETest) {
+		BaseTestCase.______TS("unregistered student: can access results");
+	    StudentAttributes unregistered = feedbackResultsPageE2ETest.testData.students.get("Unregistered");
+	    AppUrl url = BaseE2ETestCase.createUrl(WebPageURIs.SESSION_RESULTS_PAGE)
+	            .withCourseId(unregistered.getCourse())
+	            .withStudentEmail(unregistered.getEmail())
+	            .withSessionName(getFeedbackSessionName())
+	            .withRegistrationKey(feedbackResultsPageE2ETest.getKeyForStudent(unregistered));
+	    feedbackResultsPageE2ETest.resultsPage = feedbackResultsPageE2ETest.getNewPageInstance(url, FeedbackResultsPage.class);
+	
+	    feedbackResultsPageE2ETest.resultsPage.verifyFeedbackSessionDetails(this);
+	
+	    BaseTestCase.______TS("unregistered student: questions with responses loaded");
+	    feedbackResultsPageE2ETest.verifyLoadedQuestions(unregistered);
+	
+	    BaseTestCase.______TS("registered student: can access results");
+	    StudentAttributes student = feedbackResultsPageE2ETest.testData.students.get("Alice");
+	    url = BaseE2ETestCase.createUrl(WebPageURIs.STUDENT_SESSION_RESULTS_PAGE)
+	            .withCourseId(getCourseId())
+	            .withSessionName(getFeedbackSessionName());
+	    feedbackResultsPageE2ETest.resultsPage = feedbackResultsPageE2ETest.loginToPage(url, FeedbackResultsPage.class, student.getGoogleId());
+	
+	    feedbackResultsPageE2ETest.resultsPage.verifyFeedbackSessionDetails(this);
+	
+	    BaseTestCase.______TS("registered student: questions with responses loaded");
+	    feedbackResultsPageE2ETest.verifyLoadedQuestions(student);
+	
+	    BaseTestCase.______TS("verify responses");
+	    feedbackResultsPageE2ETest.questions.forEach(question -> feedbackResultsPageE2ETest.verifyResponseDetails(student, question));
+	
+	    BaseTestCase.______TS("verify statistics - numscale");
+	    String[] expectedNumScaleStats = { student.getTeam(), "You", "3.83", "4.5", "3", "3.5" };
+	
+	    feedbackResultsPageE2ETest.resultsPage.verifyNumScaleStatistics(5, expectedNumScaleStats);
+	
+	    BaseTestCase.______TS("verify statistics - rubric");
+	    feedbackResultsPageE2ETest.verifyExpectedRubricStats();
+	
+	    BaseTestCase.______TS("verify statistics - contribution");
+	    String[] expectedContribStats = {
+	            "of me: E +20%",
+	            "of others:  E +50%, E -50%",
+	            "of me: E +71%",
+	            "of others:  E -20%, E -31%",
+	    };
+	
+	    feedbackResultsPageE2ETest.resultsPage.verifyContributionStatistics(11, expectedContribStats);
+	
+	    BaseTestCase.______TS("verify comments");
+	    feedbackResultsPageE2ETest.verifyCommentDetails(2, feedbackResultsPageE2ETest.testData.feedbackResponseComments.get("qn2Comment1"), student);
+	    feedbackResultsPageE2ETest.verifyCommentDetails(2, feedbackResultsPageE2ETest.testData.feedbackResponseComments.get("qn2Comment2"), student);
+	    feedbackResultsPageE2ETest.verifyCommentDetails(3, feedbackResultsPageE2ETest.testData.feedbackResponseComments.get("qn3Comment1"), student);
+	    feedbackResultsPageE2ETest.verifyCommentDetails(3, feedbackResultsPageE2ETest.testData.feedbackResponseComments.get("qn3Comment2"), student);
+	
+	    BaseTestCase.______TS("registered instructor: can access results");
+	    feedbackResultsPageE2ETest.logout();
+	    InstructorAttributes instructor = feedbackResultsPageE2ETest.testData.instructors.get("FRes.instr");
+	    url = BaseE2ETestCase.createUrl(WebPageURIs.INSTRUCTOR_SESSION_RESULTS_PAGE)
+	            .withCourseId(getCourseId())
+	            .withSessionName(getFeedbackSessionName());
+	    feedbackResultsPageE2ETest.resultsPage = feedbackResultsPageE2ETest.loginToPage(url, FeedbackResultsPage.class, instructor.getGoogleId());
+	
+	    feedbackResultsPageE2ETest.resultsPage.verifyFeedbackSessionDetails(this);
+	
+	    BaseTestCase.______TS("registered instructor: questions with responses loaded");
+	    feedbackResultsPageE2ETest.verifyLoadedQuestions(instructor);
+	
+	    BaseTestCase.______TS("verify responses");
+	    feedbackResultsPageE2ETest.questions.forEach(question -> feedbackResultsPageE2ETest.verifyResponseDetails(instructor, question));
+	}
+
+	/**
+	 * @return
+	 */
+	public List<FeedbackResponseAttributes> otherResponsesMethod() {
+		List<FeedbackResponseAttributes> otherResponses = new ArrayList<>();
+		return otherResponses;
+	}
+
+	public Set<StudentAttributes> getOtherTeammates(FeedbackResultsPageE2ETest feedbackResultsPageE2ETest, StudentAttributes currentStudent) {
+	    return feedbackResultsPageE2ETest.testData.students.values().stream()
+	            .filter(s -> s.getTeam().equals(currentStudent.getTeam())
+	            && !s.equals(currentStudent))
+	            .collect(Collectors.toSet());
+	}
+
+	public Set<StudentAttributes> getOtherStudents(FeedbackResultsPageE2ETest feedbackResultsPageE2ETest, StudentAttributes currentStudent) {
+	    return feedbackResultsPageE2ETest.testData.students.values().stream()
+	            .filter(s -> s.getCourse().equals(currentStudent.getCourse())
+	            && !s.equals(currentStudent))
+	            .collect(Collectors.toSet());
+	}
+
+	/**
+	 * @param feedbackResultsPageE2ETest TODO
+	 * @param currentInstructor
+	 * @param user
+	 * @return
+	 */
+	public String identifierMethod(FeedbackResultsPageE2ETest feedbackResultsPageE2ETest, InstructorAttributes currentInstructor, String user) {
+		if (currentInstructor.getEmail().equals(user)) {
+	        return "You";
+	    }
+	    if (Const.GENERAL_QUESTION.equals(user)) {
+	        return Const.USER_NOBODY_TEXT;
+	    }
+	    String identifier = feedbackResultsPageE2ETest.getInstructorName(user);
+	    if (identifier == null) {
+	        identifier = feedbackResultsPageE2ETest.getStudentName(user);
+	    }
+	    if (identifier == null) {
+	        identifier = user;
+	    }
+	    return identifier;
+	}
+
+	/**
+	 * @param feedbackResultsPageE2ETest TODO
+	 * @param subQns
+	 */
+	public void statsList(FeedbackResultsPageE2ETest feedbackResultsPageE2ETest, List<String> subQns) {
+		String[] formattedSubQns = { "a) " + subQns.get(0), "b) " + subQns.get(1), "c) " + subQns.get(2) };
+	
+	    String[][] expectedRubricStats = {
+	            {
+	                    formattedSubQns[0],
+	                    "33.33% (1) [1]",
+	                    "33.33% (1) [2]",
+	                    "0% (0) [3]",
+	                    "0% (0) [4]",
+	                    "33.33% (1) [5]",
+	                    "2.67",
+	            },
+	            {
+	                    formattedSubQns[1],
+	                    "0% (0) [0.01]",
+	                    "0% (0) [0.02]",
+	                    "33.33% (1) [0.03]",
+	                    "0% (0) [0.04]",
+	                    "66.67% (2) [0.05]",
+	                    "0.04",
+	            },
+	            {
+	                    formattedSubQns[2],
+	                    "0% (0) [2]",
+	                    "0% (0) [1]",
+	                    "0% (0) [0]",
+	                    "66.67% (2) [-1]",
+	                    "33.33% (1) [-2]",
+	                    "-1.33",
+	            },
+	    };
+	
+	    String[][] expectedRubricStatsExcludingSelf = {
+	            {
+	                    formattedSubQns[0],
+	                    "50% (1) [1]",
+	                    "0% (0) [2]",
+	                    "0% (0) [3]",
+	                    "0% (0) [4]",
+	                    "50% (1) [5]",
+	                    "3",
+	            },
+	            {
+	                    formattedSubQns[1],
+	                    "0% (0) [0.01]",
+	                    "0% (0) [0.02]",
+	                    "0% (0) [0.03]",
+	                    "0% (0) [0.04]",
+	                    "100% (2) [0.05]",
+	                    "0.05",
+	            },
+	            {
+	                    formattedSubQns[2],
+	                    "0% (0) [2]",
+	                    "0% (0) [1]",
+	                    "0% (0) [0]",
+	                    "50% (1) [-1]",
+	                    "50% (1) [-2]",
+	                    "-1.5",
+	            },
+	    };
+	
+	    String[] studentNames = { "Anonymous student", "Benny Charles", "Charlie Davis", "You" };
+	    String[] studentTeams = { "", "Team 1", "Team 1", "Team 1" };
+	
+	    String[][] expectedRubricStatsPerRecipient = new String[studentNames.length * formattedSubQns.length][3];
+	    // The actual calculated stats are not verified for this table
+	    // Checking the recipient presence in the table is sufficient for E2E purposes
+	    for (int i = 0; i < studentNames.length; i++) {
+	        for (int j = 0; j < formattedSubQns.length; j++) {
+	            int index = i * formattedSubQns.length + j;
+	            expectedRubricStatsPerRecipient[index][0] = studentTeams[i];
+	            expectedRubricStatsPerRecipient[index][1] = studentNames[i];
+	            expectedRubricStatsPerRecipient[index][2] = formattedSubQns[j];
+	        }
+	    }
+	
+	    feedbackResultsPageE2ETest.resultsPage.verifyRubricStatistics(10, expectedRubricStats, expectedRubricStatsExcludingSelf,
+	            expectedRubricStatsPerRecipient);
+	}
+
+	@Test
+	public void testAll(FeedbackSubmitPageE2ETest feedbackSubmitPageE2ETest) {
+	    AppUrl url = BaseE2ETestCase.createUrl(WebPageURIs.INSTRUCTOR_SESSION_SUBMISSION_PAGE)
+	            .withCourseId(feedbackSubmitPageE2ETest.openSession.getCourseId())
+	            .withSessionName(feedbackSubmitPageE2ETest.openSession.getFeedbackSessionName());
+	    FeedbackSubmitPage submitPage = feedbackSubmitPageE2ETest.loginToPage(url, FeedbackSubmitPage.class, feedbackSubmitPageE2ETest.instructor.getGoogleId());
+	
+	    BaseTestCase.______TS("verify loaded session data");
+	    submitPage.verifyFeedbackSessionDetails(feedbackSubmitPageE2ETest.openSession);
+	
+	    BaseTestCase.______TS("questions with giver type instructor");
+	    submitPage.verifyNumQuestions(1);
+	    submitPage.verifyQuestionDetails(1, feedbackSubmitPageE2ETest.testData.feedbackQuestions.get("qn5InSession1"));
+	
+	    BaseTestCase.______TS("questions with giver type students");
+	    feedbackSubmitPageE2ETest.logout();
+	    submitPage = feedbackSubmitPageE2ETest.loginToPage(feedbackSubmitPageE2ETest.getStudentSubmitPageUrl(feedbackSubmitPageE2ETest.student, feedbackSubmitPageE2ETest.openSession), FeedbackSubmitPage.class,
+	            feedbackSubmitPageE2ETest.student.getGoogleId());
+	
+	    submitPage.verifyNumQuestions(4);
+	    submitPage.verifyQuestionDetails(1, feedbackSubmitPageE2ETest.testData.feedbackQuestions.get("qn1InSession1"));
+	    submitPage.verifyQuestionDetails(2, feedbackSubmitPageE2ETest.testData.feedbackQuestions.get("qn2InSession1"));
+	    submitPage.verifyQuestionDetails(3, feedbackSubmitPageE2ETest.testData.feedbackQuestions.get("qn3InSession1"));
+	    submitPage.verifyQuestionDetails(4, feedbackSubmitPageE2ETest.testData.feedbackQuestions.get("qn4InSession1"));
+	
+	    BaseTestCase.______TS("verify recipients: students");
+	    submitPage.verifyLimitedRecipients(1, 3, feedbackSubmitPageE2ETest.getOtherStudents(feedbackSubmitPageE2ETest.student));
+	
+	    BaseTestCase.______TS("verify recipients: instructors");
+	    submitPage.verifyRecipients(2, feedbackSubmitPageE2ETest.getInstructors(), "Instructor");
+	
+	    BaseTestCase.______TS("verify recipients: team mates");
+	    submitPage.verifyRecipients(3, feedbackSubmitPageE2ETest.getTeammates(feedbackSubmitPageE2ETest.student), "Student");
+	
+	    BaseTestCase.______TS("verify recipients: teams");
+	    submitPage.verifyRecipients(4, feedbackSubmitPageE2ETest.getOtherTeams(feedbackSubmitPageE2ETest.student), "Team");
+	
+	    BaseTestCase.______TS("submit partial response");
+	    int[] unansweredQuestions = { 1, 2, 3, 4 };
+	    submitPage.verifyWarningMessageForPartialResponse(unansweredQuestions);
+	
+	    BaseTestCase.______TS("cannot submit in closed session");
+	    AppUrl closedSessionUrl = feedbackSubmitPageE2ETest.getStudentSubmitPageUrl(feedbackSubmitPageE2ETest.student, this);
+	    submitPage = feedbackSubmitPageE2ETest.getNewPageInstance(closedSessionUrl, FeedbackSubmitPage.class);
+	    submitPage.verifyCannotSubmit();
+	
+	    BaseTestCase.______TS("can submit in grace period");
+	    AppUrl gracePeriodSessionUrl = feedbackSubmitPageE2ETest.getStudentSubmitPageUrl(feedbackSubmitPageE2ETest.student, feedbackSubmitPageE2ETest.gracePeriodSession);
+	    submitPage = feedbackSubmitPageE2ETest.getNewPageInstance(gracePeriodSessionUrl, FeedbackSubmitPage.class);
+	    FeedbackQuestionAttributes question = feedbackSubmitPageE2ETest.testData.feedbackQuestions.get("qn1InGracePeriodSession");
+	    String questionId = feedbackSubmitPageE2ETest.getFeedbackQuestion(question).getId();
+	    String recipient = "Team 2";
+	    FeedbackResponseAttributes response = feedbackSubmitPageE2ETest.getMcqResponse(questionId, recipient, false, "UI");
+	    submitPage.submitMcqResponse(1, recipient, response);
+	
+	    feedbackSubmitPageE2ETest.verifyPresentInDatabase(response);
+	
+	    BaseTestCase.______TS("add comment");
+	    String responseId = feedbackSubmitPageE2ETest.getFeedbackResponse(response).getId();
+	    int qnToComment = 1;
+	    String comment = "<p>new comment</p>";
+	    submitPage.addComment(qnToComment, recipient, comment);
+	
+	    submitPage.verifyComment(qnToComment, recipient, comment);
+	    feedbackSubmitPageE2ETest.verifyPresentInDatabase(feedbackSubmitPageE2ETest.getFeedbackResponseComment(responseId, comment));
+	
+	    BaseTestCase.______TS("edit comment");
+	    comment = "<p>edited comment</p>";
+	    submitPage.editComment(qnToComment, recipient, comment);
+	
+	    submitPage.verifyComment(qnToComment, recipient, comment);
+	    feedbackSubmitPageE2ETest.verifyPresentInDatabase(feedbackSubmitPageE2ETest.getFeedbackResponseComment(responseId, comment));
+	
+	    BaseTestCase.______TS("delete comment");
+	    submitPage.deleteComment(qnToComment, recipient);
+	
+	    submitPage.verifyStatusMessage("Your comment has been deleted!");
+	    submitPage.verifyNoCommentPresent(qnToComment, recipient);
+	    feedbackSubmitPageE2ETest.verifyAbsentInDatabase(feedbackSubmitPageE2ETest.getFeedbackResponseComment(responseId, comment));
+	
+	    BaseTestCase.______TS("preview as instructor");
+	    feedbackSubmitPageE2ETest.logout();
+	    url = BaseE2ETestCase.createUrl(WebPageURIs.INSTRUCTOR_SESSION_SUBMISSION_PAGE)
+	            .withCourseId(feedbackSubmitPageE2ETest.openSession.getCourseId())
+	            .withSessionName(feedbackSubmitPageE2ETest.openSession.getFeedbackSessionName())
+	            .withParam("previewas", feedbackSubmitPageE2ETest.instructor.getEmail());
+	    submitPage = feedbackSubmitPageE2ETest.loginToPage(url, FeedbackSubmitPage.class, feedbackSubmitPageE2ETest.instructor.getGoogleId());
+	
+	    submitPage.verifyFeedbackSessionDetails(feedbackSubmitPageE2ETest.openSession);
+	    submitPage.verifyNumQuestions(1);
+	    submitPage.verifyQuestionDetails(1, feedbackSubmitPageE2ETest.testData.feedbackQuestions.get("qn5InSession1"));
+	    submitPage.verifyCannotSubmit();
+	
+	    BaseTestCase.______TS("preview as student");
+	    url = BaseE2ETestCase.createUrl(WebPageURIs.SESSION_SUBMISSION_PAGE)
+	            .withCourseId(feedbackSubmitPageE2ETest.openSession.getCourseId())
+	            .withSessionName(feedbackSubmitPageE2ETest.openSession.getFeedbackSessionName())
+	            .withParam("previewas", feedbackSubmitPageE2ETest.student.getEmail());
+	    submitPage = feedbackSubmitPageE2ETest.getNewPageInstance(url, FeedbackSubmitPage.class);
+	
+	    submitPage.verifyFeedbackSessionDetails(feedbackSubmitPageE2ETest.openSession);
+	    submitPage.verifyNumQuestions(4);
+	    submitPage.verifyQuestionDetails(1, feedbackSubmitPageE2ETest.testData.feedbackQuestions.get("qn1InSession1"));
+	    submitPage.verifyQuestionDetails(2, feedbackSubmitPageE2ETest.testData.feedbackQuestions.get("qn2InSession1"));
+	    submitPage.verifyQuestionDetails(3, feedbackSubmitPageE2ETest.testData.feedbackQuestions.get("qn3InSession1"));
+	    submitPage.verifyQuestionDetails(4, feedbackSubmitPageE2ETest.testData.feedbackQuestions.get("qn4InSession1"));
+	    submitPage.verifyCannotSubmit();
+	
+	    BaseTestCase.______TS("moderating instructor cannot see questions without instructor visibility");
+	    url = BaseE2ETestCase.createUrl(WebPageURIs.SESSION_SUBMISSION_PAGE)
+	            .withCourseId(feedbackSubmitPageE2ETest.gracePeriodSession.getCourseId())
+	            .withSessionName(feedbackSubmitPageE2ETest.gracePeriodSession.getFeedbackSessionName())
+	            .withParam("moderatedperson", feedbackSubmitPageE2ETest.student.getEmail())
+	            .withParam("moderatedquestionId", questionId);
+	    submitPage = feedbackSubmitPageE2ETest.getNewPageInstance(url, FeedbackSubmitPage.class);
+	
+	    submitPage.verifyFeedbackSessionDetails(feedbackSubmitPageE2ETest.gracePeriodSession);
+	    // One out of two questions in grace period session should not be visible
+	    submitPage.verifyNumQuestions(1);
+	    submitPage.verifyQuestionDetails(1, question);
+	
+	    BaseTestCase.______TS("submit moderated response");
+	    response = feedbackSubmitPageE2ETest.getMcqResponse(questionId, recipient, false, "Algo");
+	    submitPage.submitMcqResponse(1, recipient, response);
+	
+	    feedbackSubmitPageE2ETest.verifyPresentInDatabase(response);
+	}
+
+	@Test
+	public void testAll(InstructorAuditLogsPageE2ETest instructorAuditLogsPageE2ETest) {
+	    AppUrl url = BaseE2ETestCase.createUrl(WebPageURIs.INSTRUCTOR_AUDIT_LOGS_PAGE);
+	    InstructorAuditLogsPage auditLogsPage = instructorAuditLogsPageE2ETest.loginToPage(url, InstructorAuditLogsPage.class, instructorAuditLogsPageE2ETest.instructor.getGoogleId());
+	
+	    BaseTestCase.______TS("verify default datetime");
+	    String currentLogsFromDate = auditLogsPage.getLogsFromDate();
+	    String currentLogsToDate = auditLogsPage.getLogsToDate();
+	    String currentLogsFromTime = auditLogsPage.getLogsFromTime();
+	    String currentLogsToTime = auditLogsPage.getLogsToTime();
+	
+	    auditLogsPage.setLogsFromDateTime(Instant.now().minus(1, ChronoUnit.DAYS),
+	            ZoneId.systemDefault().getId());
+	    auditLogsPage.setLogsToDateTime(Instant.now(), ZoneId.systemDefault().getId());
+	
+	    BaseTestCase.assertEquals(currentLogsFromDate, auditLogsPage.getLogsFromDate());
+	    BaseTestCase.assertEquals(currentLogsToDate, auditLogsPage.getLogsToDate());
+	    BaseTestCase.assertEquals(currentLogsFromTime, "23:59H");
+	    BaseTestCase.assertEquals(currentLogsToTime, "23:59H");
+	
+	    BaseTestCase.______TS("verify logs output");
+	    instructorAuditLogsPageE2ETest.logout();
+	    AppUrl studentSubmissionPageUrl = BaseE2ETestCase.createUrl(WebPageURIs.STUDENT_SESSION_SUBMISSION_PAGE)
+	            .withCourseId(instructorAuditLogsPageE2ETest.course.getId())
+	            .withSessionName(getFeedbackSessionName());
+	    FeedbackSubmitPage studentSubmissionPage = instructorAuditLogsPageE2ETest.loginToPage(studentSubmissionPageUrl,
+	            FeedbackSubmitPage.class, instructorAuditLogsPageE2ETest.student.getGoogleId());
+	
+	    StudentAttributes receiver = instructorAuditLogsPageE2ETest.testData.students.get("benny.tmms@IAuditLogs.CS2104");
+	    FeedbackQuestionAttributes question = instructorAuditLogsPageE2ETest.testData.feedbackQuestions.get("qn1");
+	    String questionId = instructorAuditLogsPageE2ETest.getFeedbackQuestion(question).getId();
+	    FeedbackTextResponseDetails details = new FeedbackTextResponseDetails("Response");
+	    FeedbackResponseAttributes response =
+	            FeedbackResponseAttributes.builder(questionId, instructorAuditLogsPageE2ETest.student.getEmail(), instructorAuditLogsPageE2ETest.instructor.getEmail())
+	                    .withResponseDetails(details)
+	                    .build();
+	
+	    studentSubmissionPage.submitTextResponse(1, receiver.getName(), response);
+	
+	    instructorAuditLogsPageE2ETest.logout();
+	    auditLogsPage = instructorAuditLogsPageE2ETest.loginToPage(url, InstructorAuditLogsPage.class, instructorAuditLogsPageE2ETest.instructor.getGoogleId());
+	    auditLogsPage.setCourseId(instructorAuditLogsPageE2ETest.course.getId());
+	    auditLogsPage.startSearching();
+	
+	    BaseTestCase.assertTrue(auditLogsPage.isLogPresentForSession(instructorAuditLogsPageE2ETest.feedbackQuestion.getFeedbackSessionName()));
+	}
+
+	/**
      * Returns a {@link UpdateOptions.Builder} to build {@link UpdateOptions} for a session.
      */
     public static UpdateOptions.Builder updateOptionsBuilder(String feedbackSessionName, String courseId) {

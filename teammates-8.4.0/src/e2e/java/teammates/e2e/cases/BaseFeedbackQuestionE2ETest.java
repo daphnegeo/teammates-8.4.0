@@ -26,7 +26,7 @@ public abstract class BaseFeedbackQuestionE2ETest extends BaseE2ETestCase {
     InstructorAttributes instructor;
     CourseAttributes course;
     FeedbackSessionAttributes feedbackSession;
-    StudentAttributes student;
+    public StudentAttributes student;
 
     abstract void testEditPage();
 

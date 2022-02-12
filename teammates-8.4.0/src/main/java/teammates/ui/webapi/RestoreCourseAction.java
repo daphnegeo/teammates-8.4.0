@@ -6,7 +6,7 @@ import teammates.common.util.Const;
 /**
  * Action: Restores a course from Recycle Bin.
  */
-class RestoreCourseAction extends Action {
+public class RestoreCourseAction extends Action {
 
     @Override
     AuthType getMinAuthLevel() {

@@ -7,7 +7,6 @@ import org.testng.annotations.Test;
 
 import teammates.common.datatransfer.DataBundle;
 import teammates.common.datatransfer.FeedbackParticipantType;
-import teammates.common.datatransfer.InstructorPrivileges;
 import teammates.common.datatransfer.attributes.CourseAttributes;
 import teammates.common.datatransfer.attributes.FeedbackQuestionAttributes;
 import teammates.common.datatransfer.attributes.FeedbackResponseAttributes;
@@ -26,10 +25,10 @@ import teammates.ui.request.InvalidHttpRequestBodyException;
  */
 public class UpdateFeedbackResponseCommentActionTest extends BaseActionTest<UpdateFeedbackResponseCommentAction> {
 
-    private CourseAttributes course;
+    public CourseAttributes course;
     private InstructorAttributes instructor1OfCourse1;
     private InstructorAttributes instructor2OfCourse1;
-    private InstructorAttributes helperOfCourse1;
+    public InstructorAttributes helperOfCourse1;
     private StudentAttributes student1InCourse1;
     private StudentAttributes student2InCourse1;
     private StudentAttributes student3InCourse1;
@@ -491,55 +490,23 @@ public class UpdateFeedbackResponseCommentActionTest extends BaseActionTest<Upda
         verifyEntityNotFoundAcl(submissionParams);
     }
 
-    @Test
-    protected void testAccessControl_instructorsWithCorrectPrivilege_shouldPass() throws Exception {
-        String[] submissionParams = getSubmissionParamsForCrossSectionResponseComment();
+    /**
+	 * @deprecated Use {@link teammates.common.datatransfer.attributes.FeedbackResponseCommentAttributes#testAccessControl_instructorsWithCorrectPrivilege_shouldPass(teammates.ui.webapi.UpdateFeedbackResponseCommentActionTest)} instead
+	 */
+	@Test
+	protected void testAccessControl_instructorsWithCorrectPrivilege_shouldPass() throws Exception {
+		comment1FromInstructor1.testAccessControl_instructorsWithCorrectPrivilege_shouldPass(this);
+	}
 
-        verifyInaccessibleWithoutLogin(submissionParams);
-        verifyInaccessibleForUnregisteredUsers(submissionParams);
-        verifyInaccessibleForStudents(submissionParams);
+    /**
+	 * @deprecated Use {@link teammates.common.datatransfer.attributes.FeedbackResponseCommentAttributes#testAccessControl_instructorWithOnlyEitherSectionPrivilege_shouldFail(teammates.ui.webapi.UpdateFeedbackResponseCommentActionTest)} instead
+	 */
+	@Test
+	protected void testAccessControl_instructorWithOnlyEitherSectionPrivilege_shouldFail() throws Exception {
+		comment1FromInstructor1.testAccessControl_instructorWithOnlyEitherSectionPrivilege_shouldFail(this);
+	}
 
-        InstructorAttributes instructor = helperOfCourse1;
-        InstructorPrivileges instructorPrivileges = new InstructorPrivileges();
-        instructorPrivileges.updatePrivilege("Section A",
-                Const.InstructorPermissions.CAN_MODIFY_SESSION_COMMENT_IN_SECTIONS, true);
-        instructorPrivileges.updatePrivilege("Section B",
-                Const.InstructorPermissions.CAN_MODIFY_SESSION_COMMENT_IN_SECTIONS, true);
-
-        logic.updateInstructor(InstructorAttributes.updateOptionsWithEmailBuilder(course.getId(), instructor.getEmail())
-                .withPrivileges(instructorPrivileges).build());
-
-        loginAsInstructor(instructor.getGoogleId());
-        verifyCanAccess(submissionParams);
-        verifyCanMasquerade(instructor.getGoogleId(), submissionParams);
-    }
-
-    @Test
-    protected void testAccessControl_instructorWithOnlyEitherSectionPrivilege_shouldFail() throws Exception {
-        String[] submissionParams = getSubmissionParamsForCrossSectionResponseComment();
-
-        InstructorAttributes instructor = helperOfCourse1;
-        InstructorPrivileges instructorPrivileges = new InstructorPrivileges();
-        instructorPrivileges.updatePrivilege("Section A",
-                Const.InstructorPermissions.CAN_MODIFY_SESSION_COMMENT_IN_SECTIONS, true);
-
-        logic.updateInstructor(InstructorAttributes.updateOptionsWithEmailBuilder(course.getId(), instructor.getEmail())
-                .withPrivileges(instructorPrivileges).build());
-
-        loginAsInstructor(instructor.getGoogleId());
-        verifyCannotAccess(submissionParams);
-
-        instructorPrivileges.updatePrivilege("Section A",
-                Const.InstructorPermissions.CAN_MODIFY_SESSION_COMMENT_IN_SECTIONS, false);
-        instructorPrivileges.updatePrivilege("Section B",
-                Const.InstructorPermissions.CAN_MODIFY_SESSION_COMMENT_IN_SECTIONS, true);
-        logic.updateInstructor(InstructorAttributes.updateOptionsWithEmailBuilder(course.getId(), instructor.getEmail())
-                .withPrivileges(instructorPrivileges).build());
-
-        verifyCannotAccess(submissionParams);
-    }
-
-    private String[] getSubmissionParamsForCrossSectionResponseComment() {
+    public String[] getSubmissionParamsForCrossSectionResponseComment() {
         return new String[] {
                 Const.ParamsNames.INTENT, Intent.INSTRUCTOR_RESULT.toString(),
                 Const.ParamsNames.FEEDBACK_RESPONSE_COMMENT_ID, comment2FromStudent1.getId().toString(),

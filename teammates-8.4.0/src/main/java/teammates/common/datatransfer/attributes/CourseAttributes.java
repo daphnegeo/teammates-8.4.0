@@ -8,11 +8,18 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 
+import teammates.common.util.AppUrl;
 import teammates.common.util.Const;
+import teammates.common.util.Const.InstructorPermissions;
+import teammates.common.util.Const.WebPageURIs;
 import teammates.common.util.FieldValidator;
 import teammates.common.util.Logger;
 import teammates.common.util.SanitizationHelper;
+import teammates.e2e.cases.BaseE2ETestCase;
+import teammates.e2e.cases.InstructorCourseEditPageE2ETest;
+import teammates.e2e.pageobjects.InstructorCourseEditPage;
 import teammates.storage.entity.Course;
+import teammates.test.BaseTestCase;
 
 /**
  * The data transfer object for {@link Course} entities.
@@ -190,7 +197,101 @@ public class CourseAttributes extends EntityAttributes<Course> implements Compar
         updateOptions.instituteOption.ifPresent(s -> institute = s);
     }
 
-    /**
+    @Test
+	public void testAll(InstructorCourseEditPageE2ETest instructorCourseEditPageE2ETest) {
+	    BaseTestCase.______TS("verify cannot edit without privilege");
+	    // log in as instructor with no edit privilege
+	    AppUrl url = BaseE2ETestCase.createUrl(WebPageURIs.INSTRUCTOR_COURSE_EDIT_PAGE)
+	            .withCourseId(getId());
+	    InstructorCourseEditPage editPage = instructorCourseEditPageE2ETest.loginToPage(url, InstructorCourseEditPage.class, instructorCourseEditPageE2ETest.instructors[2].getGoogleId());
+	
+	    editPage.verifyCourseNotEditable();
+	    editPage.verifyInstructorsNotEditable();
+	    editPage.verifyAddInstructorNotAllowed();
+	
+	    BaseTestCase.______TS("verify loaded data");
+	    // re-log in as instructor with edit privilege
+	    instructorCourseEditPageE2ETest.logout();
+	    url = BaseE2ETestCase.createUrl(WebPageURIs.INSTRUCTOR_COURSE_EDIT_PAGE)
+	            .withCourseId(getId());
+	    editPage = instructorCourseEditPageE2ETest.loginToPage(url, InstructorCourseEditPage.class, instructorCourseEditPageE2ETest.instructors[3].getGoogleId());
+	
+	    editPage.verifyCourseDetails(this);
+	    editPage.verifyInstructorDetails(instructorCourseEditPageE2ETest.instructors[0]);
+	    editPage.verifyInstructorDetails(instructorCourseEditPageE2ETest.instructors[1]);
+	    editPage.verifyInstructorDetails(instructorCourseEditPageE2ETest.instructors[2]);
+	    editPage.verifyInstructorDetails(instructorCourseEditPageE2ETest.instructors[3]);
+	    editPage.verifyInstructorDetails(instructorCourseEditPageE2ETest.instructors[4]);
+	
+	    BaseTestCase.______TS("add instructor");
+	    InstructorAttributes newInstructor = InstructorAttributes
+	            .builder(getId(), "ICEdit.test@gmail.tmt")
+	            .withName("Teammates Test")
+	            .withIsDisplayedToStudents(true)
+	            .withDisplayedName("Instructor")
+	            .withRole("Tutor")
+	            .build();
+	
+	    editPage.addInstructor(newInstructor);
+	    editPage.verifyStatusMessage("\"The instructor " + newInstructor.getName() + " has been added successfully. "
+	            + "An email containing how to 'join' this course will be sent to " + newInstructor.getEmail()
+	            + " in a few minutes.\"");
+	    editPage.verifyInstructorDetails(newInstructor);
+	    instructorCourseEditPageE2ETest.verifyPresentInDatabase(newInstructor);
+	
+	    BaseTestCase.______TS("resend invite");
+	    editPage.resendInstructorInvite(newInstructor);
+	    editPage.verifyStatusMessage("An email has been sent to " + newInstructor.getEmail());
+	
+	    BaseTestCase.______TS("edit instructor");
+	    instructorCourseEditPageE2ETest.instructors[0].setName("Edited Name");
+	    instructorCourseEditPageE2ETest.instructors[0].setEmail("ICEdit.edited@gmail.tmt");
+	    instructorCourseEditPageE2ETest.instructors[0].getPrivileges().updatePrivilege(InstructorPermissions.CAN_MODIFY_SESSION, true);
+	    instructorCourseEditPageE2ETest.instructors[0].getPrivileges().updatePrivilege(InstructorPermissions.CAN_MODIFY_STUDENT, false);
+	    instructorCourseEditPageE2ETest.instructors[0].getPrivileges().updatePrivilege("Section 2",
+	            InstructorPermissions.CAN_VIEW_SESSION_IN_SECTIONS, true);
+	    instructorCourseEditPageE2ETest.instructors[0].getPrivileges().updatePrivilege("Section 1", "First feedback session",
+	            InstructorPermissions.CAN_SUBMIT_SESSION_IN_SECTIONS, true);
+	
+	    editPage.editInstructor(1, instructorCourseEditPageE2ETest.instructors[0]);
+	    editPage.toggleCustomCourseLevelPrivilege(1, InstructorPermissions.CAN_MODIFY_SESSION);
+	    editPage.toggleCustomCourseLevelPrivilege(1, InstructorPermissions.CAN_MODIFY_STUDENT);
+	    editPage.toggleCustomSectionLevelPrivilege(1, 1, "Section 2",
+	            InstructorPermissions.CAN_VIEW_SESSION_IN_SECTIONS);
+	    editPage.toggleCustomSessionLevelPrivilege(1, 2, "Section 1", "First feedback session",
+	            InstructorPermissions.CAN_SUBMIT_SESSION_IN_SECTIONS);
+	    editPage.verifyStatusMessage("The instructor " + instructorCourseEditPageE2ETest.instructors[0].getName() + " has been updated.");
+	    editPage.verifyInstructorDetails(instructorCourseEditPageE2ETest.instructors[0]);
+	
+	    // verify in database by reloading
+	    editPage.reloadPage();
+	    editPage.verifyInstructorDetails(instructorCourseEditPageE2ETest.instructors[0]);
+	
+	    BaseTestCase.______TS("delete instructor");
+	    editPage.deleteInstructor(newInstructor);
+	    editPage.verifyStatusMessage("Instructor is successfully deleted.");
+	    editPage.verifyNumInstructorsEquals(5);
+	    instructorCourseEditPageE2ETest.verifyAbsentInDatabase(newInstructor);
+	
+	    BaseTestCase.______TS("edit course");
+	    String newName = "New Course Name";
+	    String newTimeZone = "Asia/Singapore";
+	    setName(newName);
+	    setTimeZone(newTimeZone);
+	
+	    editPage.editCourse(this);
+	    editPage.verifyStatusMessage("The course has been edited.");
+	    editPage.verifyCourseDetails(this);
+	    instructorCourseEditPageE2ETest.verifyPresentInDatabase(this);
+	
+	    BaseTestCase.______TS("delete course");
+	    editPage.deleteCourse();
+	    editPage.verifyStatusMessage("The course " + getId() + " has been deleted. "
+	            + "You can restore it from the Recycle Bin manually.");
+	    BaseTestCase.assertTrue(InstructorCourseEditPageE2ETest.BACKDOOR.isCourseInRecycleBin(getId()));
+	}
+
+	/**
      * Returns a {@link UpdateOptions.Builder} to build {@link UpdateOptions} for a course.
      */
     public static UpdateOptions.Builder updateOptionsBuilder(String courseId) {

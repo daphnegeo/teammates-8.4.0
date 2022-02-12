@@ -131,7 +131,11 @@ public abstract class DataMigrationEntitiesBaseScript<T extends BaseEntity> exte
      * Migrates the entity in a transaction to ensure data consistency.
      */
     private void migrateWithTrx(Key<T> entityKey) {
-        Runnable task = () -> {
+        migrateEntity(entityKey);
+    }
+
+	private void migrateEntity(Key<T> entityKey) {
+		Runnable task = () -> {
             // the read place a "lock" on the object to migrate
             T entity = ofy().load().key(entityKey).now();
             doMigration(entity);
@@ -142,7 +146,7 @@ public abstract class DataMigrationEntitiesBaseScript<T extends BaseEntity> exte
         } else {
             ofy().transact(task);
         }
-    }
+	}
 
     @Override
     @SuppressWarnings("unchecked")

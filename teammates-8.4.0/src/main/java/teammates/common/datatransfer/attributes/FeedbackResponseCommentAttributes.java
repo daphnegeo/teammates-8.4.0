@@ -4,12 +4,17 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import teammates.common.datatransfer.FeedbackParticipantType;
+import teammates.common.datatransfer.InstructorPrivileges;
 import teammates.common.util.Const;
+import teammates.common.util.Const.InstructorPermissions;
 import teammates.common.util.FieldValidator;
 import teammates.common.util.SanitizationHelper;
+import teammates.e2e.cases.InstructorFeedbackReportPageE2ETest;
 import teammates.storage.entity.FeedbackResponseComment;
+import teammates.ui.webapi.UpdateFeedbackResponseCommentActionTest;
 
 /**
  * The data transfer object for {@link FeedbackResponseComment} entities.
@@ -340,7 +345,64 @@ public class FeedbackResponseCommentAttributes extends EntityAttributes<Feedback
         updateOptions.receiverSectionOption.ifPresent(s -> receiverSection = s);
     }
 
-    /**
+    public List<FeedbackResponseAttributes> getResponsesByQuestion(InstructorFeedbackReportPageE2ETest instructorFeedbackReportPageE2ETest, String courseId, int qnNum) {
+	    List<FeedbackResponseAttributes> responses = instructorFeedbackReportPageE2ETest.testData.feedbackResponses.values().stream()
+	            .filter(response -> response.getCourseId().equals(courseId)
+	                    && response.getFeedbackQuestionId().equals(Integer.toString(qnNum)))
+	            .collect(Collectors.toList());
+	    instructorFeedbackReportPageE2ETest.sortResponses(responses);
+	    return responses;
+	}
+
+	@Test
+	public void testAccessControl_instructorWithOnlyEitherSectionPrivilege_shouldFail(UpdateFeedbackResponseCommentActionTest updateFeedbackResponseCommentActionTest) throws Exception {
+	    String[] submissionParams = updateFeedbackResponseCommentActionTest.getSubmissionParamsForCrossSectionResponseComment();
+	
+	    InstructorAttributes instructor = updateFeedbackResponseCommentActionTest.helperOfCourse1;
+	    InstructorPrivileges instructorPrivileges = new InstructorPrivileges();
+	    instructorPrivileges.updatePrivilege("Section A",
+	            InstructorPermissions.CAN_MODIFY_SESSION_COMMENT_IN_SECTIONS, true);
+	
+	    updateFeedbackResponseCommentActionTest.logic.updateInstructor(InstructorAttributes.updateOptionsWithEmailBuilder(updateFeedbackResponseCommentActionTest.course.getId(), instructor.getEmail())
+	            .withPrivileges(instructorPrivileges).build());
+	
+	    updateFeedbackResponseCommentActionTest.loginAsInstructor(instructor.getGoogleId());
+	    updateFeedbackResponseCommentActionTest.verifyCannotAccess(submissionParams);
+	
+	    instructorPrivileges.updatePrivilege("Section A",
+	            InstructorPermissions.CAN_MODIFY_SESSION_COMMENT_IN_SECTIONS, false);
+	    instructorPrivileges.updatePrivilege("Section B",
+	            InstructorPermissions.CAN_MODIFY_SESSION_COMMENT_IN_SECTIONS, true);
+	    updateFeedbackResponseCommentActionTest.logic.updateInstructor(InstructorAttributes.updateOptionsWithEmailBuilder(updateFeedbackResponseCommentActionTest.course.getId(), instructor.getEmail())
+	            .withPrivileges(instructorPrivileges).build());
+	
+	    updateFeedbackResponseCommentActionTest.verifyCannotAccess(submissionParams);
+	}
+
+	@Test
+	public void testAccessControl_instructorsWithCorrectPrivilege_shouldPass(UpdateFeedbackResponseCommentActionTest updateFeedbackResponseCommentActionTest) throws Exception {
+	    String[] submissionParams = updateFeedbackResponseCommentActionTest.getSubmissionParamsForCrossSectionResponseComment();
+	
+	    updateFeedbackResponseCommentActionTest.verifyInaccessibleWithoutLogin(submissionParams);
+	    updateFeedbackResponseCommentActionTest.verifyInaccessibleForUnregisteredUsers(submissionParams);
+	    updateFeedbackResponseCommentActionTest.verifyInaccessibleForStudents(submissionParams);
+	
+	    InstructorAttributes instructor = updateFeedbackResponseCommentActionTest.helperOfCourse1;
+	    InstructorPrivileges instructorPrivileges = new InstructorPrivileges();
+	    instructorPrivileges.updatePrivilege("Section A",
+	            InstructorPermissions.CAN_MODIFY_SESSION_COMMENT_IN_SECTIONS, true);
+	    instructorPrivileges.updatePrivilege("Section B",
+	            InstructorPermissions.CAN_MODIFY_SESSION_COMMENT_IN_SECTIONS, true);
+	
+	    updateFeedbackResponseCommentActionTest.logic.updateInstructor(InstructorAttributes.updateOptionsWithEmailBuilder(updateFeedbackResponseCommentActionTest.course.getId(), instructor.getEmail())
+	            .withPrivileges(instructorPrivileges).build());
+	
+	    updateFeedbackResponseCommentActionTest.loginAsInstructor(instructor.getGoogleId());
+	    updateFeedbackResponseCommentActionTest.verifyCanAccess(submissionParams);
+	    updateFeedbackResponseCommentActionTest.verifyCanMasquerade(instructor.getGoogleId(), submissionParams);
+	}
+
+	/**
      * Returns a {@link UpdateOptions.Builder} to build {@link UpdateOptions} for a comment.
      */
     public static UpdateOptions.Builder updateOptionsBuilder(long feedbackResponseCommentId) {

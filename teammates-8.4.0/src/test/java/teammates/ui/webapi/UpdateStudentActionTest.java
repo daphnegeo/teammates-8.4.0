@@ -1,7 +1,5 @@
 package teammates.ui.webapi;
 
-import java.util.List;
-
 import org.testng.annotations.Test;
 
 import teammates.common.datatransfer.attributes.InstructorAttributes;
@@ -190,57 +188,13 @@ public class UpdateStudentActionTest extends BaseActionTest<UpdateStudentAction>
         verifyNoTasksAdded();
     }
 
-    @Test
-    public void testExecute_withSectionAlreadyHasMaxNumberOfStudents_shouldFail() throws Exception {
-        InstructorAttributes instructor1OfCourse1 = typicalBundle.instructors.get("instructor1OfCourse1");
-        String courseId = instructor1OfCourse1.getCourseId();
-        String sectionInMaxCapacity = "sectionInMaxCapacity";
-
-        StudentAttributes studentToJoinMaxSection = StudentAttributes
-                .builder(courseId, "studentToJoinMaxSection@test.com")
-                .withName("studentToJoinMaxSection ")
-                .withSectionName("RandomUniqueSection")
-                .withTeamName("RandomUniqueTeamName")
-                .withComment("cmt")
-                .build();
-
-        logic.createStudent(studentToJoinMaxSection);
-
-        for (int i = 0; i < Const.SECTION_SIZE_LIMIT; i++) {
-            StudentAttributes addedStudent = StudentAttributes
-                    .builder(courseId, i + "email@test.com")
-                    .withName("Name " + i)
-                    .withSectionName(sectionInMaxCapacity)
-                    .withTeamName("Team " + i)
-                    .withComment("cmt" + i)
-                    .build();
-
-            logic.createStudent(addedStudent);
-        }
-
-        List<StudentAttributes> studentList = logic.getStudentsForCourse(courseId);
-
-        assertEquals(Const.SECTION_SIZE_LIMIT,
-                studentList.stream().filter(student -> student.getSection().equals(sectionInMaxCapacity)).count());
-        assertEquals(courseId, studentToJoinMaxSection.getCourse());
-
-        StudentUpdateRequest updateRequest =
-                new StudentUpdateRequest(studentToJoinMaxSection.getName(), studentToJoinMaxSection.getEmail(),
-                        studentToJoinMaxSection.getTeam(), sectionInMaxCapacity,
-                        studentToJoinMaxSection.getComments(), true);
-
-        String[] submissionParams = new String[] {
-                Const.ParamsNames.COURSE_ID, instructor1OfCourse1.getCourseId(),
-                Const.ParamsNames.STUDENT_EMAIL, studentToJoinMaxSection.getEmail(),
-        };
-
-        InvalidOperationException ioe = verifyInvalidOperation(updateRequest, submissionParams);
-        assertEquals("You are trying enroll more than 100 students in section \"sectionInMaxCapacity\". "
-                        + "To avoid performance problems, please do not enroll more than 100 students in a single section.",
-                ioe.getMessage());
-
-        verifyNoTasksAdded();
-    }
+    /**
+	 * @deprecated Use {@link teammates.common.datatransfer.DataBundle#testExecute_withSectionAlreadyHasMaxNumberOfStudents_shouldFail(teammates.ui.webapi.UpdateStudentActionTest)} instead
+	 */
+	@Test
+	public void testExecute_withSectionAlreadyHasMaxNumberOfStudents_shouldFail() throws Exception {
+		typicalBundle.testExecute_withSectionAlreadyHasMaxNumberOfStudents_shouldFail(this);
+	}
 
     @Test
     public void testExecute_withEmptySectionName_shouldBeUpdatedWithDefaultSectionName() {

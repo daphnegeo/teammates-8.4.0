@@ -2,7 +2,6 @@ package teammates.ui.webapi;
 
 import org.testng.annotations.Test;
 
-import teammates.common.datatransfer.attributes.CourseAttributes;
 import teammates.common.datatransfer.attributes.FeedbackSessionAttributes;
 import teammates.common.datatransfer.attributes.InstructorAttributes;
 import teammates.common.util.Const;
@@ -10,7 +9,6 @@ import teammates.ui.output.FeedbackSessionData;
 import teammates.ui.output.ResponseVisibleSetting;
 import teammates.ui.output.SessionVisibleSetting;
 import teammates.ui.request.FeedbackSessionUpdateRequest;
-import teammates.ui.request.InvalidHttpRequestBodyException;
 
 /**
  * SUT: {@link UpdateFeedbackSessionAction}.
@@ -96,78 +94,24 @@ public class UpdateFeedbackSessionActionTest extends BaseActionTest<UpdateFeedba
         assertNull(response.getDeletedAtTimestamp());
     }
 
-    @Test
-    public void testExecute_startTimeEarlierThanVisibleTime_shouldGiveInvalidParametersError() {
-        InstructorAttributes instructor1ofCourse1 = typicalBundle.instructors.get("instructor1OfCourse1");
-        FeedbackSessionAttributes session = typicalBundle.feedbackSessions.get("session1InCourse1");
+    /**
+	 * @deprecated Use {@link teammates.common.datatransfer.DataBundle#testExecute_startTimeEarlierThanVisibleTime_shouldGiveInvalidParametersError(teammates.ui.webapi.UpdateFeedbackSessionActionTest)} instead
+	 */
+	@Test
+	public void testExecute_startTimeEarlierThanVisibleTime_shouldGiveInvalidParametersError() {
+		typicalBundle.testExecute_startTimeEarlierThanVisibleTime_shouldGiveInvalidParametersError(this);
+	}
 
-        loginAsInstructor(instructor1ofCourse1.getGoogleId());
-
-        String[] param = new String[] {
-                Const.ParamsNames.COURSE_ID, session.getCourseId(),
-                Const.ParamsNames.FEEDBACK_SESSION_NAME, session.getFeedbackSessionName(),
-        };
-        FeedbackSessionUpdateRequest updateRequest = getTypicalFeedbackSessionUpdateRequest();
-        updateRequest.setCustomSessionVisibleTimestamp(
-                updateRequest.getSubmissionStartTime().plusSeconds(10).toEpochMilli());
-
-        InvalidHttpRequestBodyException ihrbe = verifyHttpRequestBodyFailure(updateRequest, param);
-        assertEquals("The start time for this feedback session cannot be "
-                + "earlier than the time when the session will be visible.", ihrbe.getMessage());
-    }
-
-    @Test
-    public void testExecute_differentFeedbackSessionVisibleResponseVisibleSetting_shouldConvertToSpecialTime()
-            throws Exception {
-        InstructorAttributes instructor1ofCourse1 = typicalBundle.instructors.get("instructor1OfCourse1");
-        FeedbackSessionAttributes session = typicalBundle.feedbackSessions.get("session1InCourse1");
-        CourseAttributes course = typicalBundle.courses.get("typicalCourse1");
-
-        loginAsInstructor(instructor1ofCourse1.getGoogleId());
-
-        ______TS("success: Custom time zone, At open show session, 'later' show results");
-
-        logic.updateCourseCascade(
-                CourseAttributes.updateOptionsBuilder(course.getId())
-                        .withTimezone("Asia/Kathmandu")
-                        .build());
-
-        String[] param = new String[] {
-                Const.ParamsNames.COURSE_ID, session.getCourseId(),
-                Const.ParamsNames.FEEDBACK_SESSION_NAME, session.getFeedbackSessionName(),
-        };
-        FeedbackSessionUpdateRequest updateRequest = getTypicalFeedbackSessionUpdateRequest();
-        updateRequest.setSessionVisibleSetting(SessionVisibleSetting.AT_OPEN);
-        updateRequest.setResponseVisibleSetting(ResponseVisibleSetting.LATER);
-
-        UpdateFeedbackSessionAction a = getAction(updateRequest, param);
-        getJsonResult(a);
-
-        session = logic.getFeedbackSession(session.getFeedbackSessionName(), session.getCourseId());
-        assertEquals(Const.TIME_REPRESENTS_FOLLOW_OPENING, session.getSessionVisibleFromTime());
-        assertEquals(Const.TIME_REPRESENTS_LATER, session.getResultsVisibleFromTime());
-
-        ______TS("success: At open session visible time, custom results visible time, UTC");
-
-        logic.updateCourseCascade(
-                CourseAttributes.updateOptionsBuilder(course.getId())
-                        .withTimezone("UTC")
-                        .build());
-
-        param = new String[] {
-                Const.ParamsNames.COURSE_ID, session.getCourseId(),
-                Const.ParamsNames.FEEDBACK_SESSION_NAME, session.getFeedbackSessionName(),
-        };
-        updateRequest = getTypicalFeedbackSessionUpdateRequest();
-        updateRequest.setSessionVisibleSetting(SessionVisibleSetting.AT_OPEN);
-
-        a = getAction(updateRequest, param);
-        getJsonResult(a);
-
-        session = logic.getFeedbackSession(session.getFeedbackSessionName(), session.getCourseId());
-        assertEquals(Const.TIME_REPRESENTS_FOLLOW_OPENING, session.getSessionVisibleFromTime());
-        assertEquals(1547003051000L, session.getResultsVisibleFromTime().toEpochMilli());
-    }
+    /**
+	 * @deprecated Use {@link teammates.common.datatransfer.DataBundle#testExecute_differentFeedbackSessionVisibleResponseVisibleSetting_shouldConvertToSpecialTime(teammates.ui.webapi.UpdateFeedbackSessionActionTest)} instead
+	 */
+	@Test
+	public void testExecute_differentFeedbackSessionVisibleResponseVisibleSetting_shouldConvertToSpecialTime()
+	        throws Exception {
+				typicalBundle
+						.testExecute_differentFeedbackSessionVisibleResponseVisibleSetting_shouldConvertToSpecialTime(
+								this);
+			}
 
     @Test
     public void testExecute_masqueradeModeWithManualReleaseResult_shouldEditSessionSuccessfully() {

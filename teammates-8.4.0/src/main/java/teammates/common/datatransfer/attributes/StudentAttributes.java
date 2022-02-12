@@ -6,11 +6,21 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 
+import teammates.common.datatransfer.questions.FeedbackRubricResponseDetails;
+import teammates.common.util.AppUrl;
 import teammates.common.util.Config;
 import teammates.common.util.Const;
+import teammates.common.util.Const.EntityType;
+import teammates.common.util.Const.WebPageURIs;
 import teammates.common.util.FieldValidator;
 import teammates.common.util.SanitizationHelper;
+import teammates.e2e.cases.BaseE2ETestCase;
+import teammates.e2e.cases.FeedbackRubricQuestionE2ETest;
+import teammates.e2e.cases.StudentCourseJoinConfirmationPageE2ETest;
+import teammates.e2e.pageobjects.CourseJoinConfirmationPage;
+import teammates.e2e.pageobjects.StudentHomePage;
 import teammates.storage.entity.CourseStudent;
+import teammates.test.BaseTestCase;
 
 /**
  * The data transfer object for {@link CourseStudent} entities.
@@ -287,7 +297,45 @@ public class StudentAttributes extends EntityAttributes<CourseStudent> {
         updateOptions.sectionNameOption.ifPresent(s -> section = s);
     }
 
-    /**
+    public FeedbackResponseAttributes getResponse(String questionId, FeedbackRubricQuestionE2ETest feedbackRubricQuestionE2ETest, List<Integer> answers) {
+	    FeedbackRubricResponseDetails details = new FeedbackRubricResponseDetails();
+	    details.setAnswer(answers);
+	    return FeedbackResponseAttributes.builder(questionId, feedbackRubricQuestionE2ETest.student.getEmail(), getEmail())
+	            .withResponseDetails(details)
+	            .build();
+	}
+
+	@Test
+	public void testAll(StudentCourseJoinConfirmationPageE2ETest studentCourseJoinConfirmationPageE2ETest) {
+	    BaseTestCase.______TS("Click join link: invalid key");
+	    String courseId = studentCourseJoinConfirmationPageE2ETest.testData.courses.get("SCJoinConf.CS2104").getId();
+	    String invalidKey = "invalidKey";
+	    AppUrl joinLink = BaseE2ETestCase.createUrl(WebPageURIs.JOIN_PAGE)
+	            .withRegistrationKey(invalidKey)
+	            .withCourseId(courseId)
+	            .withEntityType(EntityType.STUDENT);
+	    CourseJoinConfirmationPage confirmationPage = studentCourseJoinConfirmationPageE2ETest.loginToPage(
+	            joinLink, CourseJoinConfirmationPage.class, getGoogleId());
+	
+	    confirmationPage.verifyDisplayedMessage("The course join link is invalid. You may have "
+	            + "entered the URL incorrectly or the URL may correspond to a/an student that does not exist.");
+	
+	    BaseTestCase.______TS("Click join link: valid key");
+	    joinLink = BaseE2ETestCase.createUrl(WebPageURIs.JOIN_PAGE)
+	            .withRegistrationKey(studentCourseJoinConfirmationPageE2ETest.getKeyForStudent(this))
+	            .withCourseId(courseId)
+	            .withEntityType(EntityType.STUDENT);
+	    confirmationPage = studentCourseJoinConfirmationPageE2ETest.getNewPageInstance(joinLink, CourseJoinConfirmationPage.class);
+	
+	    confirmationPage.verifyJoiningUser(getGoogleId());
+	    confirmationPage.confirmJoinCourse(StudentHomePage.class);
+	
+	    BaseTestCase.______TS("Already joined, no confirmation page");
+	
+	    studentCourseJoinConfirmationPageE2ETest.getNewPageInstance(joinLink, StudentHomePage.class);
+	}
+
+	/**
      * Returns a {@link UpdateOptions.Builder} to build {@link UpdateOptions} for a student.
      */
     public static UpdateOptions.Builder updateOptionsBuilder(String courseId, String email) {

@@ -5,7 +5,6 @@ import java.util.Arrays;
 
 import org.testng.annotations.Test;
 
-import teammates.common.datatransfer.DataBundle;
 import teammates.common.datatransfer.FeedbackParticipantType;
 import teammates.common.datatransfer.attributes.FeedbackQuestionAttributes;
 import teammates.common.datatransfer.attributes.FeedbackSessionAttributes;
@@ -186,121 +185,38 @@ public class UpdateFeedbackQuestionActionTest extends BaseActionTest<UpdateFeedb
         assertEquals(Arrays.asList(FeedbackParticipantType.RECEIVER), typicalQuestion.getShowRecipientNameTo());
     }
 
-    @Test
-    public void testExecute_editingContributionTypeQuestion_shouldUpdateSuccessfully() {
-        DataBundle dataBundle = loadDataBundle("/FeedbackSessionQuestionTypeTest.json");
-        removeAndRestoreDataBundle(dataBundle);
+    /**
+	 * @deprecated Use {@link teammates.logic.api.LogicExtension#testExecute_editingContributionTypeQuestion_shouldUpdateSuccessfully(teammates.ui.webapi.UpdateFeedbackQuestionActionTest)} instead
+	 */
+	@Test
+	public void testExecute_editingContributionTypeQuestion_shouldUpdateSuccessfully() {
+		logic.testExecute_editingContributionTypeQuestion_shouldUpdateSuccessfully(this);
+	}
 
-        InstructorAttributes instructor1ofCourse1 = dataBundle.instructors.get("instructor1OfCourse1");
-
-        loginAsInstructor(instructor1ofCourse1.getGoogleId());
-
-        FeedbackSessionAttributes fs = dataBundle.feedbackSessions.get("contribSession");
-        FeedbackQuestionAttributes fq =
-                logic.getFeedbackQuestion(fs.getFeedbackSessionName(), fs.getCourseId(), 1);
-
-        ______TS("Edit text won't delete response");
-
-        // There are already responses for this question
-        assertFalse(logic.getFeedbackResponsesForQuestion(fq.getId()).isEmpty());
-
-        FeedbackQuestionUpdateRequest updateRequest = getTypicalContributionQuestionUpdateRequest();
-        updateRequest.setQuestionNumber(fq.getQuestionNumber());
-        updateRequest.setGiverType(fq.getGiverType());
-        updateRequest.setRecipientType(fq.getRecipientType());
-        updateRequest.setQuestionDetails(fq.getQuestionDetailsCopy());
-
-        String[] param = new String[] {
-                Const.ParamsNames.FEEDBACK_QUESTION_ID, fq.getFeedbackQuestionId(),
-        };
-        UpdateFeedbackQuestionAction a = getAction(updateRequest, param);
-        getJsonResult(a);
-
-        // All existing responses should remain
-        assertFalse(logic.getFeedbackResponsesForQuestion(fq.getId()).isEmpty());
-
-        ______TS("Edit: Invalid recipient type");
-
-        FeedbackQuestionUpdateRequest request = getTypicalContributionQuestionUpdateRequest();
-        request.setQuestionNumber(fq.getQuestionNumber());
-        request.setRecipientType(FeedbackParticipantType.STUDENTS);
-        verifyHttpRequestBodyFailure(request, param);
-    }
-
-    @Test
-    public void testExecute_invalidQuestionNumber_shouldThrowException() {
-        InstructorAttributes instructor1ofCourse1 = typicalBundle.instructors.get("instructor1OfCourse1");
-        FeedbackSessionAttributes session = typicalBundle.feedbackSessions.get("session1InCourse1");
-        FeedbackQuestionAttributes typicalQuestion =
-                logic.getFeedbackQuestion(session.getFeedbackSessionName(), session.getCourseId(), 1);
-
-        loginAsInstructor(instructor1ofCourse1.getGoogleId());
-
-        String[] param = new String[] {
-                Const.ParamsNames.FEEDBACK_QUESTION_ID, typicalQuestion.getFeedbackQuestionId(),
-        };
-        FeedbackQuestionUpdateRequest updateRequest = getTypicalTextQuestionUpdateRequest();
-        updateRequest.setQuestionNumber(-1);
-
-        verifyHttpRequestBodyFailure(updateRequest, param);
-
-        // question is not updated
-        assertEquals(typicalQuestion.getQuestionDescription(),
-                logic.getFeedbackQuestion(typicalQuestion.getId()).getQuestionDescription());
-    }
+    /**
+	 * @deprecated Use {@link teammates.common.datatransfer.DataBundle#testExecute_invalidQuestionNumber_shouldThrowException(teammates.ui.webapi.UpdateFeedbackQuestionActionTest)} instead
+	 */
+	@Test
+	public void testExecute_invalidQuestionNumber_shouldThrowException() {
+		typicalBundle.testExecute_invalidQuestionNumber_shouldThrowException(this);
+	}
 
     // TODO: ADD this test case in FeedbackTextQuestionDetailsTest
-    @Test
-    public void testExecute_invalidRecommendedLength_shouldThrowException() {
-        InstructorAttributes instructor1ofCourse1 = typicalBundle.instructors.get("instructor1OfCourse1");
-        FeedbackSessionAttributes session = typicalBundle.feedbackSessions.get("session1InCourse1");
-        FeedbackQuestionAttributes typicalQuestion =
-                logic.getFeedbackQuestion(session.getFeedbackSessionName(), session.getCourseId(), 1);
+	/**
+	 * @deprecated Use {@link teammates.common.datatransfer.DataBundle#testExecute_invalidRecommendedLength_shouldThrowException(teammates.ui.webapi.UpdateFeedbackQuestionActionTest)} instead
+	 */
+	@Test
+	public void testExecute_invalidRecommendedLength_shouldThrowException() {
+		typicalBundle.testExecute_invalidRecommendedLength_shouldThrowException(this);
+	}
 
-        loginAsInstructor(instructor1ofCourse1.getGoogleId());
-
-        String[] param = new String[] {
-                Const.ParamsNames.FEEDBACK_QUESTION_ID, typicalQuestion.getFeedbackQuestionId(),
-        };
-
-        FeedbackQuestionUpdateRequest updateRequest = getTypicalTextQuestionUpdateRequest();
-        FeedbackTextQuestionDetails textQuestionDetails = new FeedbackTextQuestionDetails();
-        // set recommended length as a negative integer
-        textQuestionDetails.setRecommendedLength(-1);
-        updateRequest.setQuestionDetails(textQuestionDetails);
-
-        verifyHttpRequestBodyFailure(updateRequest, param);
-
-        // question is not updated
-        assertEquals(typicalQuestion.getQuestionDescription(),
-                logic.getFeedbackQuestion(typicalQuestion.getId()).getQuestionDescription());
-
-        // recommended length does not change
-        assertNull(((FeedbackTextQuestionDetails) typicalQuestion.getQuestionDetailsCopy()).getRecommendedLength());
-    }
-
-    @Test
-    public void testExecute_invalidGiverRecipientType_shouldThrowException() {
-        InstructorAttributes instructor1ofCourse1 = typicalBundle.instructors.get("instructor1OfCourse1");
-        FeedbackSessionAttributes session = typicalBundle.feedbackSessions.get("session1InCourse1");
-        FeedbackQuestionAttributes typicalQuestion =
-                logic.getFeedbackQuestion(session.getFeedbackSessionName(), session.getCourseId(), 1);
-
-        loginAsInstructor(instructor1ofCourse1.getGoogleId());
-
-        String[] param = new String[] {
-                Const.ParamsNames.FEEDBACK_QUESTION_ID, typicalQuestion.getFeedbackQuestionId(),
-        };
-        FeedbackQuestionUpdateRequest updateRequest = getTypicalTextQuestionUpdateRequest();
-        updateRequest.setGiverType(FeedbackParticipantType.TEAMS);
-        updateRequest.setRecipientType(FeedbackParticipantType.OWN_TEAM_MEMBERS);
-
-        verifyHttpRequestBodyFailure(updateRequest, param);
-
-        // question is not updated
-        assertEquals(typicalQuestion.getQuestionDescription(),
-                logic.getFeedbackQuestion(typicalQuestion.getId()).getQuestionDescription());
-    }
+    /**
+	 * @deprecated Use {@link teammates.common.datatransfer.DataBundle#testExecute_invalidGiverRecipientType_shouldThrowException(teammates.ui.webapi.UpdateFeedbackQuestionActionTest)} instead
+	 */
+	@Test
+	public void testExecute_invalidGiverRecipientType_shouldThrowException() {
+		typicalBundle.testExecute_invalidGiverRecipientType_shouldThrowException(this);
+	}
 
     @Test
     public void testExecute_differentScenarios_shouldUpdateResponseRateCorrectly() {
