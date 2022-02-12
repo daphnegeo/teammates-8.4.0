@@ -106,25 +106,45 @@ public class StudentsDbTest extends BaseTestCaseWithLocalDatabaseAccess {
     @Test
     public void testGetStudent() throws Exception {
 
-        StudentAttributes s = createNewStudent();
-        s.setGoogleId("validGoogleId");
-        s.setTeam("validTeam");
-        studentsDb.updateStudent(
-                StudentAttributes.updateOptionsBuilder(s.getCourse(), s.getEmail())
-                        .withGoogleId(s.getGoogleId())
-                        .withTeamName(s.getTeam())
-                        .build());
+        StudentAttributes s = updatestudent();
 
         ______TS("typical success case for getStudentForRegistrationKey: existing student");
-        StudentAttributes retrieved = studentsDb.getStudentForEmail(s.getCourse(), s.getEmail());
-        assertNotNull(retrieved);
-        assertNotNull(studentsDb.getStudentForRegistrationKey(retrieved.getKey()));
-
-        assertNull(studentsDb.getStudentForRegistrationKey(StringHelper.encrypt("notExistingKey")));
+        StudentAttributes retrieved;
+		existingstudent(s);
 
         ______TS("non existant student case");
 
-        retrieved = studentsDb.getStudentForEmail("any-course-id", "non-existent@email.com");
+        StudentAttributes s2 = nonexistantstudentcase(s);
+
+        ______TS("null params case");
+        nullparamscase(s, s2);
+    }
+
+	/**
+	 * @param s
+	 * @param s2
+	 */
+	private void nullparamscase(StudentAttributes s, StudentAttributes s2) {
+		assertThrows(AssertionError.class, () -> studentsDb.getStudentForEmail(null, "valid@email.com"));
+
+        assertThrows(AssertionError.class, () -> studentsDb.getStudentForEmail("any-course-id", null));
+
+        studentsDb.deleteStudent(s.getCourse(), s.getEmail());
+        studentsDb.deleteStudent(s2.getCourse(), s2.getEmail());
+	}
+
+	/**
+	 * @param s
+	 * @return
+	 * @throws Exception
+	 * @throws EntityDoesNotExistException
+	 * @throws InvalidParametersException
+	 * @throws EntityAlreadyExistsException
+	 */
+	private StudentAttributes nonexistantstudentcase(StudentAttributes s)
+			throws Exception, EntityDoesNotExistException, InvalidParametersException, EntityAlreadyExistsException {
+		StudentAttributes retrieved;
+		retrieved = studentsDb.getStudentForEmail("any-course-id", "non-existent@email.com");
         assertNull(retrieved);
 
         StudentAttributes s2 = createNewStudent("one.new@gmail.com");
@@ -145,15 +165,39 @@ public class StudentsDbTest extends BaseTestCaseWithLocalDatabaseAccess {
         assertTrue(isEnrollInfoSameAs(studentsDb.getStudentsForCourse(s.getCourse()).get(0), s)
                 || isEnrollInfoSameAs(studentsDb.getStudentsForCourse(s.getCourse()).get(0), s2));
         assertTrue(isEnrollInfoSameAs(studentsDb.getStudentsForTeam(s.getTeam(), s.getCourse()).get(0), s));
+		return s2;
+	}
 
-        ______TS("null params case");
-        assertThrows(AssertionError.class, () -> studentsDb.getStudentForEmail(null, "valid@email.com"));
+	/**
+	 * @param s
+	 */
+	private void existingstudent(StudentAttributes s) {
+		StudentAttributes retrieved = studentsDb.getStudentForEmail(s.getCourse(), s.getEmail());
+        assertNotNull(retrieved);
+        assertNotNull(studentsDb.getStudentForRegistrationKey(retrieved.getKey()));
 
-        assertThrows(AssertionError.class, () -> studentsDb.getStudentForEmail("any-course-id", null));
+        assertNull(studentsDb.getStudentForRegistrationKey(StringHelper.encrypt("notExistingKey")));
+	}
 
-        studentsDb.deleteStudent(s.getCourse(), s.getEmail());
-        studentsDb.deleteStudent(s2.getCourse(), s2.getEmail());
-    }
+	/**
+	 * @return
+	 * @throws Exception
+	 * @throws EntityDoesNotExistException
+	 * @throws InvalidParametersException
+	 * @throws EntityAlreadyExistsException
+	 */
+	private StudentAttributes updatestudent()
+			throws Exception, EntityDoesNotExistException, InvalidParametersException, EntityAlreadyExistsException {
+		StudentAttributes s = createNewStudent();
+        s.setGoogleId("validGoogleId");
+        s.setTeam("validTeam");
+        studentsDb.updateStudent(
+                StudentAttributes.updateOptionsBuilder(s.getCourse(), s.getEmail())
+                        .withGoogleId(s.getGoogleId())
+                        .withTeamName(s.getTeam())
+                        .build());
+		return s;
+	}
 
     @Test
     public void testUpdateStudent_noChangeToStudent_shouldNotIssueSaveRequest() throws Exception {

@@ -219,38 +219,19 @@ public class GetFeedbackSessionsActionTest extends BaseActionTest<GetFeedbackSes
         loginAsStudent(student1InCourse1.getGoogleId());
 
         ______TS("student can access");
-        String[] studentEntityParam = {
-                Const.ParamsNames.ENTITY_TYPE, Const.EntityType.STUDENT,
-        };
-        verifyCanAccess(studentEntityParam);
+        String[] studentEntityParam = studentcanaccess();
 
         ______TS("student of the same course can access");
-        loginAsStudent(student1InCourse2.getGoogleId());
-        String[] courseParam = {
-                Const.ParamsNames.COURSE_ID, student1InCourse2.getCourse(),
-                Const.ParamsNames.ENTITY_TYPE, Const.EntityType.STUDENT,
-        };
-        verifyCanAccess(courseParam);
+        String[] courseParam = studentofthesaemcoursecanaccess(student1InCourse2);
 
         ______TS("Student of another course cannot access");
-        loginAsStudent(student1InCourse1.getGoogleId());
-        verifyCannotAccess(courseParam);
+        studentofanothercoursecannotaccess(student1InCourse1, courseParam);
 
         ______TS("instructor can access");
-        loginAsInstructor(instructor1OfCourse2.getGoogleId());
-
-        String[] instructorParam = {
-                Const.ParamsNames.ENTITY_TYPE, Const.EntityType.INSTRUCTOR,
-        };
-
-        verifyCanAccess(instructorParam);
+        instructorcanaccess(instructor1OfCourse2);
 
         ______TS("instructor of the same course can access");
-        String[] instructorAndCourseIdParam = {
-                Const.ParamsNames.COURSE_ID, student1InCourse2.getCourse(),
-                Const.ParamsNames.ENTITY_TYPE, Const.EntityType.INSTRUCTOR,
-        };
-        verifyCanAccess(instructorAndCourseIdParam);
+        String[] instructorAndCourseIdParam = instructorofthesamecoursecanaccess(student1InCourse2);
 
         ______TS("instructor of another course cannot access");
         loginAsInstructor(instructor2OfCourse1.getGoogleId());
@@ -261,7 +242,17 @@ public class GetFeedbackSessionsActionTest extends BaseActionTest<GetFeedbackSes
         verifyCanAccess(studentEntityParam);
 
         ______TS("instructor as student can access for course");
-        loginAsStudentInstructor(instructor1OfCourse1.getGoogleId());
+        instructorasstudentcanaccessforacourse(instructor1OfCourse1, studentEntityParam, courseParam);
+    }
+
+	/**
+	 * @param instructor1OfCourse1
+	 * @param studentEntityParam
+	 * @param courseParam
+	 */
+	private void instructorasstudentcanaccessforacourse(InstructorAttributes instructor1OfCourse1,
+			String[] studentEntityParam, String[] courseParam) {
+		loginAsStudentInstructor(instructor1OfCourse1.getGoogleId());
         verifyCanAccess(courseParam);
 
         String[] adminEntityParam = {
@@ -271,7 +262,67 @@ public class GetFeedbackSessionsActionTest extends BaseActionTest<GetFeedbackSes
         verifyAccessibleForAdmin(adminEntityParam);
         verifyInaccessibleForUnregisteredUsers(studentEntityParam);
         verifyInaccessibleWithoutLogin();
-    }
+	}
+
+	/**
+	 * @param student1InCourse2
+	 * @return
+	 */
+	private String[] instructorofthesamecoursecanaccess(StudentAttributes student1InCourse2) {
+		String[] instructorAndCourseIdParam = {
+                Const.ParamsNames.COURSE_ID, student1InCourse2.getCourse(),
+                Const.ParamsNames.ENTITY_TYPE, Const.EntityType.INSTRUCTOR,
+        };
+        verifyCanAccess(instructorAndCourseIdParam);
+		return instructorAndCourseIdParam;
+	}
+
+	/**
+	 * @param instructor1OfCourse2
+	 */
+	private void instructorcanaccess(InstructorAttributes instructor1OfCourse2) {
+		loginAsInstructor(instructor1OfCourse2.getGoogleId());
+
+        String[] instructorParam = {
+                Const.ParamsNames.ENTITY_TYPE, Const.EntityType.INSTRUCTOR,
+        };
+
+        verifyCanAccess(instructorParam);
+	}
+
+	/**
+	 * @param student1InCourse1
+	 * @param courseParam
+	 */
+	private void studentofanothercoursecannotaccess(StudentAttributes student1InCourse1, String[] courseParam) {
+		loginAsStudent(student1InCourse1.getGoogleId());
+        verifyCannotAccess(courseParam);
+	}
+
+	/**
+	 * @param student1InCourse2
+	 * @return
+	 */
+	private String[] studentofthesaemcoursecanaccess(StudentAttributes student1InCourse2) {
+		loginAsStudent(student1InCourse2.getGoogleId());
+        String[] courseParam = {
+                Const.ParamsNames.COURSE_ID, student1InCourse2.getCourse(),
+                Const.ParamsNames.ENTITY_TYPE, Const.EntityType.STUDENT,
+        };
+        verifyCanAccess(courseParam);
+		return courseParam;
+	}
+
+	/**
+	 * @return
+	 */
+	private String[] studentcanaccess() {
+		String[] studentEntityParam = {
+                Const.ParamsNames.ENTITY_TYPE, Const.EntityType.STUDENT,
+        };
+        verifyCanAccess(studentEntityParam);
+		return studentEntityParam;
+	}
 
     private void assertInformationHiddenForStudent(FeedbackSessionData data) {
         assertNull(data.getGracePeriod());

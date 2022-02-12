@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 import com.google.api.gax.paging.Page;
 import com.google.appengine.logging.v1.LogLine;
 import com.google.appengine.logging.v1.RequestLog;
+import com.google.appengine.logging.v1.RequestLogOrBuilder;
 import com.google.appengine.logging.v1.SourceReference;
 import com.google.cloud.logging.LogEntry;
 import com.google.cloud.logging.Logging;
@@ -88,7 +89,7 @@ public class GoogleCloudLoggingService implements LogService {
 
                 RequestLog.Builder builder = RequestLog.newBuilder();
                 JsonFormat.parser().ignoringUnknownFields().usingTypeRegistry(tr).merge(logContentAsJson, builder);
-                RequestLog reconvertedLog = builder.build();
+                RequestLogOrBuilder reconvertedLog = builder.build();
 
                 logLines = reconvertedLog.getLineList();
             } catch (InvalidProtocolBufferException e) {

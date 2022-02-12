@@ -57,64 +57,36 @@ public class GetStudentActionTest extends BaseActionTest<GetStudentAction> {
 
         ______TS("Student - must be in the course");
 
-        String[] submissionParams = new String[] {
-                Const.ParamsNames.COURSE_ID, student1InCourse1.getCourse(),
-        };
-
-        verifyAccessibleForStudentsOfTheSameCourse(submissionParams);
-
-        submissionParams = new String[] {
-                Const.ParamsNames.COURSE_ID, student2InCourse2.getCourse(),
-        };
-
-        verifyInaccessibleForStudents(submissionParams);
+        String[] submissionParams;
+		mustbeincourse(student1InCourse1, student2InCourse2);
 
         ______TS("Student - cannot access another student's details");
 
-        submissionParams = new String[] {
-                Const.ParamsNames.COURSE_ID, student2InCourse2.getCourse(),
-                Const.ParamsNames.STUDENT_EMAIL, student2InCourse2.getEmail(),
-        };
-
-        verifyInaccessibleForStudents(submissionParams);
+        cannotaccessanotherstudent(student2InCourse2);
 
         ______TS("Student - cannot access a non-existent email");
 
-        submissionParams = new String[] {
-                Const.ParamsNames.COURSE_ID, student2InCourse2.getCourse(),
-                Const.ParamsNames.STUDENT_EMAIL, "TEST_EMAIL",
-        };
-
-        verifyInaccessibleForStudents(submissionParams);
+        cannotaccessnonexistent(student2InCourse2);
 
         ______TS("Instructor - must be in same course as student");
 
-        submissionParams = new String[] {
-                Const.ParamsNames.COURSE_ID, student1InCourse1.getCourse(),
-                Const.ParamsNames.STUDENT_EMAIL, student1InCourse1.getEmail(),
-        };
-        verifyInaccessibleForInstructorsOfOtherCourses(submissionParams);
-
-        InstructorAttributes helperOfCourse1 = typicalBundle.instructors.get("helperOfCourse1");
-        loginAsInstructor(helperOfCourse1.getGoogleId());
-        verifyCannotAccess(submissionParams);
-
-        grantInstructorWithSectionPrivilege(helperOfCourse1,
-                Const.InstructorPermissions.CAN_VIEW_STUDENT_IN_SECTIONS,
-                new String[] {"Section 1"});
-        verifyCanAccess(submissionParams);
+        mustbeinsamecourseasstudent(student1InCourse1);
 
         ______TS("Instructor - must provide student email");
 
-        submissionParams = new String[] {
-                Const.ParamsNames.COURSE_ID, student1InCourse1.getCourse(),
-        };
-
-        verifyInaccessibleForInstructors(submissionParams);
+        providestudentemail(student1InCourse1);
 
         ______TS("Unregistered Student - can access with key");
 
-        StudentAttributes unregStudent =
+        canaccesswithkey();
+    }
+
+	/**
+	 * 
+	 */
+	private void canaccesswithkey() {
+		String[] submissionParams;
+		StudentAttributes unregStudent =
                 logic.getStudentForEmail("idOfTypicalCourse1", "student1InCourse1@gmail.tmt");
 
         submissionParams = new String[] {
@@ -136,5 +108,83 @@ public class GetStudentActionTest extends BaseActionTest<GetStudentAction> {
         };
 
         verifyAccessibleForUnregisteredUsers(submissionParams);
-    }
+	}
+
+	/**
+	 * @param student1InCourse1
+	 */
+	private void providestudentemail(StudentAttributes student1InCourse1) {
+		String[] submissionParams;
+		submissionParams = new String[] {
+                Const.ParamsNames.COURSE_ID, student1InCourse1.getCourse(),
+        };
+
+        verifyInaccessibleForInstructors(submissionParams);
+	}
+
+	/**
+	 * @param student1InCourse1
+	 * @throws Exception
+	 */
+	private void mustbeinsamecourseasstudent(StudentAttributes student1InCourse1) throws Exception {
+		String[] submissionParams;
+		submissionParams = new String[] {
+                Const.ParamsNames.COURSE_ID, student1InCourse1.getCourse(),
+                Const.ParamsNames.STUDENT_EMAIL, student1InCourse1.getEmail(),
+        };
+        verifyInaccessibleForInstructorsOfOtherCourses(submissionParams);
+
+        InstructorAttributes helperOfCourse1 = typicalBundle.instructors.get("helperOfCourse1");
+        loginAsInstructor(helperOfCourse1.getGoogleId());
+        verifyCannotAccess(submissionParams);
+
+        grantInstructorWithSectionPrivilege(helperOfCourse1,
+                Const.InstructorPermissions.CAN_VIEW_STUDENT_IN_SECTIONS,
+                new String[] {"Section 1"});
+        verifyCanAccess(submissionParams);
+	}
+
+	/**
+	 * @param student2InCourse2
+	 */
+	private void cannotaccessnonexistent(StudentAttributes student2InCourse2) {
+		String[] submissionParams;
+		submissionParams = new String[] {
+                Const.ParamsNames.COURSE_ID, student2InCourse2.getCourse(),
+                Const.ParamsNames.STUDENT_EMAIL, "TEST_EMAIL",
+        };
+
+        verifyInaccessibleForStudents(submissionParams);
+	}
+
+	/**
+	 * @param student2InCourse2
+	 */
+	private void cannotaccessanotherstudent(StudentAttributes student2InCourse2) {
+		String[] submissionParams;
+		submissionParams = new String[] {
+                Const.ParamsNames.COURSE_ID, student2InCourse2.getCourse(),
+                Const.ParamsNames.STUDENT_EMAIL, student2InCourse2.getEmail(),
+        };
+
+        verifyInaccessibleForStudents(submissionParams);
+	}
+
+	/**
+	 * @param student1InCourse1
+	 * @param student2InCourse2
+	 */
+	private void mustbeincourse(StudentAttributes student1InCourse1, StudentAttributes student2InCourse2) {
+		String[] submissionParams = new String[] {
+                Const.ParamsNames.COURSE_ID, student1InCourse1.getCourse(),
+        };
+
+        verifyAccessibleForStudentsOfTheSameCourse(submissionParams);
+
+        submissionParams = new String[] {
+                Const.ParamsNames.COURSE_ID, student2InCourse2.getCourse(),
+        };
+
+        verifyInaccessibleForStudents(submissionParams);
+	}
 }

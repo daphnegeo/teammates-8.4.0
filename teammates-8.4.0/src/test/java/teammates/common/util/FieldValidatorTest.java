@@ -87,109 +87,198 @@ public class FieldValidatorTest extends BaseTestCase {
 
         ______TS("null value");
 
-        String typicalFieldName = "name field";
-        int typicalLength = 25;
-
-        assertThrows(AssertionError.class, () ->
-                FieldValidator.getValidityInfoForAllowedName(typicalFieldName, typicalLength, null));
+        String typicalFieldName = nullvalues();
 
         ______TS("typical success case");
 
-        int maxLength = 50;
-        assertEquals("valid: typical length with valid characters",
-                "",
-                FieldValidator.getValidityInfoForAllowedName(
-                        typicalFieldName,
-                        maxLength,
-                        "Ýàn-B. s/o O'br, &2\t\n(~!@#$^*+_={}[]\\:;\"<>?)"));
+        int maxLength = typicalsuccesscase(typicalFieldName);
 
         ______TS("failure: invalid characters");
 
-        String nameContainInvalidChars = "Dr. Amy-Bén s/o O'&|% 2\t\n (~!@#$^*+_={}[]\\:;\"<>?)";
-        assertEquals("invalid: typical length with invalid characters",
-                     "\"Dr. Amy-Bén s/o O'&|% 2\t\n (~!@#$^*+_={}[]\\:;\"<>?)\" is "
-                         + "not acceptable to TEAMMATES as a/an name field because it contains invalid "
-                         + "characters. A/An name field must start with an alphanumeric character, and cannot "
-                         + "contain any vertical bar (|) or percent sign (%).",
-                     FieldValidator.getValidityInfoForAllowedName(typicalFieldName, maxLength,
-                                                             nameContainInvalidChars));
+        invalidcharacters(typicalFieldName, maxLength);
 
         ______TS("failure: starts with non-alphanumeric character");
 
-        String nameStartedWithNonAlphaNumChar = "!Amy-Bén s/o O'&|% 2\t\n (~!@#$^*+_={}[]\\:;\"<>?)";
-        assertEquals("invalid: typical length with invalid characters",
-                     "\"!Amy-Bén s/o O'&|% 2\t\n (~!@#$^*+_={}[]\\:;\"<>?)\" is not "
-                         + "acceptable to TEAMMATES as a/an name field because it starts with a "
-                         + "non-alphanumeric character. A/An name field must start with an alphanumeric "
-                         + "character, and cannot contain any vertical bar (|) or percent sign (%).",
-                     FieldValidator.getValidityInfoForAllowedName(typicalFieldName, maxLength,
-                                                             nameStartedWithNonAlphaNumChar));
+        startswithnonalphanumeric(typicalFieldName, maxLength);
 
         ______TS("failure: starts with curly braces but contains invalid char");
 
-        String nameStartedWithBracesButHasInvalidChar = "{Amy} -Bén s/o O'&|% 2\t\n (~!@#$^*+_={}[]\\:;\"<>?)";
-        assertEquals("invalid: typical length with invalid characters",
-                     "\"{Amy} -Bén s/o O'&|% 2\t\n (~!@#$^*+_={}[]\\:;\"<>?)\" is not "
-                         + "acceptable to TEAMMATES as a/an name field because it contains invalid "
-                         + "characters. A/An name field must start with an alphanumeric character, and cannot "
-                         + "contain any vertical bar (|) or percent sign (%).",
-                     FieldValidator.getValidityInfoForAllowedName(typicalFieldName, maxLength,
-                                                             nameStartedWithBracesButHasInvalidChar));
+        curlybraces(typicalFieldName, maxLength);
 
         ______TS("failure: starts with opening curly bracket but dose not have closing bracket");
 
-        String nameStartedWithCurlyBracketButHasNoEnd = "{Amy -Bén s/o O'&|% 2\t\n (~!@#$^*+_={[]\\:;\"<>?)";
-        assertEquals("invalid: typical length started with non-alphanumeric character",
-                     "\"{Amy -Bén s/o O'&|% 2\t\n (~!@#$^*+_={[]\\:;\"<>?)\" is not "
-                         + "acceptable to TEAMMATES as a/an name field because it starts with a "
-                         + "non-alphanumeric character. A/An name field must start with an alphanumeric "
-                         + "character, and cannot contain any vertical bar (|) or percent sign (%).",
-                     FieldValidator.getValidityInfoForAllowedName(typicalFieldName, maxLength,
-                                                             nameStartedWithCurlyBracketButHasNoEnd));
+        openingcurlybracket(typicalFieldName, maxLength);
 
         ______TS("success: with opening and closing curly braces");
 
-        assertEquals("valid: max length",
-                "",
-                FieldValidator.getValidityInfoForAllowedName(
-                        typicalFieldName,
-                        maxLength,
-                        "{last name} first name"));
+        curlybracesopenclosing(typicalFieldName, maxLength);
 
         ______TS("success: max length");
 
-        assertEquals("valid: max length",
-                "",
-                FieldValidator.getValidityInfoForAllowedName(
-                        typicalFieldName,
-                        maxLength,
-                        StringHelperExtension.generateStringOfLength(maxLength)));
+        maxlength(typicalFieldName, maxLength);
 
         ______TS("failure: too long");
 
-        String tooLongName = StringHelperExtension.generateStringOfLength(maxLength + 1);
+        toolong(typicalFieldName, maxLength);
+
+        ______TS("failure: empty string");
+
+        emptystring(typicalFieldName, maxLength);
+
+        ______TS("failure: untrimmed value");
+
+        untrimmedvalue(typicalFieldName, maxLength);
+    }
+
+	/**
+	 * @param typicalFieldName
+	 * @param maxLength
+	 */
+	private void untrimmedvalue(String typicalFieldName, int maxLength) {
+		String untrimmedValue = " abc ";
+        assertEquals("invalid: untrimmed",
+                     "The provided name field is not acceptable to TEAMMATES as it contains only whitespace "
+                         + "or contains extra spaces at the beginning or at the end of the text.",
+                     FieldValidator.getValidityInfoForAllowedName(typicalFieldName, maxLength, untrimmedValue));
+	}
+
+	/**
+	 * @param typicalFieldName
+	 * @param maxLength
+	 */
+	private void emptystring(String typicalFieldName, int maxLength) {
+		String emptyValue = "";
+        assertEquals("invalid: empty",
+                     "The field 'name field' is empty. The value of a/an name field should be no longer "
+                         + "than 50 characters. It should not be empty.",
+                     FieldValidator.getValidityInfoForAllowedName(typicalFieldName, maxLength, emptyValue));
+	}
+
+	/**
+	 * @param typicalFieldName
+	 * @param maxLength
+	 */
+	private void toolong(String typicalFieldName, int maxLength) {
+		String tooLongName = StringHelperExtension.generateStringOfLength(maxLength + 1);
         assertEquals("invalid: too long",
                      "\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\" is not acceptable to TEAMMATES "
                          + "as a/an name field because it is too long. The value of a/an name field should "
                          + "be no longer than 50 characters. It should not be empty.",
                      FieldValidator.getValidityInfoForAllowedName(typicalFieldName, maxLength, tooLongName));
+	}
 
-        ______TS("failure: empty string");
+	/**
+	 * @param typicalFieldName
+	 * @param maxLength
+	 */
+	private void maxlength(String typicalFieldName, int maxLength) {
+		assertEquals("valid: max length",
+                "",
+                FieldValidator.getValidityInfoForAllowedName(
+                        typicalFieldName,
+                        maxLength,
+                        StringHelperExtension.generateStringOfLength(maxLength)));
+	}
 
-        String emptyValue = "";
-        assertEquals("invalid: empty",
-                     "The field 'name field' is empty. The value of a/an name field should be no longer "
-                         + "than 50 characters. It should not be empty.",
-                     FieldValidator.getValidityInfoForAllowedName(typicalFieldName, maxLength, emptyValue));
+	/**
+	 * @param typicalFieldName
+	 * @param maxLength
+	 */
+	private void curlybracesopenclosing(String typicalFieldName, int maxLength) {
+		assertEquals("valid: max length",
+                "",
+                FieldValidator.getValidityInfoForAllowedName(
+                        typicalFieldName,
+                        maxLength,
+                        "{last name} first name"));
+	}
 
-        ______TS("failure: untrimmed value");
+	/**
+	 * @param typicalFieldName
+	 * @param maxLength
+	 */
+	private void openingcurlybracket(String typicalFieldName, int maxLength) {
+		String nameStartedWithCurlyBracketButHasNoEnd = "{Amy -BÃ©n s/o O'&|% 2\t\n (~!@#$^*+_={[]\\:;\"<>?)";
+        assertEquals("invalid: typical length started with non-alphanumeric character",
+                     "\"{Amy -BÃ©n s/o O'&|% 2\t\n (~!@#$^*+_={[]\\:;\"<>?)\" is not "
+                         + "acceptable to TEAMMATES as a/an name field because it starts with a "
+                         + "non-alphanumeric character. A/An name field must start with an alphanumeric "
+                         + "character, and cannot contain any vertical bar (|) or percent sign (%).",
+                     FieldValidator.getValidityInfoForAllowedName(typicalFieldName, maxLength,
+                                                             nameStartedWithCurlyBracketButHasNoEnd));
+	}
 
-        String untrimmedValue = " abc ";
-        assertEquals("invalid: untrimmed",
-                     "The provided name field is not acceptable to TEAMMATES as it contains only whitespace "
-                         + "or contains extra spaces at the beginning or at the end of the text.",
-                     FieldValidator.getValidityInfoForAllowedName(typicalFieldName, maxLength, untrimmedValue));
-    }
+	/**
+	 * @param typicalFieldName
+	 * @param maxLength
+	 */
+	private void curlybraces(String typicalFieldName, int maxLength) {
+		String nameStartedWithBracesButHasInvalidChar = "{Amy} -BÃ©n s/o O'&|% 2\t\n (~!@#$^*+_={}[]\\:;\"<>?)";
+        assertEquals("invalid: typical length with invalid characters",
+                     "\"{Amy} -BÃ©n s/o O'&|% 2\t\n (~!@#$^*+_={}[]\\:;\"<>?)\" is not "
+                         + "acceptable to TEAMMATES as a/an name field because it contains invalid "
+                         + "characters. A/An name field must start with an alphanumeric character, and cannot "
+                         + "contain any vertical bar (|) or percent sign (%).",
+                     FieldValidator.getValidityInfoForAllowedName(typicalFieldName, maxLength,
+                                                             nameStartedWithBracesButHasInvalidChar));
+	}
+
+	/**
+	 * @param typicalFieldName
+	 * @param maxLength
+	 */
+	private void startswithnonalphanumeric(String typicalFieldName, int maxLength) {
+		String nameStartedWithNonAlphaNumChar = "!Amy-BÃ©n s/o O'&|% 2\t\n (~!@#$^*+_={}[]\\:;\"<>?)";
+        assertEquals("invalid: typical length with invalid characters",
+                     "\"!Amy-BÃ©n s/o O'&|% 2\t\n (~!@#$^*+_={}[]\\:;\"<>?)\" is not "
+                         + "acceptable to TEAMMATES as a/an name field because it starts with a "
+                         + "non-alphanumeric character. A/An name field must start with an alphanumeric "
+                         + "character, and cannot contain any vertical bar (|) or percent sign (%).",
+                     FieldValidator.getValidityInfoForAllowedName(typicalFieldName, maxLength,
+                                                             nameStartedWithNonAlphaNumChar));
+	}
+
+	/**
+	 * @param typicalFieldName
+	 * @param maxLength
+	 */
+	private void invalidcharacters(String typicalFieldName, int maxLength) {
+		String nameContainInvalidChars = "Dr. Amy-BÃ©n s/o O'&|% 2\t\n (~!@#$^*+_={}[]\\:;\"<>?)";
+        assertEquals("invalid: typical length with invalid characters",
+                     "\"Dr. Amy-BÃ©n s/o O'&|% 2\t\n (~!@#$^*+_={}[]\\:;\"<>?)\" is "
+                         + "not acceptable to TEAMMATES as a/an name field because it contains invalid "
+                         + "characters. A/An name field must start with an alphanumeric character, and cannot "
+                         + "contain any vertical bar (|) or percent sign (%).",
+                     FieldValidator.getValidityInfoForAllowedName(typicalFieldName, maxLength,
+                                                             nameContainInvalidChars));
+	}
+
+	/**
+	 * @param typicalFieldName
+	 * @return
+	 */
+	private int typicalsuccesscase(String typicalFieldName) {
+		int maxLength = 50;
+        assertEquals("valid: typical length with valid characters",
+                "",
+                FieldValidator.getValidityInfoForAllowedName(
+                        typicalFieldName,
+                        maxLength,
+                        "Ã�Ã n-B. s/o O'br, &2\t\n(~!@#$^*+_={}[]\\:;\"<>?)"));
+		return maxLength;
+	}
+
+	/**
+	 * @return
+	 */
+	private String nullvalues() {
+		String typicalFieldName = "name field";
+        int typicalLength = 25;
+
+        assertThrows(AssertionError.class, () ->
+                FieldValidator.getValidityInfoForAllowedName(typicalFieldName, typicalLength, null));
+		return typicalFieldName;
+	}
 
     @Test
     public void testGetInvalidityInfoForPersonName_invalid_returnSpecificErrorString() {
@@ -592,11 +681,11 @@ public class FieldValidatorTest extends BaseTestCase {
     @Test
     public void testRegexName() {
         ______TS("success: typical name");
-        String name = "Benny Charlés";
+        String name = "Benny CharlÃ©s";
         assertTrue(StringHelper.isMatching(name, FieldValidator.REGEX_NAME));
 
         ______TS("success: name begins with accented characters");
-        name = "Ýàn-B. s/o O'br, &2(~!@#$^*+_={}[]\\:;\"<>?)";
+        name = "Ã�Ã n-B. s/o O'br, &2(~!@#$^*+_={}[]\\:;\"<>?)";
         assertTrue(StringHelper.isMatching(name, FieldValidator.REGEX_NAME));
 
         ______TS("failure: name begins with non-alphanumeric character");

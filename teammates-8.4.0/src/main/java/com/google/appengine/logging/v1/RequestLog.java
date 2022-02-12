@@ -14,7 +14,7 @@ package com.google.appengine.logging.v1;
 public  final class RequestLog extends
     com.google.protobuf.GeneratedMessageV3 implements
     // @@protoc_insertion_point(message_implements:google.appengine.logging.v1.RequestLog)
-    RequestLogOrBuilder {
+    RequestLogOrBuilder, Case0, Case10 {
   // Use RequestLog.newBuilder() to construct.
   private RequestLog(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
     super(builder);
@@ -103,40 +103,19 @@ public  final class RequestLog extends
           }
           case 50: {
             com.google.protobuf.Timestamp.Builder subBuilder = null;
-            if (startTime_ != null) {
-              subBuilder = startTime_.toBuilder();
-            }
-            startTime_ = input.readMessage(com.google.protobuf.Timestamp.parser(), extensionRegistry);
-            if (subBuilder != null) {
-              subBuilder.mergeFrom(startTime_);
-              startTime_ = subBuilder.buildPartial();
-            }
+            starttimemethod(input, extensionRegistry, subBuilder);
 
             break;
           }
           case 58: {
             com.google.protobuf.Timestamp.Builder subBuilder = null;
-            if (endTime_ != null) {
-              subBuilder = endTime_.toBuilder();
-            }
-            endTime_ = input.readMessage(com.google.protobuf.Timestamp.parser(), extensionRegistry);
-            if (subBuilder != null) {
-              subBuilder.mergeFrom(endTime_);
-              endTime_ = subBuilder.buildPartial();
-            }
+            endtimemethod(input, extensionRegistry, subBuilder);
 
             break;
           }
           case 66: {
             com.google.protobuf.Duration.Builder subBuilder = null;
-            if (latency_ != null) {
-              subBuilder = latency_.toBuilder();
-            }
-            latency_ = input.readMessage(com.google.protobuf.Duration.parser(), extensionRegistry);
-            if (subBuilder != null) {
-              subBuilder.mergeFrom(latency_);
-              latency_ = subBuilder.buildPartial();
-            }
+            latencymethod(input, extensionRegistry, subBuilder);
 
             break;
           }
@@ -203,15 +182,11 @@ public  final class RequestLog extends
             break;
           }
           case 178: {
-            java.lang.String s = input.readStringRequireUtf8();
-
-            taskQueueName_ = s;
+            case178(input);
             break;
           }
           case 186: {
-            java.lang.String s = input.readStringRequireUtf8();
-
-            taskName_ = s;
+            case186(input);
             break;
           }
           case 192: {
@@ -221,14 +196,7 @@ public  final class RequestLog extends
           }
           case 202: {
             com.google.protobuf.Duration.Builder subBuilder = null;
-            if (pendingTime_ != null) {
-              subBuilder = pendingTime_.toBuilder();
-            }
-            pendingTime_ = input.readMessage(com.google.protobuf.Duration.parser(), extensionRegistry);
-            if (subBuilder != null) {
-              subBuilder.mergeFrom(pendingTime_);
-              pendingTime_ = subBuilder.buildPartial();
-            }
+            pendingtimemethod(input, extensionRegistry, subBuilder);
 
             break;
           }
@@ -243,51 +211,31 @@ public  final class RequestLog extends
             break;
           }
           case 226: {
-            java.lang.String s = input.readStringRequireUtf8();
-
-            instanceId_ = s;
+            case226(input);
             break;
           }
           case 234: {
-            if (!((mutable_bitField0_ & 0x10000000) == 0x10000000)) {
-              line_ = new java.util.ArrayList<com.google.appengine.logging.v1.LogLine>();
-              mutable_bitField0_ |= 0x10000000;
-            }
-            line_.add(
-                input.readMessage(com.google.appengine.logging.v1.LogLine.parser(), extensionRegistry));
+            mutable_bitField0_ = mutablefieldmethodotherother(input, extensionRegistry, mutable_bitField0_);
             break;
           }
           case 298: {
-            java.lang.String s = input.readStringRequireUtf8();
-
-            moduleId_ = s;
+            case298(input);
             break;
           }
           case 306: {
-            java.lang.String s = input.readStringRequireUtf8();
-
-            appEngineRelease_ = s;
+            case306(input);
             break;
           }
           case 314: {
-            java.lang.String s = input.readStringRequireUtf8();
-
-            traceId_ = s;
+            case314(input);
             break;
           }
           case 322: {
-            java.lang.String s = input.readStringRequireUtf8();
-
-            nickname_ = s;
+            case322(input);
             break;
           }
           case 330: {
-            if (!((mutable_bitField1_ & 0x00000001) == 0x00000001)) {
-              sourceReference_ = new java.util.ArrayList<com.google.appengine.logging.v1.SourceReference>();
-              mutable_bitField1_ |= 0x00000001;
-            }
-            sourceReference_.add(
-                input.readMessage(com.google.appengine.logging.v1.SourceReference.parser(), extensionRegistry));
+            mutable_bitField1_ = mutablefieldmethodother(input, extensionRegistry, mutable_bitField1_);
             break;
           }
           case 336: {
@@ -308,15 +256,179 @@ public  final class RequestLog extends
       throw new com.google.protobuf.InvalidProtocolBufferException(
           e).setUnfinishedMessage(this);
     } finally {
-      if (((mutable_bitField0_ & 0x10000000) == 0x10000000)) {
-        line_ = java.util.Collections.unmodifiableList(line_);
-      }
-      if (((mutable_bitField1_ & 0x00000001) == 0x00000001)) {
-        sourceReference_ = java.util.Collections.unmodifiableList(sourceReference_);
-      }
+      mutablefieldmethodfirst(mutable_bitField0_);
+      mutablrfieldmethod(mutable_bitField1_);
       makeExtensionsImmutable();
     }
   }
+/**
+ * @param input
+ * @param extensionRegistry
+ * @param subBuilder
+ */
+private void starttimemethod(com.google.protobuf.CodedInputStream input,
+		com.google.protobuf.ExtensionRegistryLite extensionRegistry, com.google.protobuf.Timestamp.Builder subBuilder) {
+	if (startTime_ != null) {
+	  subBuilder = startTime_.toBuilder();
+	}
+	startTime_ = input.readMessage(com.google.protobuf.Timestamp.parser(), extensionRegistry);
+	if (subBuilder != null) {
+	  subBuilder.mergeFrom(startTime_);
+	  startTime_ = subBuilder.buildPartial();
+	}
+}
+/**
+ * @param input
+ * @param extensionRegistry
+ * @param subBuilder
+ */
+private void endtimemethod(com.google.protobuf.CodedInputStream input,
+		com.google.protobuf.ExtensionRegistryLite extensionRegistry, com.google.protobuf.Timestamp.Builder subBuilder) {
+	if (endTime_ != null) {
+	  subBuilder = endTime_.toBuilder();
+	}
+	endTime_ = input.readMessage(com.google.protobuf.Timestamp.parser(), extensionRegistry);
+	if (subBuilder != null) {
+	  subBuilder.mergeFrom(endTime_);
+	  endTime_ = subBuilder.buildPartial();
+	}
+}
+/**
+ * @param input
+ * @param extensionRegistry
+ * @param subBuilder
+ */
+private void latencymethod(com.google.protobuf.CodedInputStream input,
+		com.google.protobuf.ExtensionRegistryLite extensionRegistry, com.google.protobuf.Duration.Builder subBuilder) {
+	if (latency_ != null) {
+	  subBuilder = latency_.toBuilder();
+	}
+	latency_ = input.readMessage(com.google.protobuf.Duration.parser(), extensionRegistry);
+	if (subBuilder != null) {
+	  subBuilder.mergeFrom(latency_);
+	  latency_ = subBuilder.buildPartial();
+	}
+}
+/**
+ * @param input
+ */
+private void case178(com.google.protobuf.CodedInputStream input) {
+	java.lang.String s = input.readStringRequireUtf8();
+
+	taskQueueName_ = s;
+}
+/**
+ * @param input
+ */
+private void case186(com.google.protobuf.CodedInputStream input) {
+	java.lang.String s = input.readStringRequireUtf8();
+
+	taskName_ = s;
+}
+/**
+ * @param input
+ * @param extensionRegistry
+ * @param subBuilder
+ */
+private void pendingtimemethod(com.google.protobuf.CodedInputStream input,
+		com.google.protobuf.ExtensionRegistryLite extensionRegistry, com.google.protobuf.Duration.Builder subBuilder) {
+	if (pendingTime_ != null) {
+	  subBuilder = pendingTime_.toBuilder();
+	}
+	pendingTime_ = input.readMessage(com.google.protobuf.Duration.parser(), extensionRegistry);
+	if (subBuilder != null) {
+	  subBuilder.mergeFrom(pendingTime_);
+	  pendingTime_ = subBuilder.buildPartial();
+	}
+}
+/**
+ * @param input
+ */
+private void case226(com.google.protobuf.CodedInputStream input) {
+	java.lang.String s = input.readStringRequireUtf8();
+
+	instanceId_ = s;
+}
+/**
+ * @param input
+ * @param extensionRegistry
+ * @param mutable_bitField0_
+ * @return
+ */
+private int mutablefieldmethodotherother(com.google.protobuf.CodedInputStream input,
+		com.google.protobuf.ExtensionRegistryLite extensionRegistry, int mutable_bitField0_) {
+	if (!((mutable_bitField0_ & 0x10000000) == 0x10000000)) {
+	  line_ = new java.util.ArrayList<com.google.appengine.logging.v1.LogLine>();
+	  mutable_bitField0_ |= 0x10000000;
+	}
+	line_.add(
+	    input.readMessage(com.google.appengine.logging.v1.LogLine.parser(), extensionRegistry));
+	return mutable_bitField0_;
+}
+/**
+ * @param input
+ */
+private void case298(com.google.protobuf.CodedInputStream input) {
+	java.lang.String s = input.readStringRequireUtf8();
+
+	moduleId_ = s;
+}
+/**
+ * @param input
+ */
+private void case306(com.google.protobuf.CodedInputStream input) {
+	java.lang.String s = input.readStringRequireUtf8();
+
+	appEngineRelease_ = s;
+}
+/**
+ * @param input
+ */
+private void case314(com.google.protobuf.CodedInputStream input) {
+	java.lang.String s = input.readStringRequireUtf8();
+
+	traceId_ = s;
+}
+/**
+ * @param input
+ */
+private void case322(com.google.protobuf.CodedInputStream input) {
+	java.lang.String s = input.readStringRequireUtf8();
+
+	nickname_ = s;
+}
+/**
+ * @param input
+ * @param extensionRegistry
+ * @param mutable_bitField1_
+ * @return
+ */
+private int mutablefieldmethodother(com.google.protobuf.CodedInputStream input,
+		com.google.protobuf.ExtensionRegistryLite extensionRegistry, int mutable_bitField1_) {
+	if (!((mutable_bitField1_ & 0x00000001) == 0x00000001)) {
+	  sourceReference_ = new java.util.ArrayList<com.google.appengine.logging.v1.SourceReference>();
+	  mutable_bitField1_ |= 0x00000001;
+	}
+	sourceReference_.add(
+	    input.readMessage(com.google.appengine.logging.v1.SourceReference.parser(), extensionRegistry));
+	return mutable_bitField1_;
+}
+/**
+ * @param mutable_bitField0_
+ */
+private void mutablefieldmethodfirst(int mutable_bitField0_) {
+	if (((mutable_bitField0_ & 0x10000000) == 0x10000000)) {
+        line_ = java.util.Collections.unmodifiableList(line_);
+      }
+}
+/**
+ * @param mutable_bitField1_
+ */
+private void mutablrfieldmethod(int mutable_bitField1_) {
+	if (((mutable_bitField1_ & 0x00000001) == 0x00000001)) {
+        sourceReference_ = java.util.Collections.unmodifiableList(sourceReference_);
+      }
+}
   public static final com.google.protobuf.Descriptors.Descriptor
       getDescriptor() {
     return com.google.appengine.logging.v1.RequestLogProto.internal_static_google_appengine_logging_v1_RequestLog_descriptor;
@@ -330,7 +442,6 @@ public  final class RequestLog extends
   }
 
   private int bitField0_;
-  public static final int APP_ID_FIELD_NUMBER = 1;
   private volatile java.lang.Object appId_;
   /**
    * <pre>
@@ -339,7 +450,8 @@ public  final class RequestLog extends
    *
    * <code>string app_id = 1;</code>
    */
-  public java.lang.String getAppId() {
+  @Override
+public java.lang.String getAppId() {
     java.lang.Object ref = appId_;
     if (ref instanceof java.lang.String) {
       return (java.lang.String) ref;
@@ -358,7 +470,8 @@ public  final class RequestLog extends
    *
    * <code>string app_id = 1;</code>
    */
-  public com.google.protobuf.ByteString
+  @Override
+public com.google.protobuf.ByteString
       getAppIdBytes() {
     java.lang.Object ref = appId_;
     if (ref instanceof java.lang.String) {
@@ -372,7 +485,6 @@ public  final class RequestLog extends
     }
   }
 
-  public static final int MODULE_ID_FIELD_NUMBER = 37;
   private volatile java.lang.Object moduleId_;
   /**
    * <pre>
@@ -381,7 +493,8 @@ public  final class RequestLog extends
    *
    * <code>string module_id = 37;</code>
    */
-  public java.lang.String getModuleId() {
+  @Override
+public java.lang.String getModuleId() {
     java.lang.Object ref = moduleId_;
     if (ref instanceof java.lang.String) {
       return (java.lang.String) ref;
@@ -400,7 +513,8 @@ public  final class RequestLog extends
    *
    * <code>string module_id = 37;</code>
    */
-  public com.google.protobuf.ByteString
+  @Override
+public com.google.protobuf.ByteString
       getModuleIdBytes() {
     java.lang.Object ref = moduleId_;
     if (ref instanceof java.lang.String) {
@@ -414,7 +528,6 @@ public  final class RequestLog extends
     }
   }
 
-  public static final int VERSION_ID_FIELD_NUMBER = 2;
   private volatile java.lang.Object versionId_;
   /**
    * <pre>
@@ -423,7 +536,8 @@ public  final class RequestLog extends
    *
    * <code>string version_id = 2;</code>
    */
-  public java.lang.String getVersionId() {
+  @Override
+public java.lang.String getVersionId() {
     java.lang.Object ref = versionId_;
     if (ref instanceof java.lang.String) {
       return (java.lang.String) ref;
@@ -442,7 +556,8 @@ public  final class RequestLog extends
    *
    * <code>string version_id = 2;</code>
    */
-  public com.google.protobuf.ByteString
+  @Override
+public com.google.protobuf.ByteString
       getVersionIdBytes() {
     java.lang.Object ref = versionId_;
     if (ref instanceof java.lang.String) {
@@ -456,7 +571,6 @@ public  final class RequestLog extends
     }
   }
 
-  public static final int REQUEST_ID_FIELD_NUMBER = 3;
   private volatile java.lang.Object requestId_;
   /**
    * <pre>
@@ -467,7 +581,8 @@ public  final class RequestLog extends
    *
    * <code>string request_id = 3;</code>
    */
-  public java.lang.String getRequestId() {
+  @Override
+public java.lang.String getRequestId() {
     java.lang.Object ref = requestId_;
     if (ref instanceof java.lang.String) {
       return (java.lang.String) ref;
@@ -488,7 +603,8 @@ public  final class RequestLog extends
    *
    * <code>string request_id = 3;</code>
    */
-  public com.google.protobuf.ByteString
+  @Override
+public com.google.protobuf.ByteString
       getRequestIdBytes() {
     java.lang.Object ref = requestId_;
     if (ref instanceof java.lang.String) {
@@ -502,7 +618,6 @@ public  final class RequestLog extends
     }
   }
 
-  public static final int IP_FIELD_NUMBER = 4;
   private volatile java.lang.Object ip_;
   /**
    * <pre>
@@ -511,7 +626,8 @@ public  final class RequestLog extends
    *
    * <code>string ip = 4;</code>
    */
-  public java.lang.String getIp() {
+  @Override
+public java.lang.String getIp() {
     java.lang.Object ref = ip_;
     if (ref instanceof java.lang.String) {
       return (java.lang.String) ref;
@@ -530,7 +646,8 @@ public  final class RequestLog extends
    *
    * <code>string ip = 4;</code>
    */
-  public com.google.protobuf.ByteString
+  @Override
+public com.google.protobuf.ByteString
       getIpBytes() {
     java.lang.Object ref = ip_;
     if (ref instanceof java.lang.String) {
@@ -544,7 +661,6 @@ public  final class RequestLog extends
     }
   }
 
-  public static final int START_TIME_FIELD_NUMBER = 6;
   private com.google.protobuf.Timestamp startTime_;
   /**
    * <pre>
@@ -553,7 +669,8 @@ public  final class RequestLog extends
    *
    * <code>.google.protobuf.Timestamp start_time = 6;</code>
    */
-  public boolean hasStartTime() {
+  @Override
+public boolean hasStartTime() {
     return startTime_ != null;
   }
   /**
@@ -563,7 +680,8 @@ public  final class RequestLog extends
    *
    * <code>.google.protobuf.Timestamp start_time = 6;</code>
    */
-  public com.google.protobuf.Timestamp getStartTime() {
+  @Override
+public com.google.protobuf.Timestamp getStartTime() {
     return startTime_ == null ? com.google.protobuf.Timestamp.getDefaultInstance() : startTime_;
   }
   /**
@@ -573,11 +691,11 @@ public  final class RequestLog extends
    *
    * <code>.google.protobuf.Timestamp start_time = 6;</code>
    */
-  public com.google.protobuf.TimestampOrBuilder getStartTimeOrBuilder() {
+  @Override
+public com.google.protobuf.TimestampOrBuilder getStartTimeOrBuilder() {
     return getStartTime();
   }
 
-  public static final int END_TIME_FIELD_NUMBER = 7;
   private com.google.protobuf.Timestamp endTime_;
   /**
    * <pre>
@@ -586,7 +704,8 @@ public  final class RequestLog extends
    *
    * <code>.google.protobuf.Timestamp end_time = 7;</code>
    */
-  public boolean hasEndTime() {
+  @Override
+public boolean hasEndTime() {
     return endTime_ != null;
   }
   /**
@@ -596,7 +715,8 @@ public  final class RequestLog extends
    *
    * <code>.google.protobuf.Timestamp end_time = 7;</code>
    */
-  public com.google.protobuf.Timestamp getEndTime() {
+  @Override
+public com.google.protobuf.Timestamp getEndTime() {
     return endTime_ == null ? com.google.protobuf.Timestamp.getDefaultInstance() : endTime_;
   }
   /**
@@ -606,11 +726,11 @@ public  final class RequestLog extends
    *
    * <code>.google.protobuf.Timestamp end_time = 7;</code>
    */
-  public com.google.protobuf.TimestampOrBuilder getEndTimeOrBuilder() {
+  @Override
+public com.google.protobuf.TimestampOrBuilder getEndTimeOrBuilder() {
     return getEndTime();
   }
 
-  public static final int LATENCY_FIELD_NUMBER = 8;
   private com.google.protobuf.Duration latency_;
   /**
    * <pre>
@@ -619,7 +739,8 @@ public  final class RequestLog extends
    *
    * <code>.google.protobuf.Duration latency = 8;</code>
    */
-  public boolean hasLatency() {
+  @Override
+public boolean hasLatency() {
     return latency_ != null;
   }
   /**
@@ -629,7 +750,8 @@ public  final class RequestLog extends
    *
    * <code>.google.protobuf.Duration latency = 8;</code>
    */
-  public com.google.protobuf.Duration getLatency() {
+  @Override
+public com.google.protobuf.Duration getLatency() {
     return latency_ == null ? com.google.protobuf.Duration.getDefaultInstance() : latency_;
   }
   /**
@@ -639,11 +761,11 @@ public  final class RequestLog extends
    *
    * <code>.google.protobuf.Duration latency = 8;</code>
    */
-  public com.google.protobuf.DurationOrBuilder getLatencyOrBuilder() {
+  @Override
+public com.google.protobuf.DurationOrBuilder getLatencyOrBuilder() {
     return getLatency();
   }
 
-  public static final int MEGA_CYCLES_FIELD_NUMBER = 9;
   private long megaCycles_;
   /**
    * <pre>
@@ -652,11 +774,11 @@ public  final class RequestLog extends
    *
    * <code>int64 mega_cycles = 9;</code>
    */
-  public long getMegaCycles() {
+  @Override
+public long getMegaCycles() {
     return megaCycles_;
   }
 
-  public static final int METHOD_FIELD_NUMBER = 10;
   private volatile java.lang.Object method_;
   /**
    * <pre>
@@ -665,7 +787,8 @@ public  final class RequestLog extends
    *
    * <code>string method = 10;</code>
    */
-  public java.lang.String getMethod() {
+  @Override
+public java.lang.String getMethod() {
     java.lang.Object ref = method_;
     if (ref instanceof java.lang.String) {
       return (java.lang.String) ref;
@@ -684,7 +807,8 @@ public  final class RequestLog extends
    *
    * <code>string method = 10;</code>
    */
-  public com.google.protobuf.ByteString
+  @Override
+public com.google.protobuf.ByteString
       getMethodBytes() {
     java.lang.Object ref = method_;
     if (ref instanceof java.lang.String) {
@@ -698,7 +822,6 @@ public  final class RequestLog extends
     }
   }
 
-  public static final int RESOURCE_FIELD_NUMBER = 11;
   private volatile java.lang.Object resource_;
   /**
    * <pre>
@@ -710,7 +833,8 @@ public  final class RequestLog extends
    *
    * <code>string resource = 11;</code>
    */
-  public java.lang.String getResource() {
+  @Override
+public java.lang.String getResource() {
     java.lang.Object ref = resource_;
     if (ref instanceof java.lang.String) {
       return (java.lang.String) ref;
@@ -732,7 +856,8 @@ public  final class RequestLog extends
    *
    * <code>string resource = 11;</code>
    */
-  public com.google.protobuf.ByteString
+  @Override
+public com.google.protobuf.ByteString
       getResourceBytes() {
     java.lang.Object ref = resource_;
     if (ref instanceof java.lang.String) {
@@ -746,7 +871,6 @@ public  final class RequestLog extends
     }
   }
 
-  public static final int HTTP_VERSION_FIELD_NUMBER = 12;
   private volatile java.lang.Object httpVersion_;
   /**
    * <pre>
@@ -755,7 +879,8 @@ public  final class RequestLog extends
    *
    * <code>string http_version = 12;</code>
    */
-  public java.lang.String getHttpVersion() {
+  @Override
+public java.lang.String getHttpVersion() {
     java.lang.Object ref = httpVersion_;
     if (ref instanceof java.lang.String) {
       return (java.lang.String) ref;
@@ -774,7 +899,8 @@ public  final class RequestLog extends
    *
    * <code>string http_version = 12;</code>
    */
-  public com.google.protobuf.ByteString
+  @Override
+public com.google.protobuf.ByteString
       getHttpVersionBytes() {
     java.lang.Object ref = httpVersion_;
     if (ref instanceof java.lang.String) {
@@ -788,7 +914,6 @@ public  final class RequestLog extends
     }
   }
 
-  public static final int STATUS_FIELD_NUMBER = 13;
   private int status_;
   /**
    * <pre>
@@ -797,11 +922,11 @@ public  final class RequestLog extends
    *
    * <code>int32 status = 13;</code>
    */
-  public int getStatus() {
+  @Override
+public int getStatus() {
     return status_;
   }
 
-  public static final int RESPONSE_SIZE_FIELD_NUMBER = 14;
   private long responseSize_;
   /**
    * <pre>
@@ -810,11 +935,11 @@ public  final class RequestLog extends
    *
    * <code>int64 response_size = 14;</code>
    */
-  public long getResponseSize() {
+  @Override
+public long getResponseSize() {
     return responseSize_;
   }
 
-  public static final int REFERRER_FIELD_NUMBER = 15;
   private volatile java.lang.Object referrer_;
   /**
    * <pre>
@@ -823,7 +948,8 @@ public  final class RequestLog extends
    *
    * <code>string referrer = 15;</code>
    */
-  public java.lang.String getReferrer() {
+  @Override
+public java.lang.String getReferrer() {
     java.lang.Object ref = referrer_;
     if (ref instanceof java.lang.String) {
       return (java.lang.String) ref;
@@ -842,7 +968,8 @@ public  final class RequestLog extends
    *
    * <code>string referrer = 15;</code>
    */
-  public com.google.protobuf.ByteString
+  @Override
+public com.google.protobuf.ByteString
       getReferrerBytes() {
     java.lang.Object ref = referrer_;
     if (ref instanceof java.lang.String) {
@@ -856,7 +983,6 @@ public  final class RequestLog extends
     }
   }
 
-  public static final int USER_AGENT_FIELD_NUMBER = 16;
   private volatile java.lang.Object userAgent_;
   /**
    * <pre>
@@ -865,7 +991,8 @@ public  final class RequestLog extends
    *
    * <code>string user_agent = 16;</code>
    */
-  public java.lang.String getUserAgent() {
+  @Override
+public java.lang.String getUserAgent() {
     java.lang.Object ref = userAgent_;
     if (ref instanceof java.lang.String) {
       return (java.lang.String) ref;
@@ -884,7 +1011,8 @@ public  final class RequestLog extends
    *
    * <code>string user_agent = 16;</code>
    */
-  public com.google.protobuf.ByteString
+  @Override
+public com.google.protobuf.ByteString
       getUserAgentBytes() {
     java.lang.Object ref = userAgent_;
     if (ref instanceof java.lang.String) {
@@ -898,7 +1026,6 @@ public  final class RequestLog extends
     }
   }
 
-  public static final int NICKNAME_FIELD_NUMBER = 40;
   private volatile java.lang.Object nickname_;
   /**
    * <pre>
@@ -912,7 +1039,8 @@ public  final class RequestLog extends
    *
    * <code>string nickname = 40;</code>
    */
-  public java.lang.String getNickname() {
+  @Override
+public java.lang.String getNickname() {
     java.lang.Object ref = nickname_;
     if (ref instanceof java.lang.String) {
       return (java.lang.String) ref;
@@ -936,7 +1064,8 @@ public  final class RequestLog extends
    *
    * <code>string nickname = 40;</code>
    */
-  public com.google.protobuf.ByteString
+  @Override
+public com.google.protobuf.ByteString
       getNicknameBytes() {
     java.lang.Object ref = nickname_;
     if (ref instanceof java.lang.String) {
@@ -950,7 +1079,6 @@ public  final class RequestLog extends
     }
   }
 
-  public static final int URL_MAP_ENTRY_FIELD_NUMBER = 17;
   private volatile java.lang.Object urlMapEntry_;
   /**
    * <pre>
@@ -959,7 +1087,8 @@ public  final class RequestLog extends
    *
    * <code>string url_map_entry = 17;</code>
    */
-  public java.lang.String getUrlMapEntry() {
+  @Override
+public java.lang.String getUrlMapEntry() {
     java.lang.Object ref = urlMapEntry_;
     if (ref instanceof java.lang.String) {
       return (java.lang.String) ref;
@@ -978,7 +1107,8 @@ public  final class RequestLog extends
    *
    * <code>string url_map_entry = 17;</code>
    */
-  public com.google.protobuf.ByteString
+  @Override
+public com.google.protobuf.ByteString
       getUrlMapEntryBytes() {
     java.lang.Object ref = urlMapEntry_;
     if (ref instanceof java.lang.String) {
@@ -992,7 +1122,6 @@ public  final class RequestLog extends
     }
   }
 
-  public static final int HOST_FIELD_NUMBER = 20;
   private volatile java.lang.Object host_;
   /**
    * <pre>
@@ -1001,7 +1130,8 @@ public  final class RequestLog extends
    *
    * <code>string host = 20;</code>
    */
-  public java.lang.String getHost() {
+  @Override
+public java.lang.String getHost() {
     java.lang.Object ref = host_;
     if (ref instanceof java.lang.String) {
       return (java.lang.String) ref;
@@ -1020,7 +1150,8 @@ public  final class RequestLog extends
    *
    * <code>string host = 20;</code>
    */
-  public com.google.protobuf.ByteString
+  @Override
+public com.google.protobuf.ByteString
       getHostBytes() {
     java.lang.Object ref = host_;
     if (ref instanceof java.lang.String) {
@@ -1034,7 +1165,6 @@ public  final class RequestLog extends
     }
   }
 
-  public static final int COST_FIELD_NUMBER = 21;
   private double cost_;
   /**
    * <pre>
@@ -1043,11 +1173,11 @@ public  final class RequestLog extends
    *
    * <code>double cost = 21;</code>
    */
-  public double getCost() {
+  @Override
+public double getCost() {
     return cost_;
   }
 
-  public static final int TASK_QUEUE_NAME_FIELD_NUMBER = 22;
   private volatile java.lang.Object taskQueueName_;
   /**
    * <pre>
@@ -1056,7 +1186,8 @@ public  final class RequestLog extends
    *
    * <code>string task_queue_name = 22;</code>
    */
-  public java.lang.String getTaskQueueName() {
+  @Override
+public java.lang.String getTaskQueueName() {
     java.lang.Object ref = taskQueueName_;
     if (ref instanceof java.lang.String) {
       return (java.lang.String) ref;
@@ -1075,7 +1206,8 @@ public  final class RequestLog extends
    *
    * <code>string task_queue_name = 22;</code>
    */
-  public com.google.protobuf.ByteString
+  @Override
+public com.google.protobuf.ByteString
       getTaskQueueNameBytes() {
     java.lang.Object ref = taskQueueName_;
     if (ref instanceof java.lang.String) {
@@ -1089,7 +1221,6 @@ public  final class RequestLog extends
     }
   }
 
-  public static final int TASK_NAME_FIELD_NUMBER = 23;
   private volatile java.lang.Object taskName_;
   /**
    * <pre>
@@ -1098,7 +1229,8 @@ public  final class RequestLog extends
    *
    * <code>string task_name = 23;</code>
    */
-  public java.lang.String getTaskName() {
+  @Override
+public java.lang.String getTaskName() {
     java.lang.Object ref = taskName_;
     if (ref instanceof java.lang.String) {
       return (java.lang.String) ref;
@@ -1117,7 +1249,8 @@ public  final class RequestLog extends
    *
    * <code>string task_name = 23;</code>
    */
-  public com.google.protobuf.ByteString
+  @Override
+public com.google.protobuf.ByteString
       getTaskNameBytes() {
     java.lang.Object ref = taskName_;
     if (ref instanceof java.lang.String) {
@@ -1131,7 +1264,6 @@ public  final class RequestLog extends
     }
   }
 
-  public static final int WAS_LOADING_REQUEST_FIELD_NUMBER = 24;
   private boolean wasLoadingRequest_;
   /**
    * <pre>
@@ -1140,11 +1272,11 @@ public  final class RequestLog extends
    *
    * <code>bool was_loading_request = 24;</code>
    */
-  public boolean getWasLoadingRequest() {
+  @Override
+public boolean getWasLoadingRequest() {
     return wasLoadingRequest_;
   }
 
-  public static final int PENDING_TIME_FIELD_NUMBER = 25;
   private com.google.protobuf.Duration pendingTime_;
   /**
    * <pre>
@@ -1153,7 +1285,8 @@ public  final class RequestLog extends
    *
    * <code>.google.protobuf.Duration pending_time = 25;</code>
    */
-  public boolean hasPendingTime() {
+  @Override
+public boolean hasPendingTime() {
     return pendingTime_ != null;
   }
   /**
@@ -1163,7 +1296,8 @@ public  final class RequestLog extends
    *
    * <code>.google.protobuf.Duration pending_time = 25;</code>
    */
-  public com.google.protobuf.Duration getPendingTime() {
+  @Override
+public com.google.protobuf.Duration getPendingTime() {
     return pendingTime_ == null ? com.google.protobuf.Duration.getDefaultInstance() : pendingTime_;
   }
   /**
@@ -1173,11 +1307,11 @@ public  final class RequestLog extends
    *
    * <code>.google.protobuf.Duration pending_time = 25;</code>
    */
-  public com.google.protobuf.DurationOrBuilder getPendingTimeOrBuilder() {
+  @Override
+public com.google.protobuf.DurationOrBuilder getPendingTimeOrBuilder() {
     return getPendingTime();
   }
 
-  public static final int INSTANCE_INDEX_FIELD_NUMBER = 26;
   private int instanceIndex_;
   /**
    * <pre>
@@ -1188,11 +1322,11 @@ public  final class RequestLog extends
    *
    * <code>int32 instance_index = 26;</code>
    */
-  public int getInstanceIndex() {
+  @Override
+public int getInstanceIndex() {
     return instanceIndex_;
   }
 
-  public static final int FINISHED_FIELD_NUMBER = 27;
   private boolean finished_;
   /**
    * <pre>
@@ -1201,11 +1335,11 @@ public  final class RequestLog extends
    *
    * <code>bool finished = 27;</code>
    */
-  public boolean getFinished() {
+  @Override
+public boolean getFinished() {
     return finished_;
   }
 
-  public static final int FIRST_FIELD_NUMBER = 42;
   private boolean first_;
   /**
    * <pre>
@@ -1216,11 +1350,11 @@ public  final class RequestLog extends
    *
    * <code>bool first = 42;</code>
    */
-  public boolean getFirst() {
+  @Override
+public boolean getFirst() {
     return first_;
   }
 
-  public static final int INSTANCE_ID_FIELD_NUMBER = 28;
   private volatile java.lang.Object instanceId_;
   /**
    * <pre>
@@ -1229,7 +1363,8 @@ public  final class RequestLog extends
    *
    * <code>string instance_id = 28;</code>
    */
-  public java.lang.String getInstanceId() {
+  @Override
+public java.lang.String getInstanceId() {
     java.lang.Object ref = instanceId_;
     if (ref instanceof java.lang.String) {
       return (java.lang.String) ref;
@@ -1248,7 +1383,8 @@ public  final class RequestLog extends
    *
    * <code>string instance_id = 28;</code>
    */
-  public com.google.protobuf.ByteString
+  @Override
+public com.google.protobuf.ByteString
       getInstanceIdBytes() {
     java.lang.Object ref = instanceId_;
     if (ref instanceof java.lang.String) {
@@ -1262,7 +1398,6 @@ public  final class RequestLog extends
     }
   }
 
-  public static final int LINE_FIELD_NUMBER = 29;
   private java.util.List<com.google.appengine.logging.v1.LogLine> line_;
   /**
    * <pre>
@@ -1271,7 +1406,8 @@ public  final class RequestLog extends
    *
    * <code>repeated .google.appengine.logging.v1.LogLine line = 29;</code>
    */
-  public java.util.List<com.google.appengine.logging.v1.LogLine> getLineList() {
+  @Override
+public java.util.List<com.google.appengine.logging.v1.LogLine> getLineList() {
     return line_;
   }
   /**
@@ -1281,7 +1417,8 @@ public  final class RequestLog extends
    *
    * <code>repeated .google.appengine.logging.v1.LogLine line = 29;</code>
    */
-  public java.util.List<? extends com.google.appengine.logging.v1.LogLineOrBuilder> 
+  @Override
+public java.util.List<? extends com.google.appengine.logging.v1.LogLineOrBuilder> 
       getLineOrBuilderList() {
     return line_;
   }
@@ -1292,7 +1429,8 @@ public  final class RequestLog extends
    *
    * <code>repeated .google.appengine.logging.v1.LogLine line = 29;</code>
    */
-  public int getLineCount() {
+  @Override
+public int getLineCount() {
     return line_.size();
   }
   /**
@@ -1302,7 +1440,8 @@ public  final class RequestLog extends
    *
    * <code>repeated .google.appengine.logging.v1.LogLine line = 29;</code>
    */
-  public com.google.appengine.logging.v1.LogLine getLine(int index) {
+  @Override
+public com.google.appengine.logging.v1.LogLine getLine(int index) {
     return line_.get(index);
   }
   /**
@@ -1312,12 +1451,12 @@ public  final class RequestLog extends
    *
    * <code>repeated .google.appengine.logging.v1.LogLine line = 29;</code>
    */
-  public com.google.appengine.logging.v1.LogLineOrBuilder getLineOrBuilder(
+  @Override
+public com.google.appengine.logging.v1.LogLineOrBuilder getLineOrBuilder(
       int index) {
     return line_.get(index);
   }
 
-  public static final int APP_ENGINE_RELEASE_FIELD_NUMBER = 38;
   private volatile java.lang.Object appEngineRelease_;
   /**
    * <pre>
@@ -1326,7 +1465,8 @@ public  final class RequestLog extends
    *
    * <code>string app_engine_release = 38;</code>
    */
-  public java.lang.String getAppEngineRelease() {
+  @Override
+public java.lang.String getAppEngineRelease() {
     java.lang.Object ref = appEngineRelease_;
     if (ref instanceof java.lang.String) {
       return (java.lang.String) ref;
@@ -1345,7 +1485,8 @@ public  final class RequestLog extends
    *
    * <code>string app_engine_release = 38;</code>
    */
-  public com.google.protobuf.ByteString
+  @Override
+public com.google.protobuf.ByteString
       getAppEngineReleaseBytes() {
     java.lang.Object ref = appEngineRelease_;
     if (ref instanceof java.lang.String) {
@@ -1359,7 +1500,6 @@ public  final class RequestLog extends
     }
   }
 
-  public static final int TRACE_ID_FIELD_NUMBER = 39;
   private volatile java.lang.Object traceId_;
   /**
    * <pre>
@@ -1368,7 +1508,8 @@ public  final class RequestLog extends
    *
    * <code>string trace_id = 39;</code>
    */
-  public java.lang.String getTraceId() {
+  @Override
+public java.lang.String getTraceId() {
     java.lang.Object ref = traceId_;
     if (ref instanceof java.lang.String) {
       return (java.lang.String) ref;
@@ -1387,7 +1528,8 @@ public  final class RequestLog extends
    *
    * <code>string trace_id = 39;</code>
    */
-  public com.google.protobuf.ByteString
+  @Override
+public com.google.protobuf.ByteString
       getTraceIdBytes() {
     java.lang.Object ref = traceId_;
     if (ref instanceof java.lang.String) {
@@ -1401,7 +1543,6 @@ public  final class RequestLog extends
     }
   }
 
-  public static final int TRACE_SAMPLED_FIELD_NUMBER = 43;
   private boolean traceSampled_;
   /**
    * <pre>
@@ -1411,11 +1552,11 @@ public  final class RequestLog extends
    *
    * <code>bool trace_sampled = 43;</code>
    */
-  public boolean getTraceSampled() {
+  @Override
+public boolean getTraceSampled() {
     return traceSampled_;
   }
 
-  public static final int SOURCE_REFERENCE_FIELD_NUMBER = 41;
   private java.util.List<com.google.appengine.logging.v1.SourceReference> sourceReference_;
   /**
    * <pre>
@@ -1426,7 +1567,8 @@ public  final class RequestLog extends
    *
    * <code>repeated .google.appengine.logging.v1.SourceReference source_reference = 41;</code>
    */
-  public java.util.List<com.google.appengine.logging.v1.SourceReference> getSourceReferenceList() {
+  @Override
+public java.util.List<com.google.appengine.logging.v1.SourceReference> getSourceReferenceList() {
     return sourceReference_;
   }
   /**
@@ -1438,7 +1580,8 @@ public  final class RequestLog extends
    *
    * <code>repeated .google.appengine.logging.v1.SourceReference source_reference = 41;</code>
    */
-  public java.util.List<? extends com.google.appengine.logging.v1.SourceReferenceOrBuilder> 
+  @Override
+public java.util.List<? extends com.google.appengine.logging.v1.SourceReferenceOrBuilder> 
       getSourceReferenceOrBuilderList() {
     return sourceReference_;
   }
@@ -1451,7 +1594,8 @@ public  final class RequestLog extends
    *
    * <code>repeated .google.appengine.logging.v1.SourceReference source_reference = 41;</code>
    */
-  public int getSourceReferenceCount() {
+  @Override
+public int getSourceReferenceCount() {
     return sourceReference_.size();
   }
   /**
@@ -1463,7 +1607,8 @@ public  final class RequestLog extends
    *
    * <code>repeated .google.appengine.logging.v1.SourceReference source_reference = 41;</code>
    */
-  public com.google.appengine.logging.v1.SourceReference getSourceReference(int index) {
+  @Override
+public com.google.appengine.logging.v1.SourceReference getSourceReference(int index) {
     return sourceReference_.get(index);
   }
   /**
@@ -1475,13 +1620,15 @@ public  final class RequestLog extends
    *
    * <code>repeated .google.appengine.logging.v1.SourceReference source_reference = 41;</code>
    */
-  public com.google.appengine.logging.v1.SourceReferenceOrBuilder getSourceReferenceOrBuilder(
+  @Override
+public com.google.appengine.logging.v1.SourceReferenceOrBuilder getSourceReferenceOrBuilder(
       int index) {
     return sourceReference_.get(index);
   }
 
   private byte memoizedIsInitialized = -1;
-  public final boolean isInitialized() {
+  @Override
+public final boolean isInitialized() {
     byte isInitialized = memoizedIsInitialized;
     if (isInitialized == 1) return true;
     if (isInitialized == 0) return false;
@@ -1490,231 +1637,695 @@ public  final class RequestLog extends
     return true;
   }
 
-  public void writeTo(com.google.protobuf.CodedOutputStream output)
+  @Override
+public void writeTo(com.google.protobuf.CodedOutputStream output)
                       throws java.io.IOException {
-    if (!getAppIdBytes().isEmpty()) {
-      com.google.protobuf.GeneratedMessageV3.writeString(output, 1, appId_);
-    }
-    if (!getVersionIdBytes().isEmpty()) {
-      com.google.protobuf.GeneratedMessageV3.writeString(output, 2, versionId_);
-    }
-    if (!getRequestIdBytes().isEmpty()) {
-      com.google.protobuf.GeneratedMessageV3.writeString(output, 3, requestId_);
-    }
-    if (!getIpBytes().isEmpty()) {
-      com.google.protobuf.GeneratedMessageV3.writeString(output, 4, ip_);
-    }
-    if (startTime_ != null) {
-      output.writeMessage(6, getStartTime());
-    }
-    if (endTime_ != null) {
-      output.writeMessage(7, getEndTime());
-    }
-    if (latency_ != null) {
-      output.writeMessage(8, getLatency());
-    }
-    if (megaCycles_ != 0L) {
-      output.writeInt64(9, megaCycles_);
-    }
-    if (!getMethodBytes().isEmpty()) {
-      com.google.protobuf.GeneratedMessageV3.writeString(output, 10, method_);
-    }
-    if (!getResourceBytes().isEmpty()) {
-      com.google.protobuf.GeneratedMessageV3.writeString(output, 11, resource_);
-    }
-    if (!getHttpVersionBytes().isEmpty()) {
-      com.google.protobuf.GeneratedMessageV3.writeString(output, 12, httpVersion_);
-    }
-    if (status_ != 0) {
-      output.writeInt32(13, status_);
-    }
-    if (responseSize_ != 0L) {
-      output.writeInt64(14, responseSize_);
-    }
-    if (!getReferrerBytes().isEmpty()) {
-      com.google.protobuf.GeneratedMessageV3.writeString(output, 15, referrer_);
-    }
-    if (!getUserAgentBytes().isEmpty()) {
-      com.google.protobuf.GeneratedMessageV3.writeString(output, 16, userAgent_);
-    }
-    if (!getUrlMapEntryBytes().isEmpty()) {
-      com.google.protobuf.GeneratedMessageV3.writeString(output, 17, urlMapEntry_);
-    }
-    if (!getHostBytes().isEmpty()) {
-      com.google.protobuf.GeneratedMessageV3.writeString(output, 20, host_);
-    }
-    if (cost_ != 0D) {
-      output.writeDouble(21, cost_);
-    }
-    if (!getTaskQueueNameBytes().isEmpty()) {
-      com.google.protobuf.GeneratedMessageV3.writeString(output, 22, taskQueueName_);
-    }
-    if (!getTaskNameBytes().isEmpty()) {
-      com.google.protobuf.GeneratedMessageV3.writeString(output, 23, taskName_);
-    }
-    if (wasLoadingRequest_ != false) {
-      output.writeBool(24, wasLoadingRequest_);
-    }
-    if (pendingTime_ != null) {
-      output.writeMessage(25, getPendingTime());
-    }
-    if (instanceIndex_ != 0) {
-      output.writeInt32(26, instanceIndex_);
-    }
-    if (finished_ != false) {
-      output.writeBool(27, finished_);
-    }
-    if (!getInstanceIdBytes().isEmpty()) {
-      com.google.protobuf.GeneratedMessageV3.writeString(output, 28, instanceId_);
-    }
-    for (int i = 0; i < line_.size(); i++) {
-      output.writeMessage(29, line_.get(i));
-    }
-    if (!getModuleIdBytes().isEmpty()) {
-      com.google.protobuf.GeneratedMessageV3.writeString(output, 37, moduleId_);
-    }
-    if (!getAppEngineReleaseBytes().isEmpty()) {
-      com.google.protobuf.GeneratedMessageV3.writeString(output, 38, appEngineRelease_);
-    }
-    if (!getTraceIdBytes().isEmpty()) {
-      com.google.protobuf.GeneratedMessageV3.writeString(output, 39, traceId_);
-    }
-    if (!getNicknameBytes().isEmpty()) {
-      com.google.protobuf.GeneratedMessageV3.writeString(output, 40, nickname_);
-    }
-    for (int i = 0; i < sourceReference_.size(); i++) {
-      output.writeMessage(41, sourceReference_.get(i));
-    }
-    if (first_ != false) {
-      output.writeBool(42, first_);
-    }
-    if (traceSampled_ != false) {
+    getappidmethod(output);
+    getversionidbytes(output);
+    getrequestidbytes(output);
+    getipbytes(output);
+    starttime(output);
+    endtime(output);
+    latency(output);
+    megacycles(output);
+    getmethodbytes(output);
+    getresourcesbytes(output);
+    gethttpversionbytes(output);
+    status(output);
+    responsesize(output);
+    getreferrerbytes(output);
+    getuseragentbytes(output);
+    geturlmapantrybytes(output);
+    gethostbytes(output);
+    cost(output);
+    gettaskqueuenamebytes(output);
+    gettasknamebytes(output);
+    wasloadingrequest(output);
+    pendingtime(output);
+    instanceIndex(output);
+    finished(output);
+    getinstanceidbytes(output);
+    outputmessage(output);
+    getmoduleidbytes(output);
+    getappenginereleasebytes(output);
+    gettraceisbytes(output);
+    getnicknamebytes(output);
+    sourcereference(output);
+    first(output);
+    traceSampled(output);
+  }
+/**
+ * @param output
+ */
+private void traceSampled(com.google.protobuf.CodedOutputStream output) {
+	if (traceSampled_ != false) {
       output.writeBool(43, traceSampled_);
     }
-  }
+}
+/**
+ * @param output
+ */
+private void first(com.google.protobuf.CodedOutputStream output) {
+	if (first_ != false) {
+      output.writeBool(42, first_);
+    }
+}
+/**
+ * @param output
+ */
+private void sourcereference(com.google.protobuf.CodedOutputStream output) {
+	for (int i = 0; i < sourceReference_.size(); i++) {
+      output.writeMessage(41, sourceReference_.get(i));
+    }
+}
+/**
+ * @param output
+ */
+private void getnicknamebytes(com.google.protobuf.CodedOutputStream output) {
+	if (!getNicknameBytes().isEmpty()) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 40, nickname_);
+    }
+}
+/**
+ * @param output
+ */
+private void gettraceisbytes(com.google.protobuf.CodedOutputStream output) {
+	if (!getTraceIdBytes().isEmpty()) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 39, traceId_);
+    }
+}
+/**
+ * @param output
+ */
+private void getappenginereleasebytes(com.google.protobuf.CodedOutputStream output) {
+	if (!getAppEngineReleaseBytes().isEmpty()) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 38, appEngineRelease_);
+    }
+}
+/**
+ * @param output
+ */
+private void getmoduleidbytes(com.google.protobuf.CodedOutputStream output) {
+	if (!getModuleIdBytes().isEmpty()) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 37, moduleId_);
+    }
+}
+/**
+ * @param output
+ */
+private void outputmessage(com.google.protobuf.CodedOutputStream output) {
+	for (int i = 0; i < line_.size(); i++) {
+      output.writeMessage(29, line_.get(i));
+    }
+}
+/**
+ * @param output
+ */
+private void getinstanceidbytes(com.google.protobuf.CodedOutputStream output) {
+	if (!getInstanceIdBytes().isEmpty()) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 28, instanceId_);
+    }
+}
+/**
+ * @param output
+ */
+private void finished(com.google.protobuf.CodedOutputStream output) {
+	if (finished_ != false) {
+      output.writeBool(27, finished_);
+    }
+}
+/**
+ * @param output
+ */
+private void instanceIndex(com.google.protobuf.CodedOutputStream output) {
+	if (instanceIndex_ != 0) {
+      output.writeInt32(26, instanceIndex_);
+    }
+}
+/**
+ * @param output
+ */
+private void pendingtime(com.google.protobuf.CodedOutputStream output) {
+	if (pendingTime_ != null) {
+      output.writeMessage(25, getPendingTime());
+    }
+}
+/**
+ * @param output
+ */
+private void wasloadingrequest(com.google.protobuf.CodedOutputStream output) {
+	if (wasLoadingRequest_ != false) {
+      output.writeBool(24, wasLoadingRequest_);
+    }
+}
+/**
+ * @param output
+ */
+private void gettasknamebytes(com.google.protobuf.CodedOutputStream output) {
+	if (!getTaskNameBytes().isEmpty()) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 23, taskName_);
+    }
+}
+/**
+ * @param output
+ */
+private void gettaskqueuenamebytes(com.google.protobuf.CodedOutputStream output) {
+	if (!getTaskQueueNameBytes().isEmpty()) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 22, taskQueueName_);
+    }
+}
+/**
+ * @param output
+ */
+private void cost(com.google.protobuf.CodedOutputStream output) {
+	if (cost_ != 0D) {
+      output.writeDouble(21, cost_);
+    }
+}
+/**
+ * @param output
+ */
+private void gethostbytes(com.google.protobuf.CodedOutputStream output) {
+	if (!getHostBytes().isEmpty()) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 20, host_);
+    }
+}
+/**
+ * @param output
+ */
+private void geturlmapantrybytes(com.google.protobuf.CodedOutputStream output) {
+	if (!getUrlMapEntryBytes().isEmpty()) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 17, urlMapEntry_);
+    }
+}
+/**
+ * @param output
+ */
+private void getuseragentbytes(com.google.protobuf.CodedOutputStream output) {
+	if (!getUserAgentBytes().isEmpty()) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 16, userAgent_);
+    }
+}
+/**
+ * @param output
+ */
+private void getreferrerbytes(com.google.protobuf.CodedOutputStream output) {
+	if (!getReferrerBytes().isEmpty()) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 15, referrer_);
+    }
+}
+/**
+ * @param output
+ */
+private void responsesize(com.google.protobuf.CodedOutputStream output) {
+	if (responseSize_ != 0L) {
+      output.writeInt64(14, responseSize_);
+    }
+}
+/**
+ * @param output
+ */
+private void status(com.google.protobuf.CodedOutputStream output) {
+	if (status_ != 0) {
+      output.writeInt32(13, status_);
+    }
+}
+/**
+ * @param output
+ */
+private void gethttpversionbytes(com.google.protobuf.CodedOutputStream output) {
+	if (!getHttpVersionBytes().isEmpty()) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 12, httpVersion_);
+    }
+}
+/**
+ * @param output
+ */
+private void getresourcesbytes(com.google.protobuf.CodedOutputStream output) {
+	if (!getResourceBytes().isEmpty()) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 11, resource_);
+    }
+}
+/**
+ * @param output
+ */
+private void getmethodbytes(com.google.protobuf.CodedOutputStream output) {
+	if (!getMethodBytes().isEmpty()) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 10, method_);
+    }
+}
+/**
+ * @param output
+ */
+private void megacycles(com.google.protobuf.CodedOutputStream output) {
+	if (megaCycles_ != 0L) {
+      output.writeInt64(9, megaCycles_);
+    }
+}
+/**
+ * @param output
+ */
+private void latency(com.google.protobuf.CodedOutputStream output) {
+	if (latency_ != null) {
+      output.writeMessage(8, getLatency());
+    }
+}
+/**
+ * @param output
+ */
+private void endtime(com.google.protobuf.CodedOutputStream output) {
+	if (endTime_ != null) {
+      output.writeMessage(7, getEndTime());
+    }
+}
+/**
+ * @param output
+ */
+private void starttime(com.google.protobuf.CodedOutputStream output) {
+	if (startTime_ != null) {
+      output.writeMessage(6, getStartTime());
+    }
+}
+/**
+ * @param output
+ */
+private void getipbytes(com.google.protobuf.CodedOutputStream output) {
+	if (!getIpBytes().isEmpty()) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 4, ip_);
+    }
+}
+/**
+ * @param output
+ */
+private void getrequestidbytes(com.google.protobuf.CodedOutputStream output) {
+	if (!getRequestIdBytes().isEmpty()) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 3, requestId_);
+    }
+}
+/**
+ * @param output
+ */
+private void getversionidbytes(com.google.protobuf.CodedOutputStream output) {
+	if (!getVersionIdBytes().isEmpty()) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 2, versionId_);
+    }
+}
+/**
+ * @param output
+ */
+private void getappidmethod(com.google.protobuf.CodedOutputStream output) {
+	if (!getAppIdBytes().isEmpty()) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 1, appId_);
+    }
+}
 
-  public int getSerializedSize() {
+  @Override
+public int getSerializedSize() {
     int size = memoizedSize;
     if (size != -1) return size;
 
     size = 0;
-    if (!getAppIdBytes().isEmpty()) {
-      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, appId_);
-    }
-    if (!getVersionIdBytes().isEmpty()) {
-      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, versionId_);
-    }
-    if (!getRequestIdBytes().isEmpty()) {
-      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, requestId_);
-    }
-    if (!getIpBytes().isEmpty()) {
-      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(4, ip_);
-    }
-    if (startTime_ != null) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeMessageSize(6, getStartTime());
-    }
-    if (endTime_ != null) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeMessageSize(7, getEndTime());
-    }
-    if (latency_ != null) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeMessageSize(8, getLatency());
-    }
-    if (megaCycles_ != 0L) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeInt64Size(9, megaCycles_);
-    }
-    if (!getMethodBytes().isEmpty()) {
-      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(10, method_);
-    }
-    if (!getResourceBytes().isEmpty()) {
-      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(11, resource_);
-    }
-    if (!getHttpVersionBytes().isEmpty()) {
-      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(12, httpVersion_);
-    }
-    if (status_ != 0) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeInt32Size(13, status_);
-    }
-    if (responseSize_ != 0L) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeInt64Size(14, responseSize_);
-    }
-    if (!getReferrerBytes().isEmpty()) {
-      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(15, referrer_);
-    }
-    if (!getUserAgentBytes().isEmpty()) {
-      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(16, userAgent_);
-    }
-    if (!getUrlMapEntryBytes().isEmpty()) {
-      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(17, urlMapEntry_);
-    }
-    if (!getHostBytes().isEmpty()) {
-      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(20, host_);
-    }
-    if (cost_ != 0D) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeDoubleSize(21, cost_);
-    }
-    if (!getTaskQueueNameBytes().isEmpty()) {
-      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(22, taskQueueName_);
-    }
-    if (!getTaskNameBytes().isEmpty()) {
-      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(23, taskName_);
-    }
-    if (wasLoadingRequest_ != false) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeBoolSize(24, wasLoadingRequest_);
-    }
-    if (pendingTime_ != null) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeMessageSize(25, getPendingTime());
-    }
-    if (instanceIndex_ != 0) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeInt32Size(26, instanceIndex_);
-    }
-    if (finished_ != false) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeBoolSize(27, finished_);
-    }
-    if (!getInstanceIdBytes().isEmpty()) {
-      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(28, instanceId_);
-    }
-    for (int i = 0; i < line_.size(); i++) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeMessageSize(29, line_.get(i));
-    }
-    if (!getModuleIdBytes().isEmpty()) {
-      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(37, moduleId_);
-    }
-    if (!getAppEngineReleaseBytes().isEmpty()) {
-      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(38, appEngineRelease_);
-    }
-    if (!getTraceIdBytes().isEmpty()) {
-      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(39, traceId_);
-    }
-    if (!getNicknameBytes().isEmpty()) {
-      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(40, nickname_);
-    }
-    for (int i = 0; i < sourceReference_.size(); i++) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeMessageSize(41, sourceReference_.get(i));
-    }
-    if (first_ != false) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeBoolSize(42, first_);
-    }
-    if (traceSampled_ != false) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeBoolSize(43, traceSampled_);
-    }
+    size = size1(size);
+    size = size2(size);
+    size = size3(size);
+    size = size4(size);
+    size = size5(size);
+    size = size6(size);
+    size = size7(size);
+    size = size8(size);
+    size = size9(size);
+    size = size10(size);
+    size = size11(size);
+    size = size12(size);
+    size = size13(size);
+    size = size14(size);
+    size = size15(size);
+    size = size16(size);
+    size = size17(size);
+    size = size18(size);
+    size = size19(size);
+    size = size20(size);
+    size = size21(size);
+    size = size22(size);
+    size = size23(size);
+    size = size24(size);
+    size = size25(size);
+    size = size26(size);
+    size = size27(size);
+    size = size28(size);
+    size = size29(size);
+    size = size30(size);
+    size = size31(size);
+    size = size32(size);
+    size = size33(size);
     memoizedSize = size;
     return size;
   }
+/**
+ * @param size
+ * @return
+ */
+private int size33(int size) {
+	if (traceSampled_ != false) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeBoolSize(43, traceSampled_);
+    }
+	return size;
+}
+/**
+ * @param size
+ * @return
+ */
+private int size32(int size) {
+	if (first_ != false) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeBoolSize(42, first_);
+    }
+	return size;
+}
+/**
+ * @param size
+ * @return
+ */
+private int size31(int size) {
+	for (int i = 0; i < sourceReference_.size(); i++) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeMessageSize(41, sourceReference_.get(i));
+    }
+	return size;
+}
+/**
+ * @param size
+ * @return
+ */
+private int size30(int size) {
+	if (!getNicknameBytes().isEmpty()) {
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(40, nickname_);
+    }
+	return size;
+}
+/**
+ * @param size
+ * @return
+ */
+private int size29(int size) {
+	if (!getTraceIdBytes().isEmpty()) {
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(39, traceId_);
+    }
+	return size;
+}
+/**
+ * @param size
+ * @return
+ */
+private int size28(int size) {
+	if (!getAppEngineReleaseBytes().isEmpty()) {
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(38, appEngineRelease_);
+    }
+	return size;
+}
+/**
+ * @param size
+ * @return
+ */
+private int size27(int size) {
+	if (!getModuleIdBytes().isEmpty()) {
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(37, moduleId_);
+    }
+	return size;
+}
+/**
+ * @param size
+ * @return
+ */
+private int size26(int size) {
+	for (int i = 0; i < line_.size(); i++) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeMessageSize(29, line_.get(i));
+    }
+	return size;
+}
+/**
+ * @param size
+ * @return
+ */
+private int size25(int size) {
+	if (!getInstanceIdBytes().isEmpty()) {
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(28, instanceId_);
+    }
+	return size;
+}
+/**
+ * @param size
+ * @return
+ */
+private int size24(int size) {
+	if (finished_ != false) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeBoolSize(27, finished_);
+    }
+	return size;
+}
+/**
+ * @param size
+ * @return
+ */
+private int size23(int size) {
+	if (instanceIndex_ != 0) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeInt32Size(26, instanceIndex_);
+    }
+	return size;
+}
+/**
+ * @param size
+ * @return
+ */
+private int size22(int size) {
+	if (pendingTime_ != null) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeMessageSize(25, getPendingTime());
+    }
+	return size;
+}
+/**
+ * @param size
+ * @return
+ */
+private int size21(int size) {
+	if (wasLoadingRequest_ != false) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeBoolSize(24, wasLoadingRequest_);
+    }
+	return size;
+}
+/**
+ * @param size
+ * @return
+ */
+private int size20(int size) {
+	if (!getTaskNameBytes().isEmpty()) {
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(23, taskName_);
+    }
+	return size;
+}
+/**
+ * @param size
+ * @return
+ */
+private int size19(int size) {
+	if (!getTaskQueueNameBytes().isEmpty()) {
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(22, taskQueueName_);
+    }
+	return size;
+}
+/**
+ * @param size
+ * @return
+ */
+private int size18(int size) {
+	if (cost_ != 0D) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeDoubleSize(21, cost_);
+    }
+	return size;
+}
+/**
+ * @param size
+ * @return
+ */
+private int size17(int size) {
+	if (!getHostBytes().isEmpty()) {
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(20, host_);
+    }
+	return size;
+}
+/**
+ * @param size
+ * @return
+ */
+private int size16(int size) {
+	if (!getUrlMapEntryBytes().isEmpty()) {
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(17, urlMapEntry_);
+    }
+	return size;
+}
+/**
+ * @param size
+ * @return
+ */
+private int size15(int size) {
+	if (!getUserAgentBytes().isEmpty()) {
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(16, userAgent_);
+    }
+	return size;
+}
+/**
+ * @param size
+ * @return
+ */
+private int size14(int size) {
+	if (!getReferrerBytes().isEmpty()) {
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(15, referrer_);
+    }
+	return size;
+}
+/**
+ * @param size
+ * @return
+ */
+private int size13(int size) {
+	if (responseSize_ != 0L) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeInt64Size(14, responseSize_);
+    }
+	return size;
+}
+/**
+ * @param size
+ * @return
+ */
+private int size12(int size) {
+	if (status_ != 0) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeInt32Size(13, status_);
+    }
+	return size;
+}
+/**
+ * @param size
+ * @return
+ */
+private int size11(int size) {
+	if (!getHttpVersionBytes().isEmpty()) {
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(12, httpVersion_);
+    }
+	return size;
+}
+/**
+ * @param size
+ * @return
+ */
+private int size10(int size) {
+	if (!getResourceBytes().isEmpty()) {
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(11, resource_);
+    }
+	return size;
+}
+/**
+ * @param size
+ * @return
+ */
+private int size9(int size) {
+	if (!getMethodBytes().isEmpty()) {
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(10, method_);
+    }
+	return size;
+}
+/**
+ * @param size
+ * @return
+ */
+private int size8(int size) {
+	if (megaCycles_ != 0L) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeInt64Size(9, megaCycles_);
+    }
+	return size;
+}
+/**
+ * @param size
+ * @return
+ */
+private int size7(int size) {
+	if (latency_ != null) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeMessageSize(8, getLatency());
+    }
+	return size;
+}
+/**
+ * @param size
+ * @return
+ */
+private int size6(int size) {
+	if (endTime_ != null) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeMessageSize(7, getEndTime());
+    }
+	return size;
+}
+/**
+ * @param size
+ * @return
+ */
+private int size5(int size) {
+	if (startTime_ != null) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeMessageSize(6, getStartTime());
+    }
+	return size;
+}
+/**
+ * @param size
+ * @return
+ */
+private int size4(int size) {
+	if (!getIpBytes().isEmpty()) {
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(4, ip_);
+    }
+	return size;
+}
+/**
+ * @param size
+ * @return
+ */
+private int size3(int size) {
+	if (!getRequestIdBytes().isEmpty()) {
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, requestId_);
+    }
+	return size;
+}
+/**
+ * @param size
+ * @return
+ */
+private int size2(int size) {
+	if (!getVersionIdBytes().isEmpty()) {
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, versionId_);
+    }
+	return size;
+}
+/**
+ * @param size
+ * @return
+ */
+private int size1(int size) {
+	if (!getAppIdBytes().isEmpty()) {
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, appId_);
+    }
+	return size;
+}
 
   private static final long serialVersionUID = 0L;
   @java.lang.Override
@@ -1725,7 +2336,7 @@ public  final class RequestLog extends
     if (!(obj instanceof com.google.appengine.logging.v1.RequestLog)) {
       return super.equals(obj);
     }
-    com.google.appengine.logging.v1.RequestLog other = (com.google.appengine.logging.v1.RequestLog) obj;
+    RequestLogOrBuilder other = (RequestLogOrBuilder) obj;
 
     boolean result = true;
     result = result && getAppId()
@@ -1908,69 +2519,69 @@ public  final class RequestLog extends
     return hash;
   }
 
-  public static com.google.appengine.logging.v1.RequestLog parseFrom(
+  public static RequestLogOrBuilder parseFrom(
       java.nio.ByteBuffer data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static com.google.appengine.logging.v1.RequestLog parseFrom(
+  public static RequestLogOrBuilder parseFrom(
       java.nio.ByteBuffer data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static com.google.appengine.logging.v1.RequestLog parseFrom(
+  public static RequestLogOrBuilder parseFrom(
       com.google.protobuf.ByteString data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static com.google.appengine.logging.v1.RequestLog parseFrom(
+  public static RequestLogOrBuilder parseFrom(
       com.google.protobuf.ByteString data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static com.google.appengine.logging.v1.RequestLog parseFrom(byte[] data)
+  public static RequestLogOrBuilder parseFrom(byte[] data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static com.google.appengine.logging.v1.RequestLog parseFrom(
+  public static RequestLogOrBuilder parseFrom(
       byte[] data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static com.google.appengine.logging.v1.RequestLog parseFrom(java.io.InputStream input)
+  public static RequestLogOrBuilder parseFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static com.google.appengine.logging.v1.RequestLog parseFrom(
+  public static RequestLogOrBuilder parseFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input, extensionRegistry);
   }
-  public static com.google.appengine.logging.v1.RequestLog parseDelimitedFrom(java.io.InputStream input)
+  public static RequestLogOrBuilder parseDelimitedFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input);
   }
-  public static com.google.appengine.logging.v1.RequestLog parseDelimitedFrom(
+  public static RequestLogOrBuilder parseDelimitedFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
   }
-  public static com.google.appengine.logging.v1.RequestLog parseFrom(
+  public static RequestLogOrBuilder parseFrom(
       com.google.protobuf.CodedInputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static com.google.appengine.logging.v1.RequestLog parseFrom(
+  public static RequestLogOrBuilder parseFrom(
       com.google.protobuf.CodedInputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
@@ -1978,14 +2589,16 @@ public  final class RequestLog extends
         .parseWithIOException(PARSER, input, extensionRegistry);
   }
 
-  public Builder newBuilderForType() { return newBuilder(); }
+  @Override
+public Builder newBuilderForType() { return newBuilder(); }
   public static Builder newBuilder() {
     return DEFAULT_INSTANCE.toBuilder();
   }
   public static Builder newBuilder(com.google.appengine.logging.v1.RequestLog prototype) {
     return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
   }
-  public Builder toBuilder() {
+  @Override
+public Builder toBuilder() {
     return this == DEFAULT_INSTANCE
         ? new Builder() : new Builder().mergeFrom(this);
   }
@@ -2137,11 +2750,11 @@ public  final class RequestLog extends
       return com.google.appengine.logging.v1.RequestLogProto.internal_static_google_appengine_logging_v1_RequestLog_descriptor;
     }
 
-    public com.google.appengine.logging.v1.RequestLog getDefaultInstanceForType() {
+    public RequestLogOrBuilder getDefaultInstanceForType() {
       return com.google.appengine.logging.v1.RequestLog.getDefaultInstance();
     }
 
-    public com.google.appengine.logging.v1.RequestLog build() {
+    public RequestLogOrBuilder build() {
       com.google.appengine.logging.v1.RequestLog result = buildPartial();
       if (!result.isInitialized()) {
         throw newUninitializedMessageException(result);
@@ -5752,7 +6365,7 @@ public  final class RequestLog extends
     DEFAULT_INSTANCE = new com.google.appengine.logging.v1.RequestLog();
   }
 
-  public static com.google.appengine.logging.v1.RequestLog getDefaultInstance() {
+  public static RequestLogOrBuilder getDefaultInstance() {
     return DEFAULT_INSTANCE;
   }
 
@@ -5775,7 +6388,8 @@ public  final class RequestLog extends
     return PARSER;
   }
 
-  public com.google.appengine.logging.v1.RequestLog getDefaultInstanceForType() {
+  @Override
+public RequestLogOrBuilder getDefaultInstanceForType() {
     return DEFAULT_INSTANCE;
   }
 
