@@ -2,7 +2,6 @@ package teammates.ui.webapi;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 import org.testng.annotations.Test;
 
@@ -13,11 +12,7 @@ import teammates.common.datatransfer.attributes.InstructorAttributes;
 import teammates.common.datatransfer.attributes.StudentAttributes;
 import teammates.common.datatransfer.questions.FeedbackMcqQuestionDetails;
 import teammates.common.util.Const;
-import teammates.common.util.JsonUtils;
-import teammates.ui.output.FeedbackQuestionData;
 import teammates.ui.output.FeedbackQuestionsData;
-import teammates.ui.output.FeedbackVisibilityType;
-import teammates.ui.output.NumberOfEntitiesToGiveFeedbackToSetting;
 import teammates.ui.request.Intent;
 
 /**
@@ -33,68 +28,6 @@ public class GetFeedbackQuestionsActionTest extends BaseActionTest<GetFeedbackQu
     @Override
     protected String getRequestMethod() {
         return GET;
-    }
-
-    @Override
-    @Test
-    protected void testExecute() {
-        InstructorAttributes instructor1OfCourse1 = typicalBundle.instructors.get("instructor1OfCourse1");
-        FeedbackSessionAttributes feedbackSessionAttributes = typicalBundle.feedbackSessions.get("session1InCourse1");
-
-        loginAsInstructor(instructor1OfCourse1.getGoogleId());
-
-        ______TS("Not enough parameters");
-
-        verifyHttpParameterFailure();
-        verifyHttpParameterFailure(Const.ParamsNames.COURSE_ID, feedbackSessionAttributes.getCourseId());
-        verifyHttpParameterFailure(Const.ParamsNames.FEEDBACK_SESSION_NAME,
-                feedbackSessionAttributes.getFeedbackSessionName());
-        verifyHttpParameterFailure(Const.ParamsNames.COURSE_ID, feedbackSessionAttributes.getCourseId(),
-                Const.ParamsNames.FEEDBACK_SESSION_NAME, feedbackSessionAttributes.getFeedbackSessionName());
-
-        ______TS("typical success case");
-
-        String[] params = {
-                Const.ParamsNames.COURSE_ID, feedbackSessionAttributes.getCourseId(),
-                Const.ParamsNames.FEEDBACK_SESSION_NAME, feedbackSessionAttributes.getFeedbackSessionName(),
-                Const.ParamsNames.INTENT, Intent.FULL_DETAIL.toString(),
-        };
-        GetFeedbackQuestionsAction a = getAction(params);
-        JsonResult r = getJsonResult(a);
-
-        FeedbackQuestionsData feedbackQuestionsResponse = (FeedbackQuestionsData) r.getOutput();
-
-        List<FeedbackQuestionData> questions = feedbackQuestionsResponse.getQuestions();
-        assertEquals(5, questions.size());
-
-        FeedbackQuestionData typicalResponse = questions.get(0);
-        FeedbackQuestionAttributes expected =
-                logic.getFeedbackQuestionsForSession(feedbackSessionAttributes.getFeedbackSessionName(),
-                        feedbackSessionAttributes.getCourseId()).get(0);
-
-        assertNotNull(typicalResponse.getFeedbackQuestionId());
-        assertEquals(expected.getFeedbackQuestionId(), typicalResponse.getFeedbackQuestionId());
-        assertEquals(expected.getQuestionNumber(), typicalResponse.getQuestionNumber());
-        assertEquals(expected.getQuestionDetailsCopy().getQuestionText(), typicalResponse.getQuestionBrief());
-        assertEquals(expected.getQuestionDescription(), typicalResponse.getQuestionDescription());
-
-        assertEquals(JsonUtils.toJson(expected.getQuestionDetailsCopy()),
-                JsonUtils.toJson(typicalResponse.getQuestionDetails()));
-
-        assertEquals(expected.getQuestionType(), typicalResponse.getQuestionType());
-        assertEquals(expected.getGiverType(), typicalResponse.getGiverType());
-        assertEquals(expected.getRecipientType(), typicalResponse.getRecipientType());
-
-        assertEquals(NumberOfEntitiesToGiveFeedbackToSetting.CUSTOM,
-                typicalResponse.getNumberOfEntitiesToGiveFeedbackToSetting());
-        assertEquals(1, typicalResponse.getCustomNumberOfEntitiesToGiveFeedbackTo().intValue());
-
-        assertEquals(Arrays.asList(FeedbackVisibilityType.INSTRUCTORS),
-                typicalResponse.getShowResponsesTo());
-        assertEquals(Arrays.asList(FeedbackVisibilityType.INSTRUCTORS),
-                typicalResponse.getShowGiverNameTo());
-        assertEquals(Arrays.asList(FeedbackVisibilityType.INSTRUCTORS),
-                typicalResponse.getShowRecipientNameTo());
     }
 
     @Test

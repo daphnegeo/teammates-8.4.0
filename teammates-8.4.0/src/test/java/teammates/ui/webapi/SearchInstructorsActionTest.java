@@ -34,11 +34,6 @@ public class SearchInstructorsActionTest extends BaseActionTest<SearchInstructor
         return GET;
     }
 
-    @Override
-    protected void testExecute() {
-        // See test cases below.
-    }
-
     @Test
     protected void testExecute_notEnoughParameters_shouldFail() {
         loginAsAdmin();

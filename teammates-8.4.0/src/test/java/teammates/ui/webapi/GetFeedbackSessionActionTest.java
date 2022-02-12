@@ -6,12 +6,6 @@ import teammates.common.datatransfer.attributes.FeedbackSessionAttributes;
 import teammates.common.datatransfer.attributes.InstructorAttributes;
 import teammates.common.datatransfer.attributes.StudentAttributes;
 import teammates.common.util.Const;
-import teammates.common.util.TimeHelper;
-import teammates.ui.output.FeedbackSessionData;
-import teammates.ui.output.FeedbackSessionPublishStatus;
-import teammates.ui.output.FeedbackSessionSubmissionStatus;
-import teammates.ui.output.ResponseVisibleSetting;
-import teammates.ui.output.SessionVisibleSetting;
 import teammates.ui.request.Intent;
 
 /**
@@ -27,70 +21,6 @@ public class GetFeedbackSessionActionTest extends BaseActionTest<GetFeedbackSess
     @Override
     protected String getRequestMethod() {
         return GET;
-    }
-
-    @Override
-    @Test
-    protected void testExecute() {
-        // TODO: Add test cases
-
-        InstructorAttributes instructor1OfCourse1 = typicalBundle.instructors.get("instructor1OfCourse1");
-        FeedbackSessionAttributes feedbackSessionAttributes = typicalBundle.feedbackSessions.get("session1InCourse1");
-        String timeZone = feedbackSessionAttributes.getTimeZone();
-
-        loginAsInstructor(instructor1OfCourse1.getGoogleId());
-
-        ______TS("Not enough parameters");
-
-        verifyHttpParameterFailure();
-        verifyHttpParameterFailure(Const.ParamsNames.COURSE_ID, feedbackSessionAttributes.getCourseId());
-        verifyHttpParameterFailure(Const.ParamsNames.FEEDBACK_SESSION_NAME,
-                feedbackSessionAttributes.getFeedbackSessionName());
-        verifyHttpParameterFailure(Const.ParamsNames.COURSE_ID, feedbackSessionAttributes.getCourseId(),
-                Const.ParamsNames.FEEDBACK_SESSION_NAME, feedbackSessionAttributes.getFeedbackSessionName());
-
-        ______TS("typical success case");
-
-        String[] params = {
-                Const.ParamsNames.COURSE_ID, feedbackSessionAttributes.getCourseId(),
-                Const.ParamsNames.FEEDBACK_SESSION_NAME, feedbackSessionAttributes.getFeedbackSessionName(),
-                Const.ParamsNames.INTENT, Intent.FULL_DETAIL.toString(),
-        };
-        GetFeedbackSessionAction a = getAction(params);
-        JsonResult r = getJsonResult(a);
-
-        FeedbackSessionData response = (FeedbackSessionData) r.getOutput();
-        assertEquals(feedbackSessionAttributes.getCourseId(), response.getCourseId());
-        assertEquals(feedbackSessionAttributes.getFeedbackSessionName(), response.getFeedbackSessionName());
-        assertEquals(timeZone, response.getTimeZone());
-        assertEquals(feedbackSessionAttributes.getInstructions(), response.getInstructions());
-
-        assertEquals(TimeHelper.getMidnightAdjustedInstantBasedOnZone(feedbackSessionAttributes.getStartTime(),
-                timeZone, true).toEpochMilli(),
-                response.getSubmissionStartTimestamp());
-        assertEquals(TimeHelper.getMidnightAdjustedInstantBasedOnZone(feedbackSessionAttributes.getEndTime(),
-                timeZone, true).toEpochMilli(),
-                response.getSubmissionEndTimestamp());
-        assertEquals(feedbackSessionAttributes.getGracePeriodMinutes(), response.getGracePeriod().longValue());
-
-        assertEquals(SessionVisibleSetting.CUSTOM, response.getSessionVisibleSetting());
-        assertEquals(TimeHelper.getMidnightAdjustedInstantBasedOnZone(feedbackSessionAttributes.getSessionVisibleFromTime(),
-                timeZone, true).toEpochMilli(),
-                response.getCustomSessionVisibleTimestamp().longValue());
-
-        assertEquals(ResponseVisibleSetting.CUSTOM, response.getResponseVisibleSetting());
-        assertEquals(TimeHelper.getMidnightAdjustedInstantBasedOnZone(feedbackSessionAttributes.getResultsVisibleFromTime(),
-                timeZone, true).toEpochMilli(),
-                response.getCustomResponseVisibleTimestamp().longValue());
-
-        assertEquals(FeedbackSessionSubmissionStatus.OPEN, response.getSubmissionStatus());
-        assertEquals(FeedbackSessionPublishStatus.NOT_PUBLISHED, response.getPublishStatus());
-
-        assertEquals(feedbackSessionAttributes.isClosingEmailEnabled(), response.getIsClosingEmailEnabled());
-        assertEquals(feedbackSessionAttributes.isPublishedEmailEnabled(), response.getIsPublishedEmailEnabled());
-
-        assertEquals(feedbackSessionAttributes.getCreatedTime().toEpochMilli(), response.getCreatedAtTimestamp());
-        assertNull(response.getDeletedAtTimestamp());
     }
 
     @Override

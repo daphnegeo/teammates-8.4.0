@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.testng.annotations.Test;
 
-import teammates.common.datatransfer.attributes.FeedbackQuestionAttributes;
+import teammates.common.datatransfer.attributes.FeedbackQuestionsVariousAttributes;
 import teammates.common.datatransfer.attributes.FeedbackResponseAttributes;
 import teammates.common.datatransfer.attributes.InstructorAttributes;
 import teammates.common.datatransfer.questions.FeedbackRankQuestionDetails;
@@ -13,7 +13,7 @@ import teammates.common.datatransfer.questions.FeedbackRankRecipientsQuestionDet
 import teammates.common.datatransfer.questions.FeedbackRankRecipientsResponseDetails;
 import teammates.common.util.Const;
 import teammates.e2e.pageobjects.FeedbackSubmitPage;
-import teammates.e2e.pageobjects.InstructorFeedbackEditPage;
+import teammates.e2e.pageobjects.InstructorFeedbackPage;
 
 /**
  * SUT: {@link Const.WebPageURIs#INSTRUCTOR_SESSION_EDIT_PAGE}, {@link Const.WebPageURIs#SESSION_SUBMISSION_PAGE}
@@ -42,10 +42,10 @@ public class FeedbackRankRecipientQuestionE2ETest extends BaseFeedbackQuestionE2
 
     @Override
     protected void testEditPage() {
-        InstructorFeedbackEditPage feedbackEditPage = loginToFeedbackEditPage();
+        InstructorFeedbackPage feedbackEditPage = loginToFeedbackEditPage();
 
         ______TS("verify loaded question");
-        FeedbackQuestionAttributes loadedQuestion = testData.feedbackQuestions.get("qn1ForFirstSession").getCopy();
+        FeedbackQuestionsVariousAttributes loadedQuestion = testData.feedbackQuestions.get("qn1ForFirstSession").getCopy();
         FeedbackRankRecipientsQuestionDetails questionDetails =
                 (FeedbackRankRecipientsQuestionDetails) loadedQuestion.getQuestionDetailsCopy();
         feedbackEditPage.verifyRankQuestionDetails(1, questionDetails);
@@ -59,7 +59,7 @@ public class FeedbackRankRecipientQuestionE2ETest extends BaseFeedbackQuestionE2
         verifyPresentInDatabase(loadedQuestion);
 
         ______TS("copy question");
-        FeedbackQuestionAttributes copiedQuestion = testData.feedbackQuestions.get("qn1ForSecondSession");
+        FeedbackQuestionsVariousAttributes copiedQuestion = testData.feedbackQuestions.get("qn1ForSecondSession");
         questionDetails = (FeedbackRankRecipientsQuestionDetails) copiedQuestion.getQuestionDetailsCopy();
         feedbackEditPage.copyQuestion(copiedQuestion.getCourseId(),
                 copiedQuestion.getQuestionDetailsCopy().getQuestionText());
@@ -88,7 +88,7 @@ public class FeedbackRankRecipientQuestionE2ETest extends BaseFeedbackQuestionE2
         FeedbackSubmitPage feedbackSubmitPage = loginToFeedbackSubmitPage();
 
         ______TS("verify loaded question");
-        FeedbackQuestionAttributes question = testData.feedbackQuestions.get("qn1ForFirstSession");
+        FeedbackQuestionsVariousAttributes question = testData.feedbackQuestions.get("qn1ForFirstSession");
         InstructorAttributes receiver = testData.instructors.get("instructor");
         InstructorAttributes receiver2 = testData.instructors.get("instructor2");
         feedbackSubmitPage.verifyRankQuestion(1, receiver.getName(),

@@ -9,7 +9,7 @@ import org.testng.annotations.Test;
 
 import teammates.common.datatransfer.DataBundle;
 import teammates.common.datatransfer.FeedbackParticipantType;
-import teammates.common.datatransfer.attributes.FeedbackQuestionAttributes;
+import teammates.common.datatransfer.attributes.FeedbackQuestionsVariousAttributes;
 import teammates.common.datatransfer.attributes.FeedbackResponseAttributes;
 import teammates.common.datatransfer.attributes.FeedbackResponseCommentAttributes;
 import teammates.common.datatransfer.attributes.FeedbackSessionAttributes;
@@ -65,17 +65,17 @@ public class CreateFeedbackResponseCommentActionTest extends BaseActionTest<Crea
         student2InCourse1 = dataBundle.students.get("student2InCourse1");
         student3InCourse1 = dataBundle.students.get("student3InCourse1");
         session1InCourse1 = dataBundle.feedbackSessions.get("session1InCourse1");
-        FeedbackQuestionAttributes qn1InSession1InCourse1 = logic.getFeedbackQuestion(
+        FeedbackQuestionsVariousAttributes qn1InSession1InCourse1 = logic.getFeedbackQuestion(
                 session1InCourse1.getFeedbackSessionName(), session1InCourse1.getCourseId(), 1);
-        FeedbackQuestionAttributes qn2InSession1InCourse1 = logic.getFeedbackQuestion(
+        FeedbackQuestionsVariousAttributes qn2InSession1InCourse1 = logic.getFeedbackQuestion(
                 session1InCourse1.getFeedbackSessionName(), session1InCourse1.getCourseId(), 2);
-        FeedbackQuestionAttributes qn3InSession1InCourse1 = logic.getFeedbackQuestion(
+        FeedbackQuestionsVariousAttributes qn3InSession1InCourse1 = logic.getFeedbackQuestion(
                 session1InCourse1.getFeedbackSessionName(), session1InCourse1.getCourseId(), 3);
-        FeedbackQuestionAttributes qn4InSession1InCourse1 = logic.getFeedbackQuestion(
+        FeedbackQuestionsVariousAttributes qn4InSession1InCourse1 = logic.getFeedbackQuestion(
                 session1InCourse1.getFeedbackSessionName(), session1InCourse1.getCourseId(), 4);
-        FeedbackQuestionAttributes qn5InSession1InCourse1 = logic.getFeedbackQuestion(
+        FeedbackQuestionsVariousAttributes qn5InSession1InCourse1 = logic.getFeedbackQuestion(
                 session1InCourse1.getFeedbackSessionName(), session1InCourse1.getCourseId(), 5);
-        FeedbackQuestionAttributes qn6InSession1InCourse1 = logic.getFeedbackQuestion(
+        FeedbackQuestionsVariousAttributes qn6InSession1InCourse1 = logic.getFeedbackQuestion(
                 session1InCourse1.getFeedbackSessionName(), session1InCourse1.getCourseId(), 6);
         response1ForQ1 = logic.getFeedbackResponse(qn1InSession1InCourse1.getId(),
                 instructor1OfCourse1.getEmail(), instructor1OfCourse1.getEmail());
@@ -91,12 +91,6 @@ public class CreateFeedbackResponseCommentActionTest extends BaseActionTest<Crea
                 instructor1OfCourse1.getEmail(), instructor1OfCourse1.getEmail());
         response1ForQ6 = logic.getFeedbackResponse(qn6InSession1InCourse1.getId(),
                 student1InCourse1.getEmail(), student3InCourse1.getEmail());
-    }
-
-    @Override
-    @Test
-    public void testExecute() {
-        //see individual test cases.
     }
 
     @Test
@@ -366,7 +360,7 @@ public class CreateFeedbackResponseCommentActionTest extends BaseActionTest<Crea
         removeAndRestoreDataBundle(contributionDataBundle);
         InstructorAttributes instructorAttributes = contributionDataBundle.instructors.get("instructor1OfCourse1");
         FeedbackSessionAttributes contributionSession = contributionDataBundle.feedbackSessions.get("contribSession");
-        FeedbackQuestionAttributes contributionQuestion = logic.getFeedbackQuestion(
+        FeedbackQuestionsVariousAttributes contributionQuestion = logic.getFeedbackQuestion(
                 contributionSession.getFeedbackSessionName(), contributionSession.getCourseId(), 1);
         FeedbackResponseAttributes contributionResponse =
                 contributionDataBundle.feedbackResponses.get("response1ForQ1S5C1");

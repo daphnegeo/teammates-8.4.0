@@ -10,6 +10,7 @@ import com.googlecode.objectify.cmd.Query;
 import teammates.common.datatransfer.AttributesDeletionQuery;
 import teammates.common.datatransfer.FeedbackParticipantType;
 import teammates.common.datatransfer.attributes.FeedbackQuestionAttributes;
+import teammates.common.datatransfer.attributes.FeedbackQuestionsVariousAttributes;
 import teammates.common.exception.EntityDoesNotExistException;
 import teammates.common.exception.InvalidParametersException;
 import teammates.storage.entity.FeedbackQuestion;
@@ -94,7 +95,7 @@ public final class FeedbackQuestionsDb extends EntitiesDb<FeedbackQuestion, Feed
      * @throws InvalidParametersException if attributes to update are not valid
      * @throws EntityDoesNotExistException if the feedback question cannot be found
      */
-    public FeedbackQuestionAttributes updateFeedbackQuestion(FeedbackQuestionAttributes.UpdateOptions updateOptions)
+    public FeedbackQuestionsVariousAttributes updateFeedbackQuestion(FeedbackQuestionAttributes.UpdateOptions updateOptions)
             throws InvalidParametersException, EntityDoesNotExistException {
         assert updateOptions != null;
 
@@ -103,7 +104,7 @@ public final class FeedbackQuestionsDb extends EntitiesDb<FeedbackQuestion, Feed
             throw new EntityDoesNotExistException(ERROR_UPDATE_NON_EXISTENT + updateOptions);
         }
 
-        FeedbackQuestionAttributes newAttributes = makeAttributes(feedbackQuestion);
+        FeedbackQuestionsVariousAttributes newAttributes = makeAttributes(feedbackQuestion);
         newAttributes.update(updateOptions);
 
         newAttributes.sanitizeForSaving();
@@ -231,7 +232,7 @@ public final class FeedbackQuestionsDb extends EntitiesDb<FeedbackQuestion, Feed
     }
 
     @Override
-    boolean hasExistingEntities(FeedbackQuestionAttributes entityToCreate) {
+    boolean hasExistingEntities(FeedbackQuestionsVariousAttributes entityToCreate) {
         return !load()
                 .filter("feedbackSessionName =", entityToCreate.getFeedbackSessionName())
                 .filter("courseId =", entityToCreate.getCourseId())
@@ -242,7 +243,7 @@ public final class FeedbackQuestionsDb extends EntitiesDb<FeedbackQuestion, Feed
     }
 
     @Override
-    FeedbackQuestionAttributes makeAttributes(FeedbackQuestion entity) {
+    FeedbackQuestionsVariousAttributes makeAttributes(FeedbackQuestion entity) {
         assert entity != null;
 
         return FeedbackQuestionAttributes.valueOf(entity);

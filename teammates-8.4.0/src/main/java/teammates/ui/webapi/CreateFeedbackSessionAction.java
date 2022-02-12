@@ -20,7 +20,7 @@ import teammates.ui.request.InvalidHttpRequestBodyException;
 /**
  * Create a feedback session.
  */
-class CreateFeedbackSessionAction extends Action {
+public class CreateFeedbackSessionAction extends Action {
 
     private static final Logger log = Logger.getLogger();
 

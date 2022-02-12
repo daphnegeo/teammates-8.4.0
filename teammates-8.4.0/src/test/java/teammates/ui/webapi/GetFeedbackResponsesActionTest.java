@@ -6,7 +6,7 @@ import org.testng.annotations.Test;
 
 import teammates.common.datatransfer.DataBundle;
 import teammates.common.datatransfer.FeedbackParticipantType;
-import teammates.common.datatransfer.attributes.FeedbackQuestionAttributes;
+import teammates.common.datatransfer.attributes.FeedbackQuestionsVariousAttributes;
 import teammates.common.datatransfer.attributes.FeedbackResponseAttributes;
 import teammates.common.datatransfer.attributes.FeedbackResponseCommentAttributes;
 import teammates.common.datatransfer.attributes.FeedbackSessionAttributes;
@@ -25,10 +25,10 @@ import teammates.ui.request.Intent;
  */
 public class GetFeedbackResponsesActionTest extends BaseActionTest<GetFeedbackResponsesAction> {
 
-    private FeedbackQuestionAttributes qn1InSession1InCourse1;
+    private FeedbackQuestionsVariousAttributes qn1InSession1InCourse1;
     private StudentAttributes student1InCourse1;
     private InstructorAttributes instructor1OfCourse1;
-    private FeedbackQuestionAttributes qn2InGracePeriodInCourse1;
+    private FeedbackQuestionsVariousAttributes qn2InGracePeriodInCourse1;
     private StudentAttributes student1InCourse2;
     private InstructorAttributes instructor1OfCourse2;
 
@@ -55,12 +55,6 @@ public class GetFeedbackResponsesActionTest extends BaseActionTest<GetFeedbackRe
                 gracePeriodSession.getFeedbackSessionName(), gracePeriodSession.getCourseId(), 2);
         student1InCourse2 = typicalBundle.students.get("student1InCourse2");
         instructor1OfCourse2 = typicalBundle.instructors.get("instructor1OfCourse2");
-    }
-
-    @Test
-    @Override
-    protected void testExecute() {
-        // See independent test cases
     }
 
     @Test
@@ -127,7 +121,7 @@ public class GetFeedbackResponsesActionTest extends BaseActionTest<GetFeedbackRe
         DataBundle dataBundle = loadDataBundle("/FeedbackResponseCommentCRUDTest.json");
         removeAndRestoreDataBundle(dataBundle);
         StudentAttributes student1InCourse1 = dataBundle.students.get("student1InCourse1");
-        FeedbackQuestionAttributes qn3InSession1 = dataBundle.feedbackQuestions.get("qn3InSession1");
+        FeedbackQuestionsVariousAttributes qn3InSession1 = dataBundle.feedbackQuestions.get("qn3InSession1");
         FeedbackResponseAttributes response1ForQ3 = dataBundle.feedbackResponses.get("response1ForQ3");
         FeedbackResponseCommentAttributes comment1FromStudent1 =
                 dataBundle.feedbackResponseComments.get("comment1FromStudent1");

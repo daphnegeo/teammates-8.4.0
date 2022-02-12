@@ -3,6 +3,7 @@ package teammates.ui.webapi;
 import java.util.List;
 
 import teammates.common.datatransfer.attributes.FeedbackQuestionAttributes;
+import teammates.common.datatransfer.attributes.FeedbackQuestionsVariousAttributes;
 import teammates.common.datatransfer.questions.FeedbackQuestionDetails;
 import teammates.common.exception.EntityDoesNotExistException;
 import teammates.common.exception.InvalidParametersException;
@@ -24,7 +25,7 @@ public class UpdateFeedbackQuestionAction extends Action {
     @Override
     void checkSpecificAccessControl() throws UnauthorizedAccessException {
         String feedbackQuestionId = getNonNullRequestParamValue(Const.ParamsNames.FEEDBACK_QUESTION_ID);
-        FeedbackQuestionAttributes questionAttributes = logic.getFeedbackQuestion(feedbackQuestionId);
+        FeedbackQuestionsVariousAttributes questionAttributes = logic.getFeedbackQuestion(feedbackQuestionId);
 
         if (questionAttributes == null) {
             throw new EntityNotFoundException("Unknown question id");
@@ -38,7 +39,7 @@ public class UpdateFeedbackQuestionAction extends Action {
     @Override
     public JsonResult execute() throws InvalidHttpRequestBodyException {
         String feedbackQuestionId = getNonNullRequestParamValue(Const.ParamsNames.FEEDBACK_QUESTION_ID);
-        FeedbackQuestionAttributes oldQuestion = logic.getFeedbackQuestion(feedbackQuestionId);
+        FeedbackQuestionsVariousAttributes oldQuestion = logic.getFeedbackQuestion(feedbackQuestionId);
 
         FeedbackQuestionUpdateRequest updateRequest = getAndValidateRequestBody(FeedbackQuestionUpdateRequest.class);
 

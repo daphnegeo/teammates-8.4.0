@@ -24,12 +24,6 @@ public class GetStudentProfileActionTest extends BaseActionTest<GetStudentProfil
         return GET;
     }
 
-    @Override
-    @Test
-    public void testExecute() {
-        // See test cases below.
-    }
-
     @Test
     public void testExecute_withExistingProfileAndNoParameter_shouldReturnOwnProfile() {
         AccountAttributes student1InCourse1 = typicalBundle.accounts.get("student1InCourse1");

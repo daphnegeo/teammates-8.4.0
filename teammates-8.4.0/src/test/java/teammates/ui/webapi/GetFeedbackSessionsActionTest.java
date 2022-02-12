@@ -61,11 +61,6 @@ public class GetFeedbackSessionsActionTest extends BaseActionTest<GetFeedbackSes
         removeAndRestoreDataBundle(typicalBundle);
     }
 
-    @Override
-    protected void testExecute() {
-        // see individual tests
-    }
-
     @Test
     protected void testExecute_asInstructorWithCourseId_shouldReturnAllSessionsForCourse() {
         InstructorAttributes instructor2OfCourse1 = typicalBundle.instructors.get("instructor2OfCourse1");
@@ -297,17 +292,7 @@ public class GetFeedbackSessionsActionTest extends BaseActionTest<GetFeedbackSes
     }
 
     private void assertPartialInformationMatch(FeedbackSessionData data, FeedbackSessionAttributes expectedSession) {
-        String timeZone = expectedSession.getTimeZone();
-        assertEquals(expectedSession.getCourseId(), data.getCourseId());
-        assertEquals(timeZone, data.getTimeZone());
-        assertEquals(expectedSession.getFeedbackSessionName(), data.getFeedbackSessionName());
-        assertEquals(expectedSession.getInstructions(), data.getInstructions());
-        assertEquals(TimeHelper.getMidnightAdjustedInstantBasedOnZone(expectedSession.getStartTime(),
-                timeZone, true).toEpochMilli(),
-                data.getSubmissionStartTimestamp());
-        assertEquals(TimeHelper.getMidnightAdjustedInstantBasedOnZone(expectedSession.getEndTime(),
-                timeZone, true).toEpochMilli(),
-                data.getSubmissionEndTimestamp());
+        partialInfoMatchMethod(data, expectedSession);
 
         if (!expectedSession.isVisible()) {
             assertEquals(FeedbackSessionSubmissionStatus.NOT_VISIBLE, data.getSubmissionStatus());
@@ -330,8 +315,12 @@ public class GetFeedbackSessionsActionTest extends BaseActionTest<GetFeedbackSes
         assertInformationHidden(data);
     }
 
-    private void assertAllInformationMatch(FeedbackSessionData data, FeedbackSessionAttributes expectedSession) {
-        String timeZone = expectedSession.getTimeZone();
+	/**
+	 * @param data
+	 * @param expectedSession
+	 */
+	private void partialInfoMatchMethod(FeedbackSessionData data, FeedbackSessionAttributes expectedSession) {
+		String timeZone = expectedSession.getTimeZone();
         assertEquals(expectedSession.getCourseId(), data.getCourseId());
         assertEquals(timeZone, data.getTimeZone());
         assertEquals(expectedSession.getFeedbackSessionName(), data.getFeedbackSessionName());
@@ -342,6 +331,10 @@ public class GetFeedbackSessionsActionTest extends BaseActionTest<GetFeedbackSes
         assertEquals(TimeHelper.getMidnightAdjustedInstantBasedOnZone(expectedSession.getEndTime(),
                 timeZone, true).toEpochMilli(),
                 data.getSubmissionEndTimestamp());
+	}
+
+    private void assertAllInformationMatch(FeedbackSessionData data, FeedbackSessionAttributes expectedSession) {
+    	partialInfoMatchMethod(data, expectedSession);
         assertEquals(expectedSession.getGracePeriodMinutes(), data.getGracePeriod().longValue());
 
         Instant sessionVisibleTime = expectedSession.getSessionVisibleFromTime();
@@ -398,7 +391,15 @@ public class GetFeedbackSessionsActionTest extends BaseActionTest<GetFeedbackSes
     private void assertAllInstructorSessionsMatch(FeedbackSessionsData sessionsData,
                                                   List<FeedbackSessionAttributes> expectedSessions) {
 
-        assertEquals(sessionsData.getFeedbackSessions().size(), expectedSessions.size());
+        sessionMatching(sessionsData, expectedSessions);
+    }
+
+	/**
+	 * @param sessionsData
+	 * @param expectedSessions
+	 */
+	private void sessionMatching(FeedbackSessionsData sessionsData, List<FeedbackSessionAttributes> expectedSessions) {
+		assertEquals(sessionsData.getFeedbackSessions().size(), expectedSessions.size());
         for (FeedbackSessionData sessionData : sessionsData.getFeedbackSessions()) {
             List<FeedbackSessionAttributes> matchedSessions =
                     expectedSessions.stream().filter(session -> session.getFeedbackSessionName().equals(
@@ -407,22 +408,15 @@ public class GetFeedbackSessionsActionTest extends BaseActionTest<GetFeedbackSes
 
             assertEquals(1, matchedSessions.size());
             assertAllInformationMatch(sessionData, matchedSessions.get(0));
+            assertPartialInformationMatch(sessionData, matchedSessions.get(0));
+            assertInformationHiddenForStudent(sessionData);
         }
-    }
+	}
 
     private void assertAllStudentSessionsMatch(FeedbackSessionsData sessionsData,
                                                List<FeedbackSessionAttributes> expectedSessions) {
 
-        assertEquals(sessionsData.getFeedbackSessions().size(), expectedSessions.size());
-        for (FeedbackSessionData sessionData : sessionsData.getFeedbackSessions()) {
-            List<FeedbackSessionAttributes> matchedSessions =
-                    expectedSessions.stream().filter(session -> session.getFeedbackSessionName().equals(
-                            sessionData.getFeedbackSessionName())
-                            && session.getCourseId().equals(sessionData.getCourseId())).collect(Collectors.toList());
+    	  sessionMatching(sessionsData, expectedSessions);
 
-            assertEquals(1, matchedSessions.size());
-            assertPartialInformationMatch(sessionData, matchedSessions.get(0));
-            assertInformationHiddenForStudent(sessionData);
-        }
     }
 }

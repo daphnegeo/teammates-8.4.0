@@ -5,7 +5,6 @@ import org.testng.annotations.Test;
 import teammates.common.datatransfer.attributes.FeedbackSessionAttributes;
 import teammates.common.datatransfer.attributes.InstructorAttributes;
 import teammates.common.util.Const;
-import teammates.ui.output.FeedbackSessionData;
 import teammates.ui.output.ResponseVisibleSetting;
 import teammates.ui.output.SessionVisibleSetting;
 import teammates.ui.request.FeedbackSessionUpdateRequest;
@@ -23,75 +22,6 @@ public class UpdateFeedbackSessionActionTest extends BaseActionTest<UpdateFeedba
     @Override
     protected String getRequestMethod() {
         return PUT;
-    }
-
-    @Override
-    @Test
-    protected void testExecute() {
-        InstructorAttributes instructor1ofCourse1 = typicalBundle.instructors.get("instructor1OfCourse1");
-        FeedbackSessionAttributes session = typicalBundle.feedbackSessions.get("session1InCourse1");
-
-        loginAsInstructor(instructor1ofCourse1.getGoogleId());
-
-        ______TS("Not enough parameters");
-
-        verifyHttpParameterFailure();
-        verifyHttpParameterFailure(Const.ParamsNames.COURSE_ID, session.getCourseId());
-        verifyHttpParameterFailure(Const.ParamsNames.FEEDBACK_SESSION_NAME, session.getFeedbackSessionName());
-
-        ______TS("success: Typical case");
-
-        String[] param = new String[] {
-                Const.ParamsNames.COURSE_ID, session.getCourseId(),
-                Const.ParamsNames.FEEDBACK_SESSION_NAME, session.getFeedbackSessionName(),
-        };
-        FeedbackSessionUpdateRequest updateRequest = getTypicalFeedbackSessionUpdateRequest();
-
-        UpdateFeedbackSessionAction a = getAction(updateRequest, param);
-        JsonResult r = getJsonResult(a);
-
-        FeedbackSessionData response = (FeedbackSessionData) r.getOutput();
-
-        session = logic.getFeedbackSession(session.getFeedbackSessionName(), session.getCourseId());
-        assertEquals(session.getCourseId(), response.getCourseId());
-        assertEquals(session.getTimeZone(), response.getTimeZone());
-        assertEquals(session.getFeedbackSessionName(), response.getFeedbackSessionName());
-
-        assertEquals(session.getInstructions(), response.getInstructions());
-
-        assertEquals(session.getStartTime().toEpochMilli(), response.getSubmissionStartTimestamp());
-        assertEquals(session.getEndTime().toEpochMilli(), response.getSubmissionEndTimestamp());
-        assertEquals(session.getGracePeriodMinutes(), response.getGracePeriod().longValue());
-
-        assertEquals(SessionVisibleSetting.CUSTOM, response.getSessionVisibleSetting());
-        assertEquals(session.getSessionVisibleFromTime().toEpochMilli(),
-                response.getCustomSessionVisibleTimestamp().longValue());
-        assertEquals(ResponseVisibleSetting.CUSTOM, response.getResponseVisibleSetting());
-        assertEquals(session.getResultsVisibleFromTime().toEpochMilli(),
-                response.getCustomResponseVisibleTimestamp().longValue());
-
-        assertEquals(session.isClosingEmailEnabled(), response.getIsClosingEmailEnabled());
-        assertEquals(session.isPublishedEmailEnabled(), response.getIsPublishedEmailEnabled());
-
-        assertEquals(session.getCreatedTime().toEpochMilli(), response.getCreatedAtTimestamp());
-        assertNull(session.getDeletedTime());
-
-        assertEquals("instructions", response.getInstructions());
-        assertEquals(1444003051000L, response.getSubmissionStartTimestamp());
-        assertEquals(1546003051000L, response.getSubmissionEndTimestamp());
-        assertEquals(5, response.getGracePeriod().longValue());
-
-        assertEquals(SessionVisibleSetting.CUSTOM, response.getSessionVisibleSetting());
-        assertEquals(1440003051000L, response.getCustomSessionVisibleTimestamp().longValue());
-
-        assertEquals(ResponseVisibleSetting.CUSTOM, response.getResponseVisibleSetting());
-        assertEquals(1547003051000L, response.getCustomResponseVisibleTimestamp().longValue());
-
-        assertFalse(response.getIsClosingEmailEnabled());
-        assertFalse(response.getIsPublishedEmailEnabled());
-
-        assertNotNull(response.getCreatedAtTimestamp());
-        assertNull(response.getDeletedAtTimestamp());
     }
 
     /**

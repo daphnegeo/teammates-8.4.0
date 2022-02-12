@@ -4,7 +4,7 @@ import java.util.List;
 
 import teammates.common.datatransfer.FeedbackParticipantType;
 import teammates.common.datatransfer.SessionResultsBundle;
-import teammates.common.datatransfer.attributes.FeedbackQuestionAttributes;
+import teammates.common.datatransfer.attributes.FeedbackQuestionsVariousAttributes;
 import teammates.common.util.JsonUtils;
 
 /**
@@ -32,7 +32,7 @@ public abstract class FeedbackQuestionDetails {
      */
     @SuppressWarnings("PMD.EmptyMethodInAbstractClassShouldBeAbstract")
     public String getQuestionResultStatisticsJson(
-            FeedbackQuestionAttributes question, String studentEmail, SessionResultsBundle bundle) {
+            FeedbackQuestionsVariousAttributes question, String studentEmail, SessionResultsBundle bundle) {
         // Statistics are calculated in the front-end as it is dependent on the responses being filtered.
         // The only exception is contribution question, where there is only one statistics for the entire question.
         // It is also necessary to calculate contribution question statistics here
@@ -76,7 +76,7 @@ public abstract class FeedbackQuestionDetails {
      * <p>Override in Feedback*QuestionDetails if necessary.
      * @return error message detailing the error, or an empty string if valid.
      */
-    public abstract String validateGiverRecipientVisibility(FeedbackQuestionAttributes feedbackQuestionAttributes);
+    public abstract String validateGiverRecipientVisibility(FeedbackQuestionsVariousAttributes feedbackQuestionAttributes);
 
     /**
      * Checks whether instructor comments are allowed for the question.
@@ -93,7 +93,7 @@ public abstract class FeedbackQuestionDetails {
     /**
      * Checks whether missing responses should be generated.
      */
-    public boolean shouldGenerateMissingResponses(FeedbackQuestionAttributes question) {
+    public boolean shouldGenerateMissingResponses(FeedbackQuestionsVariousAttributes question) {
         // generate combinations against all students/teams are meaningless
         return question.getRecipientType() != FeedbackParticipantType.STUDENTS
                 && question.getRecipientType() != FeedbackParticipantType.TEAMS;

@@ -19,15 +19,6 @@ public class SendJoinReminderEmailActionTest extends BaseActionTest<SendJoinRemi
         return POST;
     }
 
-    /**
-	 * @deprecated Use {@link teammates.common.datatransfer.DataBundle#testExecute(teammates.ui.webapi.SendJoinReminderEmailActionTest)} instead
-	 */
-	@Override
-	@Test
-	protected void testExecute() throws Exception {
-		typicalBundle.testExecute(this);
-	}
-
     @Override
     @Test
     protected void testAccessControl() throws Exception {

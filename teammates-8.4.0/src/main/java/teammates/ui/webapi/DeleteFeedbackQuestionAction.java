@@ -1,6 +1,6 @@
 package teammates.ui.webapi;
 
-import teammates.common.datatransfer.attributes.FeedbackQuestionAttributes;
+import teammates.common.datatransfer.attributes.FeedbackQuestionsVariousAttributes;
 import teammates.common.util.Const;
 
 /**
@@ -16,7 +16,7 @@ class DeleteFeedbackQuestionAction extends Action {
     @Override
     void checkSpecificAccessControl() throws UnauthorizedAccessException {
         String feedbackQuestionId = getNonNullRequestParamValue(Const.ParamsNames.FEEDBACK_QUESTION_ID);
-        FeedbackQuestionAttributes questionAttributes = logic.getFeedbackQuestion(feedbackQuestionId);
+        FeedbackQuestionsVariousAttributes questionAttributes = logic.getFeedbackQuestion(feedbackQuestionId);
 
         if (questionAttributes == null) {
             throw new UnauthorizedAccessException("Unknown question ID");

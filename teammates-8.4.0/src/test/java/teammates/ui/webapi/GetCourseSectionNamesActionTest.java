@@ -24,12 +24,6 @@ public class GetCourseSectionNamesActionTest extends BaseActionTest<GetCourseSec
     }
 
     @Test
-    @Override
-    protected void testExecute() {
-        // See test cases below
-    }
-
-    @Test
     protected void testExecute_typicalUsage_shouldPass() throws Exception {
         InstructorAttributes instructor1OfCourse1 = typicalBundle.instructors.get("instructor1OfCourse1");
         List<String> expectedSectionNames = logic.getSectionNamesForCourse(instructor1OfCourse1.getCourseId());

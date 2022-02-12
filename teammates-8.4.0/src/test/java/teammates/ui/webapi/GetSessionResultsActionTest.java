@@ -6,7 +6,6 @@ import org.testng.annotations.Test;
 
 import teammates.common.datatransfer.attributes.CourseAttributes;
 import teammates.common.datatransfer.attributes.FeedbackSessionAttributes;
-import teammates.common.datatransfer.attributes.InstructorAttributes;
 import teammates.common.datatransfer.attributes.StudentAttributes;
 import teammates.common.util.Const;
 import teammates.common.util.JsonUtils;
@@ -26,60 +25,6 @@ public class GetSessionResultsActionTest extends BaseActionTest<GetSessionResult
     @Override
     protected String getRequestMethod() {
         return GET;
-    }
-
-    @Override
-    @Test
-    protected void testExecute() {
-        InstructorAttributes instructorAttributes = typicalBundle.instructors.get("instructor1OfCourse1");
-        loginAsInstructor(instructorAttributes.getGoogleId());
-
-        ______TS("typical: instructor accesses results of his/her course");
-
-        FeedbackSessionAttributes accessibleFeedbackSession = typicalBundle.feedbackSessions.get("session1InCourse1");
-        String[] submissionParams = new String[] {
-                Const.ParamsNames.FEEDBACK_SESSION_NAME, accessibleFeedbackSession.getFeedbackSessionName(),
-                Const.ParamsNames.COURSE_ID, accessibleFeedbackSession.getCourseId(),
-                Const.ParamsNames.INTENT, Intent.FULL_DETAIL.name(),
-        };
-
-        GetSessionResultsAction a = getAction(submissionParams);
-        JsonResult r = getJsonResult(a);
-
-        SessionResultsData output = (SessionResultsData) r.getOutput();
-
-        SessionResultsData expectedResults = SessionResultsData.initForInstructor(
-                logic.getSessionResultsForCourse(accessibleFeedbackSession.getFeedbackSessionName(),
-                        accessibleFeedbackSession.getCourseId(),
-                        instructorAttributes.getEmail(),
-                        null, null));
-
-        assertTrue(isSessionResultsDataEqual(expectedResults, output));
-
-        ______TS("typical: student accesses results of his/her course");
-
-        StudentAttributes studentAttributes = typicalBundle.students.get("student1InCourse1");
-        loginAsStudent(studentAttributes.getGoogleId());
-
-        submissionParams = new String[] {
-                Const.ParamsNames.FEEDBACK_SESSION_NAME, accessibleFeedbackSession.getFeedbackSessionName(),
-                Const.ParamsNames.COURSE_ID, accessibleFeedbackSession.getCourseId(),
-                Const.ParamsNames.INTENT, Intent.STUDENT_RESULT.name(),
-        };
-
-        a = getAction(submissionParams);
-        r = getJsonResult(a);
-
-        output = (SessionResultsData) r.getOutput();
-        expectedResults = SessionResultsData.initForStudent(
-                logic.getSessionResultsForUser(accessibleFeedbackSession.getFeedbackSessionName(),
-                        accessibleFeedbackSession.getCourseId(),
-                        studentAttributes.getEmail(),
-                        false, null),
-                studentAttributes);
-
-        assertTrue(isSessionResultsDataEqual(expectedResults, output));
-
     }
 
     @Override
@@ -218,16 +163,27 @@ public class GetSessionResultsActionTest extends BaseActionTest<GetSessionResult
         CourseAttributes typicalCourse1 = typicalBundle.courses.get("typicalCourse1");
         FeedbackSessionAttributes feedbackSessionAttributes = typicalBundle.feedbackSessions.get("session1InCourse1");
 
-        String[] submissionParams = new String[] {
-                Const.ParamsNames.COURSE_ID, typicalCourse1.getId(),
-                Const.ParamsNames.FEEDBACK_SESSION_NAME, feedbackSessionAttributes.getFeedbackSessionName(),
-                Const.ParamsNames.INTENT, Intent.STUDENT_RESULT.toString(),
-        };
+        String[] submissionParams = accessParamget(typicalCourse1, feedbackSessionAttributes);
 
         logic.publishFeedbackSession(feedbackSessionAttributes.getFeedbackSessionName(), typicalCourse1.getId());
         loginAsStudent(student1InCourse1.getGoogleId());
         verifyCanAccess(submissionParams);
     }
+
+	/**
+	 * @param typicalCourse1
+	 * @param feedbackSessionAttributes
+	 * @return
+	 */
+	private String[] accessParamget(CourseAttributes typicalCourse1,
+			FeedbackSessionAttributes feedbackSessionAttributes) {
+		String[] submissionParams = new String[] {
+                Const.ParamsNames.COURSE_ID, typicalCourse1.getId(),
+                Const.ParamsNames.FEEDBACK_SESSION_NAME, feedbackSessionAttributes.getFeedbackSessionName(),
+                Const.ParamsNames.INTENT, Intent.STUDENT_RESULT.toString(),
+        };
+		return submissionParams;
+	}
 
     @Test
     public void testAccessControl_studentAccessUnpublishedSessionStudentResult_shouldFail() {
@@ -235,11 +191,7 @@ public class GetSessionResultsActionTest extends BaseActionTest<GetSessionResult
         CourseAttributes typicalCourse1 = typicalBundle.courses.get("typicalCourse1");
         FeedbackSessionAttributes feedbackSessionAttributes = typicalBundle.feedbackSessions.get("session2InCourse1");
 
-        String[] submissionParams = new String[] {
-                Const.ParamsNames.COURSE_ID, typicalCourse1.getId(),
-                Const.ParamsNames.FEEDBACK_SESSION_NAME, feedbackSessionAttributes.getFeedbackSessionName(),
-                Const.ParamsNames.INTENT, Intent.STUDENT_RESULT.toString(),
-        };
+        String[] submissionParams = accessParamget(typicalCourse1, feedbackSessionAttributes);
         loginAsStudent(student1InCourse1.getGoogleId());
         verifyCannotAccess(submissionParams);
     }
@@ -249,11 +201,7 @@ public class GetSessionResultsActionTest extends BaseActionTest<GetSessionResult
         StudentAttributes student1InCourse1 = typicalBundle.students.get("student1InCourse1");
         CourseAttributes typicalCourse1 = typicalBundle.courses.get("typicalCourse1");
         FeedbackSessionAttributes feedbackSessionAttributes = typicalBundle.feedbackSessions.get("session1InCourse1");
-        String[] submissionParams = new String[] {
-                Const.ParamsNames.COURSE_ID, typicalCourse1.getId(),
-                Const.ParamsNames.FEEDBACK_SESSION_NAME, feedbackSessionAttributes.getFeedbackSessionName(),
-                Const.ParamsNames.INTENT, Intent.STUDENT_RESULT.toString(),
-        };
+        String[] submissionParams = accessParamget(typicalCourse1, feedbackSessionAttributes);
 
         logic.publishFeedbackSession(feedbackSessionAttributes.getFeedbackSessionName(), typicalCourse1.getId());
         loginAsAdmin();

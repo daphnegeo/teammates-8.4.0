@@ -28,12 +28,6 @@ public class EnrollStudentsActionTest extends BaseActionTest<EnrollStudentsActio
         return PUT;
     }
 
-    @Override
-    @Test
-    public void testExecute() {
-        // See test cases below.
-    }
-
     @Test
     public void testExecute_withNewStudent_shouldBeAddedToDatabase() throws Exception {
         String courseId = typicalBundle.students.get("student1InCourse1").getCourse();

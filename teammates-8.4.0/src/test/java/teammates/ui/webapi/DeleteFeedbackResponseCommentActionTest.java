@@ -6,14 +6,13 @@ import org.testng.annotations.Test;
 import teammates.common.datatransfer.FeedbackParticipantType;
 import teammates.common.datatransfer.InstructorPrivileges;
 import teammates.common.datatransfer.attributes.CourseAttributes;
-import teammates.common.datatransfer.attributes.FeedbackQuestionAttributes;
+import teammates.common.datatransfer.attributes.FeedbackQuestionsVariousAttributes;
 import teammates.common.datatransfer.attributes.FeedbackResponseAttributes;
 import teammates.common.datatransfer.attributes.FeedbackResponseCommentAttributes;
 import teammates.common.datatransfer.attributes.FeedbackSessionAttributes;
 import teammates.common.datatransfer.attributes.InstructorAttributes;
 import teammates.common.datatransfer.attributes.StudentAttributes;
 import teammates.common.util.Const;
-import teammates.ui.output.MessageOutput;
 import teammates.ui.request.Intent;
 
 /**
@@ -38,53 +37,6 @@ public class DeleteFeedbackResponseCommentActionTest extends BaseActionTest<Dele
     }
 
     @Override
-    @Test
-    public void testExecute() {
-        FeedbackResponseCommentAttributes feedbackResponseComment =
-                typicalBundle.feedbackResponseComments.get("comment1FromInstructor1");
-
-        feedbackResponseComment = logic.getFeedbackResponseComment(feedbackResponseComment.getFeedbackResponseId(),
-                feedbackResponseComment.getCommentGiver(), feedbackResponseComment.getCreatedAt());
-        assertNotNull("response comment not found", feedbackResponseComment);
-
-        InstructorAttributes instructor = typicalBundle.instructors.get("instructor1OfCourse1");
-        loginAsInstructor(instructor.getGoogleId());
-
-        ______TS("Unsuccessful case: not enough parameters");
-
-        verifyHttpParameterFailure();
-
-        ______TS("Typical successful case, comment deleted");
-
-        String[] submissionParams = new String[] {
-                Const.ParamsNames.FEEDBACK_RESPONSE_COMMENT_ID, feedbackResponseComment.getId().toString(),
-                Const.ParamsNames.INTENT, Intent.INSTRUCTOR_SUBMISSION.toString(),
-        };
-
-        DeleteFeedbackResponseCommentAction action = getAction(submissionParams);
-        JsonResult result = getJsonResult(action);
-        MessageOutput output = (MessageOutput) result.getOutput();
-
-        assertNull(logic.getFeedbackResponseComment(feedbackResponseComment.getId()));
-        assertEquals("Successfully deleted feedback response comment.", output.getMessage());
-
-        ______TS("Non-existent feedback response comment, non-existent comment should fail silently");
-
-        submissionParams = new String[] {
-                // non-existent feedback response comment id
-                Const.ParamsNames.FEEDBACK_RESPONSE_COMMENT_ID, "123123123123123",
-                Const.ParamsNames.INTENT, Intent.INSTRUCTOR_SUBMISSION.toString(),
-        };
-
-        action = getAction(submissionParams);
-        result = getJsonResult(action);
-        output = (MessageOutput) result.getOutput();
-
-        assertNull(logic.getFeedbackResponseComment(123123123123123L));
-        assertEquals("Successfully deleted feedback response comment.", output.getMessage());
-    }
-
-    @Override
     protected void testAccessControl() {
         // See each independent test case
     }
@@ -97,7 +49,7 @@ public class DeleteFeedbackResponseCommentActionTest extends BaseActionTest<Dele
         FeedbackResponseCommentAttributes comment = typicalBundle.feedbackResponseComments.get("comment1FromInstructor1Q2");
         FeedbackResponseAttributes response = typicalBundle.feedbackResponses.get("response1ForQ1");
 
-        FeedbackQuestionAttributes question = logic.getFeedbackQuestion(
+        FeedbackQuestionsVariousAttributes question = logic.getFeedbackQuestion(
                 fs.getFeedbackSessionName(), fs.getCourseId(), questionNumber);
         response = logic.getFeedbackResponse(question.getId(), response.getGiver(), response.getRecipient());
         comment = logic.getFeedbackResponseComment(response.getId(), comment.getCommentGiver(), comment.getCreatedAt());
@@ -160,10 +112,7 @@ public class DeleteFeedbackResponseCommentActionTest extends BaseActionTest<Dele
         FeedbackResponseCommentAttributes comment = typicalBundle.feedbackResponseComments.get("comment1FromInstructor1");
         FeedbackResponseAttributes response = typicalBundle.feedbackResponses.get("response1ForQ1");
 
-        FeedbackQuestionAttributes question =
-                logic.getFeedbackQuestion(fs.getFeedbackSessionName(), fs.getCourseId(), questionNumber);
-        response = logic.getFeedbackResponse(question.getId(), response.getGiver(), response.getRecipient());
-        comment = logic.getFeedbackResponseComment(response.getId(), comment.getCommentGiver(), comment.getCreatedAt());
+        comment = feedbackQuestionAttributesmethod(questionNumber, fs, comment, response);
 
         String[] submissionParams = new String[] {
                 Const.ParamsNames.FEEDBACK_RESPONSE_COMMENT_ID, comment.getId().toString(),
@@ -185,6 +134,23 @@ public class DeleteFeedbackResponseCommentActionTest extends BaseActionTest<Dele
         verifyCannotAccess(submissionParams);
     }
 
+	/**
+	 * @param questionNumber
+	 * @param fs
+	 * @param comment
+	 * @param response
+	 * @return
+	 */
+	private FeedbackResponseCommentAttributes feedbackQuestionAttributesmethod(int questionNumber,
+			FeedbackSessionAttributes fs, FeedbackResponseCommentAttributes comment,
+			FeedbackResponseAttributes response) {
+		FeedbackQuestionsVariousAttributes question =
+                logic.getFeedbackQuestion(fs.getFeedbackSessionName(), fs.getCourseId(), questionNumber);
+        response = logic.getFeedbackResponse(question.getId(), response.getGiver(), response.getRecipient());
+        comment = logic.getFeedbackResponseComment(response.getId(), comment.getCommentGiver(), comment.getCreatedAt());
+		return comment;
+	}
+
     @Test
     public void testAccessControlsForCommentByStudent() {
         int questionNumber = 3;
@@ -192,10 +158,7 @@ public class DeleteFeedbackResponseCommentActionTest extends BaseActionTest<Dele
         FeedbackResponseCommentAttributes comment = typicalBundle.feedbackResponseComments.get("comment1FromStudent1");
         FeedbackResponseAttributes response = typicalBundle.feedbackResponses.get("response1ForQ3");
 
-        FeedbackQuestionAttributes question =
-                logic.getFeedbackQuestion(fs.getFeedbackSessionName(), fs.getCourseId(), questionNumber);
-        response = logic.getFeedbackResponse(question.getId(), response.getGiver(), response.getRecipient());
-        comment = logic.getFeedbackResponseComment(response.getId(), comment.getCommentGiver(), comment.getCreatedAt());
+        comment = feedbackQuestionAttributesmethod(questionNumber, fs, comment, response);
 
         String[] submissionParams = new String[] {
                 Const.ParamsNames.FEEDBACK_RESPONSE_COMMENT_ID, comment.getId().toString(),
@@ -230,10 +193,7 @@ public class DeleteFeedbackResponseCommentActionTest extends BaseActionTest<Dele
         FeedbackResponseCommentAttributes comment = typicalBundle.feedbackResponseComments.get("comment2FromStudent1");
         FeedbackResponseAttributes response = typicalBundle.feedbackResponses.get("response1ForQ6");
 
-        FeedbackQuestionAttributes question =
-                logic.getFeedbackQuestion(fs.getFeedbackSessionName(), fs.getCourseId(), questionNumber);
-        response = logic.getFeedbackResponse(question.getId(), response.getGiver(), response.getRecipient());
-        comment = logic.getFeedbackResponseComment(response.getId(), comment.getCommentGiver(), comment.getCreatedAt());
+        comment = feedbackQuestionAttributesmethod(questionNumber, fs, comment, response);
 
         String[] submissionParams = new String[] {
                 Const.ParamsNames.FEEDBACK_RESPONSE_COMMENT_ID, comment.getId().toString(),
@@ -281,7 +241,7 @@ public class DeleteFeedbackResponseCommentActionTest extends BaseActionTest<Dele
         FeedbackResponseCommentAttributes comment = typicalBundle.feedbackResponseComments.get("comment1FromTeam1");
         FeedbackResponseAttributes response = typicalBundle.feedbackResponses.get("response1ForQ4");
 
-        FeedbackQuestionAttributes question =
+        FeedbackQuestionsVariousAttributes question =
                 logic.getFeedbackQuestion(fs.getFeedbackSessionName(), fs.getCourseId(), questionNumber);
         assertEquals(FeedbackParticipantType.TEAMS, question.getGiverType());
         response = logic.getFeedbackResponse(question.getId(), response.getGiver(), response.getRecipient());

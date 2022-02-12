@@ -8,7 +8,7 @@ import org.testng.annotations.Test;
 import teammates.common.datatransfer.DataBundle;
 import teammates.common.datatransfer.FeedbackParticipantType;
 import teammates.common.datatransfer.attributes.CourseAttributes;
-import teammates.common.datatransfer.attributes.FeedbackQuestionAttributes;
+import teammates.common.datatransfer.attributes.FeedbackQuestionsVariousAttributes;
 import teammates.common.datatransfer.attributes.FeedbackResponseAttributes;
 import teammates.common.datatransfer.attributes.FeedbackResponseCommentAttributes;
 import teammates.common.datatransfer.attributes.FeedbackSessionAttributes;
@@ -62,13 +62,13 @@ public class UpdateFeedbackResponseCommentActionTest extends BaseActionTest<Upda
         instructor2OfCourse1 = dataBundle.instructors.get("instructor2OfCourse1");
         helperOfCourse1 = dataBundle.instructors.get("helperOfCourse1");
         FeedbackSessionAttributes session1InCourse1 = dataBundle.feedbackSessions.get("session1InCourse1");
-        FeedbackQuestionAttributes qn1InSession1InCourse1 = logic.getFeedbackQuestion(
+        FeedbackQuestionsVariousAttributes qn1InSession1InCourse1 = logic.getFeedbackQuestion(
                 session1InCourse1.getFeedbackSessionName(), session1InCourse1.getCourseId(), 1);
-        FeedbackQuestionAttributes qn3InSession1InCourse1 = logic.getFeedbackQuestion(
+        FeedbackQuestionsVariousAttributes qn3InSession1InCourse1 = logic.getFeedbackQuestion(
                 session1InCourse1.getFeedbackSessionName(), session1InCourse1.getCourseId(), 3);
-        FeedbackQuestionAttributes qn4InSession1InCourse1 = logic.getFeedbackQuestion(
+        FeedbackQuestionsVariousAttributes qn4InSession1InCourse1 = logic.getFeedbackQuestion(
                 session1InCourse1.getFeedbackSessionName(), session1InCourse1.getCourseId(), 4);
-        FeedbackQuestionAttributes qn6InSession1InCourse1 = logic.getFeedbackQuestion(
+        FeedbackQuestionsVariousAttributes qn6InSession1InCourse1 = logic.getFeedbackQuestion(
                 session1InCourse1.getFeedbackSessionName(), session1InCourse1.getCourseId(), 6);
         response1ForQn1 = logic.getFeedbackResponse(qn1InSession1InCourse1.getId(),
                 instructor1OfCourse1.getEmail(), instructor1OfCourse1.getEmail());
@@ -86,12 +86,6 @@ public class UpdateFeedbackResponseCommentActionTest extends BaseActionTest<Upda
         comment1FromInstructor1Q2 = dataBundle.feedbackResponseComments.get("comment1FromInstructor1Q2");
         comment1FromInstructor1Q2 = logic.getFeedbackResponseComment(response1ForQn1.getId(),
                 comment1FromInstructor1Q2.getCommentGiver(), comment1FromInstructor1Q2.getCreatedAt());
-    }
-
-    @Override
-    @Test
-    protected void testExecute() {
-        // see individual test cases.
     }
 
     @Test

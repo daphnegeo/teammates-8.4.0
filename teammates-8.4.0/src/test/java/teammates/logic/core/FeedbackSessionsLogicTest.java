@@ -13,6 +13,7 @@ import teammates.common.datatransfer.AttributesDeletionQuery;
 import teammates.common.datatransfer.FeedbackParticipantType;
 import teammates.common.datatransfer.attributes.CourseAttributes;
 import teammates.common.datatransfer.attributes.FeedbackQuestionAttributes;
+import teammates.common.datatransfer.attributes.FeedbackQuestionsVariousAttributes;
 import teammates.common.datatransfer.attributes.FeedbackSessionAttributes;
 import teammates.common.datatransfer.attributes.InstructorAttributes;
 import teammates.common.datatransfer.attributes.StudentAttributes;
@@ -500,7 +501,7 @@ public class FeedbackSessionsLogicTest extends BaseLogicTest {
         ______TS("test delete");
         fs = getNewFeedbackSession();
         // Create a question under the session to test for cascading during delete.
-        FeedbackQuestionAttributes fq = FeedbackQuestionAttributes.builder()
+        FeedbackQuestionsVariousAttributes fq = FeedbackQuestionAttributes.builder()
                 .withFeedbackSessionName(fs.getFeedbackSessionName())
                 .withCourseId(fs.getCourseId())
                 .withQuestionNumber(1)

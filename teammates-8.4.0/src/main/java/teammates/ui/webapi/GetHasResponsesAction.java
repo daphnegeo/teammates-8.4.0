@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import teammates.common.datatransfer.attributes.FeedbackQuestionAttributes;
+import teammates.common.datatransfer.attributes.FeedbackQuestionsVariousAttributes;
 import teammates.common.datatransfer.attributes.FeedbackSessionAttributes;
 import teammates.common.datatransfer.attributes.StudentAttributes;
 import teammates.common.util.Const;
@@ -34,7 +34,7 @@ class GetHasResponsesAction extends Action {
             //An instructor of the feedback session can check responses for questions within it.
             String questionId = getRequestParamValue(Const.ParamsNames.FEEDBACK_QUESTION_ID);
             if (questionId != null) {
-                FeedbackQuestionAttributes feedbackQuestionAttributes = logic.getFeedbackQuestion(questionId);
+                FeedbackQuestionsVariousAttributes feedbackQuestionAttributes = logic.getFeedbackQuestion(questionId);
                 FeedbackSessionAttributes feedbackSession = getNonNullFeedbackSession(
                         feedbackQuestionAttributes.getFeedbackSessionName(),
                         feedbackQuestionAttributes.getCourseId());

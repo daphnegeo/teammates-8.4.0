@@ -818,7 +818,7 @@ public class FeedbackSessionAttributes extends EntityAttributes<FeedbackSession>
 	    BaseTestCase.______TS("can submit in grace period");
 	    AppUrl gracePeriodSessionUrl = feedbackSubmitPageE2ETest.getStudentSubmitPageUrl(feedbackSubmitPageE2ETest.student, feedbackSubmitPageE2ETest.gracePeriodSession);
 	    submitPage = feedbackSubmitPageE2ETest.getNewPageInstance(gracePeriodSessionUrl, FeedbackSubmitPage.class);
-	    FeedbackQuestionAttributes question = feedbackSubmitPageE2ETest.testData.feedbackQuestions.get("qn1InGracePeriodSession");
+	    FeedbackQuestionsVariousAttributes question = feedbackSubmitPageE2ETest.testData.feedbackQuestions.get("qn1InGracePeriodSession");
 	    String questionId = feedbackSubmitPageE2ETest.getFeedbackQuestion(question).getId();
 	    String recipient = "Team 2";
 	    FeedbackResponseAttributes response = feedbackSubmitPageE2ETest.getMcqResponse(questionId, recipient, false, "UI");
@@ -926,7 +926,7 @@ public class FeedbackSessionAttributes extends EntityAttributes<FeedbackSession>
 	            FeedbackSubmitPage.class, instructorAuditLogsPageE2ETest.student.getGoogleId());
 	
 	    StudentAttributes receiver = instructorAuditLogsPageE2ETest.testData.students.get("benny.tmms@IAuditLogs.CS2104");
-	    FeedbackQuestionAttributes question = instructorAuditLogsPageE2ETest.testData.feedbackQuestions.get("qn1");
+	    FeedbackQuestionsVariousAttributes question = instructorAuditLogsPageE2ETest.testData.feedbackQuestions.get("qn1");
 	    String questionId = instructorAuditLogsPageE2ETest.getFeedbackQuestion(question).getId();
 	    FeedbackTextResponseDetails details = new FeedbackTextResponseDetails("Response");
 	    FeedbackResponseAttributes response =

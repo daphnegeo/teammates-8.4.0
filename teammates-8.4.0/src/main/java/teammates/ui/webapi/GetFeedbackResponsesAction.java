@@ -3,7 +3,7 @@ package teammates.ui.webapi;
 import java.util.LinkedList;
 import java.util.List;
 
-import teammates.common.datatransfer.attributes.FeedbackQuestionAttributes;
+import teammates.common.datatransfer.attributes.FeedbackQuestionsVariousAttributes;
 import teammates.common.datatransfer.attributes.FeedbackResponseAttributes;
 import teammates.common.datatransfer.attributes.FeedbackResponseCommentAttributes;
 import teammates.common.datatransfer.attributes.FeedbackSessionAttributes;
@@ -29,7 +29,7 @@ class GetFeedbackResponsesAction extends BasicFeedbackSubmissionAction {
     @Override
     void checkSpecificAccessControl() throws UnauthorizedAccessException {
         String feedbackQuestionId = getNonNullRequestParamValue(Const.ParamsNames.FEEDBACK_QUESTION_ID);
-        FeedbackQuestionAttributes feedbackQuestion = logic.getFeedbackQuestion(feedbackQuestionId);
+        FeedbackQuestionsVariousAttributes feedbackQuestion = logic.getFeedbackQuestion(feedbackQuestionId);
         if (feedbackQuestion == null) {
             throw new EntityNotFoundException("The feedback question does not exist.");
         }
@@ -60,7 +60,7 @@ class GetFeedbackResponsesAction extends BasicFeedbackSubmissionAction {
     public JsonResult execute() {
         String feedbackQuestionId = getNonNullRequestParamValue(Const.ParamsNames.FEEDBACK_QUESTION_ID);
         Intent intent = Intent.valueOf(getNonNullRequestParamValue(Const.ParamsNames.INTENT));
-        FeedbackQuestionAttributes questionAttributes = logic.getFeedbackQuestion(feedbackQuestionId);
+        FeedbackQuestionsVariousAttributes questionAttributes = logic.getFeedbackQuestion(feedbackQuestionId);
 
         List<FeedbackResponseAttributes> responses;
         switch (intent) {

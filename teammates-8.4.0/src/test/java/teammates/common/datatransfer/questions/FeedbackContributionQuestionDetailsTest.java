@@ -12,6 +12,7 @@ import teammates.common.datatransfer.DataBundle;
 import teammates.common.datatransfer.FeedbackParticipantType;
 import teammates.common.datatransfer.SessionResultsBundle;
 import teammates.common.datatransfer.attributes.FeedbackQuestionAttributes;
+import teammates.common.datatransfer.attributes.FeedbackQuestionsVariousAttributes;
 import teammates.common.util.Const;
 import teammates.test.BaseTestCase;
 
@@ -78,7 +79,7 @@ public class FeedbackContributionQuestionDetailsTest extends BaseTestCase {
                         new CourseRoster(new ArrayList<>(responseBundle.students.values()),
                                 new ArrayList<>(responseBundle.instructors.values())));
 
-        FeedbackQuestionAttributes fqa;
+        FeedbackQuestionsVariousAttributes fqa;
 
         ______TS("(student email specified): all students have response");
         fqa = responseBundle.feedbackQuestions.get("qn1InSession1InCourse1");
@@ -533,7 +534,7 @@ public class FeedbackContributionQuestionDetailsTest extends BaseTestCase {
     @Test
     public void testValidateGiverRecipientVisibility() {
         FeedbackContributionQuestionDetails details = new FeedbackContributionQuestionDetails();
-        FeedbackQuestionAttributes feedbackQuestionAttributes = FeedbackQuestionAttributes.builder()
+        FeedbackQuestionsVariousAttributes feedbackQuestionAttributes = FeedbackQuestionAttributes.builder()
                 .withCourseId("course")
                 .withFeedbackSessionName("session")
                 .withGiverType(FeedbackParticipantType.STUDENTS)

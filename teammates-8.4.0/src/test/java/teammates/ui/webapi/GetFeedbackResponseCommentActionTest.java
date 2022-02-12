@@ -4,7 +4,7 @@ import org.apache.http.HttpStatus;
 import org.testng.annotations.Test;
 
 import teammates.common.datatransfer.DataBundle;
-import teammates.common.datatransfer.attributes.FeedbackQuestionAttributes;
+import teammates.common.datatransfer.attributes.FeedbackQuestionsVariousAttributes;
 import teammates.common.datatransfer.attributes.FeedbackResponseAttributes;
 import teammates.common.datatransfer.attributes.FeedbackResponseCommentAttributes;
 import teammates.common.datatransfer.attributes.FeedbackSessionAttributes;
@@ -44,11 +44,11 @@ public class GetFeedbackResponseCommentActionTest extends BaseActionTest<GetFeed
         removeAndRestoreDataBundle(dataBundle);
 
         FeedbackSessionAttributes session1InCourse1 = dataBundle.feedbackSessions.get("session1InCourse1");
-        FeedbackQuestionAttributes qn1InSession1InCourse1 = logic.getFeedbackQuestion(
+        FeedbackQuestionsVariousAttributes qn1InSession1InCourse1 = logic.getFeedbackQuestion(
                 session1InCourse1.getFeedbackSessionName(), session1InCourse1.getCourseId(), 1);
-        FeedbackQuestionAttributes qn3InSession1InCourse1 = logic.getFeedbackQuestion(
+        FeedbackQuestionsVariousAttributes qn3InSession1InCourse1 = logic.getFeedbackQuestion(
                 session1InCourse1.getFeedbackSessionName(), session1InCourse1.getCourseId(), 3);
-        FeedbackQuestionAttributes qn4InSession1InCourse1 = logic.getFeedbackQuestion(
+        FeedbackQuestionsVariousAttributes qn4InSession1InCourse1 = logic.getFeedbackQuestion(
                 session1InCourse1.getFeedbackSessionName(), session1InCourse1.getCourseId(), 4);
 
         student1InCourse1 = dataBundle.students.get("student1InCourse1");
@@ -61,12 +61,6 @@ public class GetFeedbackResponseCommentActionTest extends BaseActionTest<GetFeed
                 student1InCourse1.getEmail(), student1InCourse1.getEmail());
         response2ForQ4 = logic.getFeedbackResponse(qn4InSession1InCourse1.getId(),
                 student1InCourse1.getTeam(), student1InCourse1.getTeam());
-    }
-
-    @Override
-    @Test
-    protected void testExecute() {
-        // ses individual test cases
     }
 
     @Test

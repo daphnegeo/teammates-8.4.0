@@ -21,15 +21,6 @@ public class UnpublishFeedbackSessionActionTest extends BaseActionTest<Unpublish
         return DELETE;
     }
 
-    /**
-	 * @deprecated Use {@link teammates.common.datatransfer.DataBundle#testExecute(teammates.ui.webapi.UnpublishFeedbackSessionActionTest)} instead
-	 */
-	@Test
-	@Override
-	protected void testExecute() {
-		typicalBundle.testExecute(this);
-	}
-
     @Test
     @Override
     protected void testAccessControl() throws Exception {

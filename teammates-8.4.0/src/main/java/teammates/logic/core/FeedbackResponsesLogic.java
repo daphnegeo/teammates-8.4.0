@@ -16,6 +16,7 @@ import teammates.common.datatransfer.CourseRoster;
 import teammates.common.datatransfer.FeedbackParticipantType;
 import teammates.common.datatransfer.SessionResultsBundle;
 import teammates.common.datatransfer.attributes.FeedbackQuestionAttributes;
+import teammates.common.datatransfer.attributes.FeedbackQuestionsVariousAttributes;
 import teammates.common.datatransfer.attributes.FeedbackResponseAttributes;
 import teammates.common.datatransfer.attributes.FeedbackResponseCommentAttributes;
 import teammates.common.datatransfer.attributes.InstructorAttributes;
@@ -193,7 +194,7 @@ public final class FeedbackResponsesLogic {
      * question.
      */
     public List<FeedbackResponseAttributes> getFeedbackResponsesFromStudentOrTeamForQuestion(
-            FeedbackQuestionAttributes question, StudentAttributes student) {
+            FeedbackQuestionsVariousAttributes question, StudentAttributes student) {
         if (question.getGiverType() == FeedbackParticipantType.TEAMS) {
             return getFeedbackResponsesFromTeamForQuestion(
                     question.getId(), question.getCourseId(), student.getTeam(), null);
@@ -205,7 +206,7 @@ public final class FeedbackResponsesLogic {
      * Checks whether the giver name of a response is visible to an user.
      */
     public boolean isNameVisibleToUser(
-            FeedbackQuestionAttributes question,
+            FeedbackQuestionsVariousAttributes question,
             FeedbackResponseAttributes response,
             String userEmail,
             boolean isInstructor, boolean isGiverName, CourseRoster roster) {
@@ -231,7 +232,7 @@ public final class FeedbackResponsesLogic {
     }
 
     private boolean isFeedbackParticipantNameVisibleToUser(
-            FeedbackQuestionAttributes question, FeedbackResponseAttributes response,
+            FeedbackQuestionsVariousAttributes question, FeedbackResponseAttributes response,
             String userEmail, boolean isInstructor, boolean isGiverName, CourseRoster roster) {
         List<FeedbackParticipantType> showNameTo = isGiverName
                                                  ? question.getShowGiverNameTo()
@@ -294,7 +295,7 @@ public final class FeedbackResponsesLogic {
     /**
      * Returns true if the responses of the question are visible to students.
      */
-    public boolean isResponseOfFeedbackQuestionVisibleToStudent(FeedbackQuestionAttributes question) {
+    public boolean isResponseOfFeedbackQuestionVisibleToStudent(FeedbackQuestionsVariousAttributes question) {
         if (question.isResponseVisibleTo(FeedbackParticipantType.STUDENTS)) {
             return true;
         }
@@ -396,7 +397,7 @@ public final class FeedbackResponsesLogic {
         // build comment
         for (FeedbackResponseCommentAttributes frc : allComments) {
             FeedbackResponseAttributes relatedResponse = relatedResponsesMap.get(frc.getFeedbackResponseId());
-            FeedbackQuestionAttributes relatedQuestion = relatedQuestionsMap.get(frc.getFeedbackQuestionId());
+            FeedbackQuestionsVariousAttributes relatedQuestion = relatedQuestionsMap.get(frc.getFeedbackQuestionId());
             // the comment needs to be relevant to the question and response
             if (relatedQuestion == null || relatedResponse == null) {
                 continue;
@@ -491,7 +492,7 @@ public final class FeedbackResponsesLogic {
         StudentAttributes student = isInstructor ? null : studentsLogic.getStudentForEmail(courseId, userEmail);
         InstructorAttributes instructor = isInstructor ? instructorsLogic.getInstructorForEmail(courseId, userEmail) : null;
         List<FeedbackResponseAttributes> allResponses = new ArrayList<>();
-        for (FeedbackQuestionAttributes question : allQuestions) {
+        for (FeedbackQuestionsVariousAttributes question : allQuestions) {
             // load viewable responses for students/instructors proactively
             // this is cost-effective as in most of time responses for the whole session will not be viewable to individuals
             List<FeedbackResponseAttributes> viewableResponses = isInstructor
@@ -527,7 +528,7 @@ public final class FeedbackResponsesLogic {
 
         // first get all possible giver recipient pairs
         Map<String, Map<String, Set<String>>> questionCompleteGiverRecipientMap = new HashMap<>();
-        for (FeedbackQuestionAttributes feedbackQuestion : relatedQuestionsMap.values()) {
+        for (FeedbackQuestionsVariousAttributes feedbackQuestion : relatedQuestionsMap.values()) {
             if (feedbackQuestion.getQuestionDetailsCopy().shouldGenerateMissingResponses(feedbackQuestion)) {
                 questionCompleteGiverRecipientMap.put(feedbackQuestion.getId(),
                         fqLogic.buildCompleteGiverRecipientMap(feedbackQuestion, courseRoster));
@@ -550,7 +551,7 @@ public final class FeedbackResponsesLogic {
         // build dummy responses
         for (Map.Entry<String, Map<String, Set<String>>> currGiverRecipientMapEntry
                 : questionCompleteGiverRecipientMap.entrySet()) {
-            FeedbackQuestionAttributes correspondingQuestion =
+            FeedbackQuestionsVariousAttributes correspondingQuestion =
                     relatedQuestionsMap.get(currGiverRecipientMapEntry.getKey());
             String questionId = correspondingQuestion.getId();
 
@@ -606,7 +607,7 @@ public final class FeedbackResponsesLogic {
     private boolean isResponseVisibleForUser(
             String userEmail, boolean isInstructor, StudentAttributes student,
             Set<String> studentsEmailInTeam, FeedbackResponseAttributes response,
-            FeedbackQuestionAttributes relatedQuestion, InstructorAttributes instructor) {
+            FeedbackQuestionsVariousAttributes relatedQuestion, InstructorAttributes instructor) {
 
         boolean isVisibleResponse = false;
         if (isInstructor && relatedQuestion.isResponseVisibleTo(FeedbackParticipantType.INSTRUCTORS)
@@ -717,7 +718,7 @@ public final class FeedbackResponsesLogic {
      */
     public void updateFeedbackResponsesForChangingTeam(
             String courseId, String userEmail, String oldTeam, String newTeam) {
-        FeedbackQuestionAttributes question;
+        FeedbackQuestionsVariousAttributes question;
         // deletes all responses given by the user to team members or given by the user as a representative of a team.
         List<FeedbackResponseAttributes> responsesFromUser =
                 getFeedbackResponsesFromGiverForCourse(courseId, userEmail);
@@ -791,7 +792,7 @@ public final class FeedbackResponsesLogic {
         }
     }
 
-    private boolean isRecipientTypeTeamMembers(FeedbackQuestionAttributes question) {
+    private boolean isRecipientTypeTeamMembers(FeedbackQuestionsVariousAttributes question) {
         return question.getRecipientType() == FeedbackParticipantType.OWN_TEAM_MEMBERS
                || question.getRecipientType() == FeedbackParticipantType.OWN_TEAM_MEMBERS_INCLUDING_SELF;
     }
@@ -907,7 +908,7 @@ public final class FeedbackResponsesLogic {
      * Returns feedback responses given/received by an instructor.
      */
     private List<FeedbackResponseAttributes> getFeedbackResponsesToOrFromInstructorForQuestion(
-            FeedbackQuestionAttributes question, InstructorAttributes instructor) {
+            FeedbackQuestionsVariousAttributes question, InstructorAttributes instructor) {
         UniqueResponsesSet viewableResponses = new UniqueResponsesSet();
 
         // Add responses that the instructor submitted him/herself
@@ -933,7 +934,7 @@ public final class FeedbackResponsesLogic {
      * Returns viewable feedback responses for a student.
      */
     private List<FeedbackResponseAttributes> getViewableFeedbackResponsesForStudentForQuestion(
-            FeedbackQuestionAttributes question, StudentAttributes student, CourseRoster courseRoster) {
+            FeedbackQuestionsVariousAttributes question, StudentAttributes student, CourseRoster courseRoster) {
         UniqueResponsesSet viewableResponses = new UniqueResponsesSet();
 
         // Add responses that the student submitted him/herself

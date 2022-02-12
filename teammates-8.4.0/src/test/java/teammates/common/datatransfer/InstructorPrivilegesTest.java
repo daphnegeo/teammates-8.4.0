@@ -18,13 +18,7 @@ public class InstructorPrivilegesTest extends BaseTestCase {
         // co-owner: all true
         privileges.setDefaultPrivilegesForCoowner();
         courseLevelMap = privileges.getCourseLevelPrivileges();
-        assertTrue(courseLevelMap.get(Const.InstructorPermissions.CAN_MODIFY_COURSE));
-        assertTrue(courseLevelMap.get(Const.InstructorPermissions.CAN_MODIFY_INSTRUCTOR));
-        assertTrue(courseLevelMap.get(Const.InstructorPermissions.CAN_MODIFY_SESSION));
-        assertTrue(courseLevelMap.get(Const.InstructorPermissions.CAN_MODIFY_STUDENT));
-        assertTrue(courseLevelMap.get(Const.InstructorPermissions.CAN_VIEW_STUDENT_IN_SECTIONS));
-        assertTrue(courseLevelMap.get(Const.InstructorPermissions.CAN_VIEW_SESSION_IN_SECTIONS));
-        assertTrue(courseLevelMap.get(Const.InstructorPermissions.CAN_SUBMIT_SESSION_IN_SECTIONS));
+        courseLevelMapParam(courseLevelMap);
         assertTrue(courseLevelMap.get(Const.InstructorPermissions.CAN_MODIFY_SESSION_COMMENT_IN_SECTIONS));
         String invalidKey = "invalid key";
         assertFalse(courseLevelMap.get(invalidKey));
@@ -78,6 +72,19 @@ public class InstructorPrivilegesTest extends BaseTestCase {
         assertFalse(courseLevelMap.get(Const.InstructorPermissions.CAN_SUBMIT_SESSION_IN_SECTIONS));
         assertFalse(courseLevelMap.get(Const.InstructorPermissions.CAN_MODIFY_SESSION_COMMENT_IN_SECTIONS));
     }
+
+	/**
+	 * @param courseLevelMap
+	 */
+	private void courseLevelMapParam(InstructorPermissionSet courseLevelMap) {
+		assertTrue(courseLevelMap.get(Const.InstructorPermissions.CAN_MODIFY_COURSE));
+        assertTrue(courseLevelMap.get(Const.InstructorPermissions.CAN_MODIFY_INSTRUCTOR));
+        assertTrue(courseLevelMap.get(Const.InstructorPermissions.CAN_MODIFY_SESSION));
+        assertTrue(courseLevelMap.get(Const.InstructorPermissions.CAN_MODIFY_STUDENT));
+        assertTrue(courseLevelMap.get(Const.InstructorPermissions.CAN_VIEW_STUDENT_IN_SECTIONS));
+        assertTrue(courseLevelMap.get(Const.InstructorPermissions.CAN_VIEW_SESSION_IN_SECTIONS));
+        assertTrue(courseLevelMap.get(Const.InstructorPermissions.CAN_SUBMIT_SESSION_IN_SECTIONS));
+	}
 
     @Test
     public void testConstructor() {

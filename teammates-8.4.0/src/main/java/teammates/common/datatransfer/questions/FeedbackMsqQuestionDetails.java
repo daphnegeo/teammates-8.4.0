@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import teammates.common.datatransfer.FeedbackParticipantType;
-import teammates.common.datatransfer.attributes.FeedbackQuestionAttributes;
+import teammates.common.datatransfer.attributes.FeedbackQuestionsVariousAttributes;
 import teammates.common.util.Const;
 
 /**
@@ -272,7 +272,7 @@ public class FeedbackMsqQuestionDetails extends FeedbackQuestionDetails {
     }
 
     @Override
-    public String validateGiverRecipientVisibility(FeedbackQuestionAttributes feedbackQuestionAttributes) {
+    public String validateGiverRecipientVisibility(FeedbackQuestionsVariousAttributes feedbackQuestionAttributes) {
         return "";
     }
 

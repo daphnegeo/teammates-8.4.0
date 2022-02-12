@@ -20,15 +20,6 @@ public class RestoreCourseActionTest
         return DELETE;
     }
 
-    /**
-	 * @deprecated Use {@link teammates.common.datatransfer.DataBundle#testExecute(teammates.ui.webapi.RestoreCourseActionTest)} instead
-	 */
-	@Override
-	@Test
-	public void testExecute() throws Exception {
-		typicalBundle.testExecute(this);
-	}
-
     @Override
     @Test
     protected void testAccessControl() throws Exception {

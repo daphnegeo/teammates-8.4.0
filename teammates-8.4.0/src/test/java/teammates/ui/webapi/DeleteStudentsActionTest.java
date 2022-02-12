@@ -22,34 +22,6 @@ public class DeleteStudentsActionTest extends BaseActionTest<DeleteStudentsActio
 
     @Override
     @Test
-    protected void testExecute() {
-        InstructorAttributes instructor1OfCourse1 = typicalBundle.instructors.get("instructor1OfCourse1");
-
-        ______TS("success: delete all students");
-        loginAsInstructor(instructor1OfCourse1.getGoogleId());
-
-        String[] submissionParams = new String[] {
-                Const.ParamsNames.COURSE_ID, instructor1OfCourse1.getCourseId(),
-        };
-
-        DeleteStudentsAction action = getAction(submissionParams);
-        getJsonResult(action);
-
-        ______TS("fails silently if random course given");
-        submissionParams = new String[] {
-                Const.ParamsNames.COURSE_ID, "RANDOM_ID",
-        };
-
-        action = getAction(submissionParams);
-        getJsonResult(action);
-
-        ______TS("failure: invalid params");
-
-        verifyHttpParameterFailure();
-    }
-
-    @Override
-    @Test
     protected void testAccessControl() throws Exception {
         InstructorAttributes instructor1OfCourse1 = typicalBundle.instructors.get("instructor1OfCourse1");
 

@@ -7,6 +7,7 @@ import java.util.List;
 import org.testng.annotations.Test;
 
 import teammates.common.datatransfer.attributes.FeedbackQuestionAttributes;
+import teammates.common.datatransfer.attributes.FeedbackQuestionsVariousAttributes;
 import teammates.test.BaseTestCase;
 
 /**
@@ -182,7 +183,7 @@ public class FeedbackRankRecipientsQuestionDetailsTest extends BaseTestCase {
     public void testValidateGiverRecipientVisibility() {
         FeedbackRankRecipientsQuestionDetails feedbackRankRecipientsQuestionDetails =
                 new FeedbackRankRecipientsQuestionDetails();
-        FeedbackQuestionAttributes feedbackQuestionAttributes = FeedbackQuestionAttributes.builder().build();
+        FeedbackQuestionsVariousAttributes feedbackQuestionAttributes = FeedbackQuestionAttributes.builder().build();
         assertEquals("", feedbackRankRecipientsQuestionDetails.validateGiverRecipientVisibility(feedbackQuestionAttributes));
     }
 }

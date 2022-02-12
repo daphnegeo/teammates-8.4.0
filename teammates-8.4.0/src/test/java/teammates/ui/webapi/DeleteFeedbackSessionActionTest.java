@@ -23,12 +23,6 @@ public class DeleteFeedbackSessionActionTest extends BaseActionTest<DeleteFeedba
     }
 
     @Test
-    @Override
-    protected void testExecute() {
-        // see test cases below
-    }
-
-    @Test
     public void testDeleteFeedbackSessionAction_invalidParameters_shouldThrowHttpParameterException() {
         CourseAttributes course = typicalBundle.courses.get("typicalCourse1");
         FeedbackSessionAttributes session = typicalBundle.feedbackSessions.get("session1InCourse1");

@@ -14,7 +14,7 @@ import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 
 import teammates.common.datatransfer.FeedbackParticipantType;
-import teammates.common.datatransfer.attributes.FeedbackQuestionAttributes;
+import teammates.common.datatransfer.attributes.FeedbackQuestionsVariousAttributes;
 import teammates.common.datatransfer.attributes.FeedbackResponseAttributes;
 import teammates.common.datatransfer.attributes.FeedbackSessionAttributes;
 import teammates.common.datatransfer.questions.FeedbackConstantSumQuestionDetails;
@@ -66,7 +66,7 @@ public class FeedbackSubmitPage extends AppPage {
         assertEquals(browser.driver.findElements(By.id("question-submission-form")).size(), expected);
     }
 
-    public void verifyQuestionDetails(int qnNumber, FeedbackQuestionAttributes questionAttributes) {
+    public void verifyQuestionDetails(int qnNumber, FeedbackQuestionsVariousAttributes questionAttributes) {
         assertEquals(getQuestionBrief(qnNumber), questionAttributes.getQuestionDetailsCopy().getQuestionText());
         verifyVisibilityList(qnNumber, questionAttributes);
         if (questionAttributes.getQuestionDescription() != null) {
@@ -594,7 +594,7 @@ public class FeedbackSubmitPage extends AppPage {
         return questionDetails.split(": ")[1];
     }
 
-    private void verifyVisibilityList(int qnNumber, FeedbackQuestionAttributes questionAttributes) {
+    private void verifyVisibilityList(int qnNumber, FeedbackQuestionsVariousAttributes questionAttributes) {
         if (questionAttributes.getShowResponsesTo().isEmpty()) {
             verifyVisibilityStringPresent(qnNumber, "No-one can see your responses");
         }
@@ -617,7 +617,7 @@ public class FeedbackSubmitPage extends AppPage {
         fail("Expected visibility string not found: " + qnNumber + ": " + expectedString);
     }
 
-    private String getVisibilityString(FeedbackQuestionAttributes questionAttributes,
+    private String getVisibilityString(FeedbackQuestionsVariousAttributes questionAttributes,
                                        FeedbackParticipantType viewerType) {
         if (!questionAttributes.getShowResponsesTo().contains(viewerType)) {
             return "";

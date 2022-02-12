@@ -29,13 +29,6 @@ public class DeleteStudentProfilePictureActionTest extends BaseActionTest<Delete
         account = typicalBundle.accounts.get("student1InCourse1");
     }
 
-    @Override
-    @Test
-    public void testExecute() throws Exception {
-        testValidAction();
-        testInvalidProfileAction();
-    }
-
     private void testValidAction() throws Exception {
         ______TS("Typical case: success scenario");
 

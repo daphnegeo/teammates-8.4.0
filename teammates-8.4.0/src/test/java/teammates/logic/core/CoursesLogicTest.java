@@ -9,7 +9,7 @@ import org.testng.annotations.Test;
 
 import teammates.common.datatransfer.attributes.AccountAttributes;
 import teammates.common.datatransfer.attributes.CourseAttributes;
-import teammates.common.datatransfer.attributes.FeedbackQuestionAttributes;
+import teammates.common.datatransfer.attributes.FeedbackQuestionsVariousAttributes;
 import teammates.common.datatransfer.attributes.FeedbackResponseAttributes;
 import teammates.common.datatransfer.attributes.FeedbackResponseCommentAttributes;
 import teammates.common.datatransfer.attributes.FeedbackSessionAttributes;
@@ -570,7 +570,7 @@ public class CoursesLogicTest extends BaseLogicTest {
         verifyPresentInDatabase(dataBundle.feedbackSessions.get("session2InCourse1"));
         verifyPresentInDatabase(dataBundle.feedbackQuestions.get("qn1InSession1InCourse1"));
         FeedbackResponseAttributes typicalResponse = dataBundle.feedbackResponses.get("response1ForQ1S1C1");
-        FeedbackQuestionAttributes typicalQuestion =
+        FeedbackQuestionsVariousAttributes typicalQuestion =
                 fqLogic.getFeedbackQuestion(typicalResponse.getFeedbackSessionName(), typicalResponse.getCourseId(),
                         Integer.parseInt(typicalResponse.getFeedbackQuestionId()));
         typicalResponse = frLogic

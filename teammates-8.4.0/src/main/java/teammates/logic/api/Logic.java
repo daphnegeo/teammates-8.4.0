@@ -12,6 +12,7 @@ import teammates.common.datatransfer.SessionResultsBundle;
 import teammates.common.datatransfer.attributes.AccountAttributes;
 import teammates.common.datatransfer.attributes.CourseAttributes;
 import teammates.common.datatransfer.attributes.FeedbackQuestionAttributes;
+import teammates.common.datatransfer.attributes.FeedbackQuestionsVariousAttributes;
 import teammates.common.datatransfer.attributes.FeedbackResponseAttributes;
 import teammates.common.datatransfer.attributes.FeedbackResponseCommentAttributes;
 import teammates.common.datatransfer.attributes.FeedbackSessionAttributes;
@@ -592,7 +593,7 @@ public class Logic {
      * @param teamOfEntityDoingQuestion the team of the entity doing the question. If the entity is an instructor,
      *                                  it can be {@code null}.
      */
-    public void populateFieldsToGenerateInQuestion(FeedbackQuestionAttributes feedbackQuestionAttributes,
+    public void populateFieldsToGenerateInQuestion(FeedbackQuestionsVariousAttributes feedbackQuestionAttributes,
             String emailOfEntityDoingQuestion, String teamOfEntityDoingQuestion) {
         assert feedbackQuestionAttributes != null;
         assert emailOfEntityDoingQuestion != null;
@@ -911,7 +912,7 @@ public class Logic {
      * @see FeedbackQuestionsLogic#getRecipientsOfQuestion
      */
     public Map<String, String> getRecipientsOfQuestion(
-            FeedbackQuestionAttributes question,
+            FeedbackQuestionsVariousAttributes question,
             @Nullable InstructorAttributes instructorGiver, @Nullable StudentAttributes studentGiver) {
         assert question != null;
 
@@ -924,7 +925,7 @@ public class Logic {
      * * All parameters are non-null. <br>
      *
      */
-    public FeedbackQuestionAttributes getFeedbackQuestion(String feedbackQuestionId) {
+    public FeedbackQuestionsVariousAttributes getFeedbackQuestion(String feedbackQuestionId) {
         assert feedbackQuestionId != null;
         return feedbackQuestionsLogic.getFeedbackQuestion(feedbackQuestionId);
     }
@@ -1070,7 +1071,7 @@ public class Logic {
      * @return the created question
      * @throws InvalidParametersException if the question is invalid
      */
-    public FeedbackQuestionAttributes createFeedbackQuestion(FeedbackQuestionAttributes feedbackQuestion)
+    public FeedbackQuestionAttributes createFeedbackQuestion(FeedbackQuestionsVariousAttributes feedbackQuestion)
             throws InvalidParametersException {
         assert feedbackQuestion != null;
 
@@ -1091,7 +1092,7 @@ public class Logic {
      * @throws InvalidParametersException if attributes to update are not valid
      * @throws EntityDoesNotExistException if the feedback question cannot be found
      */
-    public FeedbackQuestionAttributes updateFeedbackQuestionCascade(FeedbackQuestionAttributes.UpdateOptions updateOptions)
+    public FeedbackQuestionsVariousAttributes updateFeedbackQuestionCascade(FeedbackQuestionAttributes.UpdateOptions updateOptions)
             throws InvalidParametersException, EntityDoesNotExistException {
         assert updateOptions != null;
 
@@ -1181,7 +1182,7 @@ public class Logic {
      * Get existing feedback responses from student or his team for the given question.
      */
     public List<FeedbackResponseAttributes> getFeedbackResponsesFromStudentOrTeamForQuestion(
-            FeedbackQuestionAttributes question, StudentAttributes student) {
+            FeedbackQuestionsVariousAttributes question, StudentAttributes student) {
         assert question != null;
         assert student != null;
 
@@ -1192,7 +1193,7 @@ public class Logic {
      * Get existing feedback responses from instructor for the given question.
      */
     public List<FeedbackResponseAttributes> getFeedbackResponsesFromInstructorForQuestion(
-            FeedbackQuestionAttributes question, InstructorAttributes instructorAttributes) {
+            FeedbackQuestionsVariousAttributes question, InstructorAttributes instructorAttributes) {
         assert question != null;
         assert instructorAttributes != null;
 

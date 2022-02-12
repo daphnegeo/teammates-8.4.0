@@ -13,7 +13,7 @@ import com.google.common.collect.Sets;
 
 import teammates.common.datatransfer.AttributesDeletionQuery;
 import teammates.common.datatransfer.DataBundle;
-import teammates.common.datatransfer.attributes.FeedbackQuestionAttributes;
+import teammates.common.datatransfer.attributes.FeedbackQuestionsVariousAttributes;
 import teammates.common.datatransfer.attributes.FeedbackResponseAttributes;
 import teammates.common.datatransfer.questions.FeedbackResponseDetails;
 import teammates.common.datatransfer.questions.FeedbackTextResponseDetails;
@@ -60,7 +60,7 @@ public class FeedbackResponsesDbTest extends BaseTestCaseWithLocalDatabaseAccess
             FeedbackResponseAttributes fra = dataBundle.feedbackResponses.get(i);
 
             // Update feedbackQuestionId for response
-            FeedbackQuestionAttributes fqa = fqDb.getFeedbackQuestion(fra.getFeedbackSessionName(),
+            FeedbackQuestionsVariousAttributes fqa = fqDb.getFeedbackQuestion(fra.getFeedbackSessionName(),
                     fra.getCourseId(), Integer.parseInt(fra.getFeedbackQuestionId()));
             fra.setFeedbackQuestionId(fqa.getId());
             frDb.createEntity(fra);

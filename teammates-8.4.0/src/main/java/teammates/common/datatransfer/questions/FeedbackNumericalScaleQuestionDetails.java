@@ -5,7 +5,7 @@ import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
-import teammates.common.datatransfer.attributes.FeedbackQuestionAttributes;
+import teammates.common.datatransfer.attributes.FeedbackQuestionsVariousAttributes;
 
 /**
  * Contains specific structure and processing logic for numerical scale feedback questions.
@@ -93,7 +93,7 @@ public class FeedbackNumericalScaleQuestionDetails extends FeedbackQuestionDetai
     }
 
     @Override
-    public String validateGiverRecipientVisibility(FeedbackQuestionAttributes feedbackQuestionAttributes) {
+    public String validateGiverRecipientVisibility(FeedbackQuestionsVariousAttributes feedbackQuestionAttributes) {
         return "";
     }
 

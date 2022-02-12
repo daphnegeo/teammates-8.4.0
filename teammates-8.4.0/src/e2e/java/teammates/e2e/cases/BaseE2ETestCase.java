@@ -12,7 +12,7 @@ import org.testng.annotations.BeforeClass;
 import teammates.common.datatransfer.DataBundle;
 import teammates.common.datatransfer.attributes.AccountAttributes;
 import teammates.common.datatransfer.attributes.CourseAttributes;
-import teammates.common.datatransfer.attributes.FeedbackQuestionAttributes;
+import teammates.common.datatransfer.attributes.FeedbackQuestionsVariousAttributes;
 import teammates.common.datatransfer.attributes.FeedbackResponseAttributes;
 import teammates.common.datatransfer.attributes.FeedbackResponseCommentAttributes;
 import teammates.common.datatransfer.attributes.FeedbackSessionAttributes;
@@ -243,12 +243,12 @@ public abstract class BaseE2ETestCase extends BaseTestCaseWithDatabaseAccess {
         return BACKDOOR.getArchivedCourse(instructorId, courseId);
     }
 
-    FeedbackQuestionAttributes getFeedbackQuestion(String courseId, String feedbackSessionName, int qnNumber) {
+    FeedbackQuestionsVariousAttributes getFeedbackQuestion(String courseId, String feedbackSessionName, int qnNumber) {
         return BACKDOOR.getFeedbackQuestion(courseId, feedbackSessionName, qnNumber);
     }
 
     @Override
-    protected FeedbackQuestionAttributes getFeedbackQuestion(FeedbackQuestionAttributes fq) {
+    protected FeedbackQuestionsVariousAttributes getFeedbackQuestion(FeedbackQuestionsVariousAttributes fq) {
         return getFeedbackQuestion(fq.getCourseId(), fq.getFeedbackSessionName(), fq.getQuestionNumber());
     }
 

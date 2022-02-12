@@ -3,7 +3,7 @@ package teammates.ui.webapi;
 import org.testng.annotations.Test;
 
 import teammates.common.datatransfer.DataBundle;
-import teammates.common.datatransfer.attributes.FeedbackQuestionAttributes;
+import teammates.common.datatransfer.attributes.FeedbackQuestionsVariousAttributes;
 import teammates.common.datatransfer.attributes.FeedbackSessionAttributes;
 import teammates.common.datatransfer.attributes.InstructorAttributes;
 import teammates.common.datatransfer.attributes.StudentAttributes;
@@ -45,11 +45,6 @@ public class GetFeedbackQuestionRecipientsActionTest extends BaseActionTest<GetF
     @Override
     protected String getRequestMethod() {
         return GET;
-    }
-
-    @Override
-    protected void testExecute() {
-        // See independent test cases
     }
 
     @Test
@@ -315,7 +310,7 @@ public class GetFeedbackQuestionRecipientsActionTest extends BaseActionTest<GetF
 
     private String[] generateParameters(FeedbackSessionAttributes session, int questionNumber, Intent intent,
                                         String regKey, String moderatedPerson, String previewPerson) {
-        FeedbackQuestionAttributes question = logic.getFeedbackQuestion(session.getFeedbackSessionName(),
+        FeedbackQuestionsVariousAttributes question = logic.getFeedbackQuestion(session.getFeedbackSessionName(),
                 session.getCourseId(), questionNumber);
         return new String[] {
                 Const.ParamsNames.FEEDBACK_QUESTION_ID, question.getFeedbackQuestionId(),

@@ -23,36 +23,6 @@ public class BinFeedbackSessionActionTest extends BaseActionTest<BinFeedbackSess
 
     @Override
     @Test
-    protected void testExecute() {
-
-        FeedbackSessionAttributes fs = typicalBundle.feedbackSessions.get("session1InCourse1");
-        InstructorAttributes instructor = typicalBundle.instructors.get("instructor1OfCourse1");
-
-        loginAsInstructor(instructor.getGoogleId());
-
-        ______TS("Not enough parameters");
-
-        verifyHttpParameterFailure();
-        verifyHttpParameterFailure(Const.ParamsNames.COURSE_ID, fs.getCourseId());
-        verifyHttpParameterFailure(Const.ParamsNames.FEEDBACK_SESSION_NAME, fs.getFeedbackSessionName());
-
-        ______TS("typical success case");
-
-        assertNotNull(logic.getFeedbackSession(fs.getFeedbackSessionName(), fs.getCourseId()));
-
-        String[] params = new String[] {
-                Const.ParamsNames.COURSE_ID, fs.getCourseId(),
-                Const.ParamsNames.FEEDBACK_SESSION_NAME, fs.getFeedbackSessionName(),
-        };
-        BinFeedbackSessionAction a = getAction(params);
-        getJsonResult(a);
-
-        assertNull(logic.getFeedbackSession(fs.getFeedbackSessionName(), fs.getCourseId()));
-        assertNotNull(logic.getFeedbackSessionFromRecycleBin(fs.getFeedbackSessionName(), fs.getCourseId()));
-    }
-
-    @Override
-    @Test
     protected void testAccessControl() throws Exception {
         InstructorAttributes instructor1OfCourse1 = typicalBundle.instructors.get("instructor1OfCourse1");
         FeedbackSessionAttributes fs = typicalBundle.feedbackSessions.get("session1InCourse1");

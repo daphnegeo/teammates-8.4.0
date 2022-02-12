@@ -7,14 +7,14 @@ import java.util.stream.Collectors;
 
 import org.testng.annotations.Test;
 
-import teammates.common.datatransfer.attributes.FeedbackQuestionAttributes;
+import teammates.common.datatransfer.attributes.FeedbackQuestionsVariousAttributes;
 import teammates.common.datatransfer.attributes.FeedbackResponseAttributes;
 import teammates.common.datatransfer.attributes.StudentAttributes;
 import teammates.common.datatransfer.questions.FeedbackMsqQuestionDetails;
 import teammates.common.datatransfer.questions.FeedbackMsqResponseDetails;
 import teammates.common.util.Const;
 import teammates.e2e.pageobjects.FeedbackSubmitPage;
-import teammates.e2e.pageobjects.InstructorFeedbackEditPage;
+import teammates.e2e.pageobjects.InstructorFeedbackPage;
 
 /**
  * SUT: {@link Const.WebPageURIs#INSTRUCTOR_SESSION_EDIT_PAGE}, {@link Const.WebPageURIs#SESSION_SUBMISSION_PAGE}
@@ -43,10 +43,10 @@ public class FeedbackMsqQuestionE2ETest extends BaseFeedbackQuestionE2ETest {
 
     @Override
     protected void testEditPage() {
-        InstructorFeedbackEditPage feedbackEditPage = loginToFeedbackEditPage();
+        InstructorFeedbackPage feedbackEditPage = loginToFeedbackEditPage();
 
         ______TS("verify loaded question");
-        FeedbackQuestionAttributes loadedQuestion = testData.feedbackQuestions.get("qn1ForFirstSession").getCopy();
+        FeedbackQuestionsVariousAttributes loadedQuestion = testData.feedbackQuestions.get("qn1ForFirstSession").getCopy();
         FeedbackMsqQuestionDetails questionDetails = (FeedbackMsqQuestionDetails) loadedQuestion.getQuestionDetailsCopy();
         feedbackEditPage.verifyMsqQuestionDetails(1, questionDetails);
 
@@ -59,7 +59,7 @@ public class FeedbackMsqQuestionE2ETest extends BaseFeedbackQuestionE2ETest {
         verifyPresentInDatabase(loadedQuestion);
 
         ______TS("copy question");
-        FeedbackQuestionAttributes copiedQuestion = testData.feedbackQuestions.get("qn1ForSecondSession");
+        FeedbackQuestionsVariousAttributes copiedQuestion = testData.feedbackQuestions.get("qn1ForSecondSession");
         questionDetails = (FeedbackMsqQuestionDetails) copiedQuestion.getQuestionDetailsCopy();
         feedbackEditPage.copyQuestion(copiedQuestion.getCourseId(),
                 copiedQuestion.getQuestionDetailsCopy().getQuestionText());
@@ -93,13 +93,13 @@ public class FeedbackMsqQuestionE2ETest extends BaseFeedbackQuestionE2ETest {
         FeedbackSubmitPage feedbackSubmitPage = loginToFeedbackSubmitPage();
 
         ______TS("verify loaded question");
-        FeedbackQuestionAttributes question = testData.feedbackQuestions.get("qn1ForFirstSession");
+        FeedbackQuestionsVariousAttributes question = testData.feedbackQuestions.get("qn1ForFirstSession");
         StudentAttributes receiver = testData.students.get("benny.tmms@FMsqQn.CS2104");
         feedbackSubmitPage.verifyMsqQuestion(1, receiver.getName(),
                 (FeedbackMsqQuestionDetails) question.getQuestionDetailsCopy());
 
         ______TS("verify loaded question with generated options");
-        FeedbackQuestionAttributes generatedQn = testData.feedbackQuestions.get("qn1ForSecondSession");
+        FeedbackQuestionsVariousAttributes generatedQn = testData.feedbackQuestions.get("qn1ForSecondSession");
         feedbackSubmitPage.verifyGeneratedMsqQuestion(3, "",
                 (FeedbackMsqQuestionDetails) generatedQn.getQuestionDetailsCopy(), getGeneratedTeams());
 

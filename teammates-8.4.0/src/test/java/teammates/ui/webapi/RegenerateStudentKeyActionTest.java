@@ -90,12 +90,6 @@ public class RegenerateStudentKeyActionTest extends BaseActionTest<RegenerateStu
 
     @Override
     @Test
-    protected void testExecute() {
-        // see individual tests
-    }
-
-    @Override
-    @Test
     protected void testAccessControl() {
         verifyOnlyAdminCanAccess();
     }

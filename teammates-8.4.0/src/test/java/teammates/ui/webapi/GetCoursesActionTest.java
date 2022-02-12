@@ -34,12 +34,6 @@ public class GetCoursesActionTest extends BaseActionTest<GetCoursesAction> {
     }
 
     @Test
-    @Override
-    protected void testExecute() {
-        // See separated test cases below.
-    }
-
-    @Test
     public void testGetCoursesAction_withNoParameter_shouldThrowHttpParameterException() {
         InstructorAttributes instructor = testData.instructors.get("instructor1OfCourse1");
         loginAsInstructor(instructor.getGoogleId());

@@ -3,6 +3,7 @@ package teammates.ui.webapi;
 import java.util.List;
 
 import teammates.common.datatransfer.attributes.FeedbackQuestionAttributes;
+import teammates.common.datatransfer.attributes.FeedbackQuestionsVariousAttributes;
 import teammates.common.datatransfer.attributes.InstructorAttributes;
 import teammates.common.datatransfer.questions.FeedbackQuestionDetails;
 import teammates.common.exception.InvalidParametersException;
@@ -38,7 +39,7 @@ class CreateFeedbackQuestionAction extends Action {
         String feedbackSessionName = getNonNullRequestParamValue(Const.ParamsNames.FEEDBACK_SESSION_NAME);
 
         FeedbackQuestionCreateRequest request = getAndValidateRequestBody(FeedbackQuestionCreateRequest.class);
-        FeedbackQuestionAttributes attributes = FeedbackQuestionAttributes.builder()
+        FeedbackQuestionsVariousAttributes attributes = FeedbackQuestionAttributes.builder()
                 .withCourseId(courseId)
                 .withFeedbackSessionName(feedbackSessionName)
                 .withGiverType(request.getGiverType())

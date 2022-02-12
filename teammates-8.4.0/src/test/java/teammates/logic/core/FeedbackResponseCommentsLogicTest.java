@@ -21,7 +21,7 @@ import teammates.common.datatransfer.AttributesDeletionQuery;
 import teammates.common.datatransfer.CourseRoster;
 import teammates.common.datatransfer.DataBundle;
 import teammates.common.datatransfer.FeedbackParticipantType;
-import teammates.common.datatransfer.attributes.FeedbackQuestionAttributes;
+import teammates.common.datatransfer.attributes.FeedbackQuestionsVariousAttributes;
 import teammates.common.datatransfer.attributes.FeedbackResponseAttributes;
 import teammates.common.datatransfer.attributes.FeedbackResponseCommentAttributes;
 import teammates.common.datatransfer.attributes.StudentAttributes;
@@ -479,7 +479,7 @@ public class FeedbackResponseCommentsLogicTest extends BaseLogicTest {
                 .collect(Collectors.toSet());
 
         FeedbackResponseAttributes response = dataBundle.feedbackResponses.get("response1ForQ1S1C1");
-        FeedbackQuestionAttributes relatedQuestion = dataBundle.feedbackQuestions.get("qn1InSession1InCourse1");
+        FeedbackQuestionsVariousAttributes relatedQuestion = dataBundle.feedbackQuestions.get("qn1InSession1InCourse1");
         FeedbackResponseCommentAttributes commentVisibleToStudent = FeedbackResponseCommentAttributes.builder()
                 .withCommentGiver("instructor1@course1.tmt")
                 .withCommentGiverType(INSTRUCTORS)
@@ -860,7 +860,7 @@ public class FeedbackResponseCommentsLogicTest extends BaseLogicTest {
     }
 
     private String getQuestionIdInDataBundle(String questionInDataBundle) {
-        FeedbackQuestionAttributes question = dataBundle.feedbackQuestions.get(questionInDataBundle);
+        FeedbackQuestionsVariousAttributes question = dataBundle.feedbackQuestions.get(questionInDataBundle);
         question = fqLogic.getFeedbackQuestion(
                 question.getFeedbackSessionName(), question.getCourseId(), question.getQuestionNumber());
         return question.getId();

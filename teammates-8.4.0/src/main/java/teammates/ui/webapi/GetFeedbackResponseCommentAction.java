@@ -2,7 +2,7 @@ package teammates.ui.webapi;
 
 import org.apache.http.HttpStatus;
 
-import teammates.common.datatransfer.attributes.FeedbackQuestionAttributes;
+import teammates.common.datatransfer.attributes.FeedbackQuestionsVariousAttributes;
 import teammates.common.datatransfer.attributes.FeedbackResponseAttributes;
 import teammates.common.datatransfer.attributes.FeedbackResponseCommentAttributes;
 import teammates.common.datatransfer.attributes.FeedbackSessionAttributes;
@@ -42,7 +42,7 @@ class GetFeedbackResponseCommentAction extends BasicCommentSubmissionAction {
         FeedbackSessionAttributes feedbackSession =
                 getNonNullFeedbackSession(feedbackResponseAttributes.getFeedbackSessionName(),
                         feedbackResponseAttributes.getCourseId());
-        FeedbackQuestionAttributes feedbackQuestion =
+        FeedbackQuestionsVariousAttributes feedbackQuestion =
                 logic.getFeedbackQuestion(feedbackResponseAttributes.getFeedbackQuestionId());
 
         verifyInstructorCanSeeQuestionIfInModeration(feedbackQuestion);

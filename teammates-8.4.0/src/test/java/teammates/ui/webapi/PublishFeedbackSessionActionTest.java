@@ -5,8 +5,6 @@ import org.testng.annotations.Test;
 import teammates.common.datatransfer.attributes.CourseAttributes;
 import teammates.common.datatransfer.attributes.FeedbackSessionAttributes;
 import teammates.common.util.Const;
-import teammates.ui.output.FeedbackSessionData;
-import teammates.ui.output.FeedbackSessionPublishStatus;
 
 /**
  * SUT: {@link PublishFeedbackSessionAction}.
@@ -21,39 +19,6 @@ public class PublishFeedbackSessionActionTest extends BaseActionTest<PublishFeed
     @Override
     protected String getRequestMethod() {
         return POST;
-    }
-
-    @Test
-    @Override
-    protected void testExecute() {
-        ______TS("Typical case");
-
-        CourseAttributes course = typicalBundle.courses.get("typicalCourse1");
-        FeedbackSessionAttributes session = typicalBundle.feedbackSessions.get("session1InCourse1");
-
-        String[] params = {
-                Const.ParamsNames.COURSE_ID, course.getId(),
-                Const.ParamsNames.FEEDBACK_SESSION_NAME, session.getFeedbackSessionName(),
-        };
-
-        PublishFeedbackSessionAction publishFeedbackSessionAction = getAction(params);
-
-        JsonResult result = getJsonResult(publishFeedbackSessionAction);
-        FeedbackSessionData feedbackSessionData = (FeedbackSessionData) result.getOutput();
-
-        assertEquals(feedbackSessionData.getFeedbackSessionName(), session.getFeedbackSessionName());
-        assertEquals(FeedbackSessionPublishStatus.PUBLISHED, feedbackSessionData.getPublishStatus());
-        assertTrue(logic.getFeedbackSession(session.getFeedbackSessionName(), course.getId()).isPublished());
-
-        ______TS("Typical case: Session is already published");
-        // Attempt to publish the same session again.
-
-        result = getJsonResult(getAction(params));
-        feedbackSessionData = (FeedbackSessionData) result.getOutput();
-
-        assertEquals(feedbackSessionData.getFeedbackSessionName(), session.getFeedbackSessionName());
-        assertEquals(FeedbackSessionPublishStatus.PUBLISHED, feedbackSessionData.getPublishStatus());
-        assertTrue(logic.getFeedbackSession(session.getFeedbackSessionName(), course.getId()).isPublished());
     }
 
     @Test

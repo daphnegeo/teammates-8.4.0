@@ -9,7 +9,7 @@ import javax.annotation.Nullable;
 import teammates.common.datatransfer.AttributesDeletionQuery;
 import teammates.common.datatransfer.CourseRoster;
 import teammates.common.datatransfer.FeedbackParticipantType;
-import teammates.common.datatransfer.attributes.FeedbackQuestionAttributes;
+import teammates.common.datatransfer.attributes.FeedbackQuestionsVariousAttributes;
 import teammates.common.datatransfer.attributes.FeedbackResponseAttributes;
 import teammates.common.datatransfer.attributes.FeedbackResponseCommentAttributes;
 import teammates.common.datatransfer.attributes.FeedbackSessionAttributes;
@@ -278,7 +278,7 @@ public final class FeedbackResponseCommentsLogic {
      */
     public boolean isResponseCommentVisibleForUser(String userEmail, boolean isInstructor,
             StudentAttributes student, Set<String> studentsEmailInTeam, FeedbackResponseAttributes response,
-            FeedbackQuestionAttributes relatedQuestion, FeedbackResponseCommentAttributes relatedComment) {
+            FeedbackQuestionsVariousAttributes relatedQuestion, FeedbackResponseCommentAttributes relatedComment) {
 
         if (response == null || relatedQuestion == null) {
             return false;
@@ -298,7 +298,7 @@ public final class FeedbackResponseCommentsLogic {
     }
 
     private boolean isVisibleToUserTeam(StudentAttributes student, Set<String> studentsEmailInTeam,
-            FeedbackResponseAttributes response, FeedbackQuestionAttributes relatedQuestion,
+            FeedbackResponseAttributes response, FeedbackQuestionsVariousAttributes relatedQuestion,
             FeedbackResponseCommentAttributes relatedComment, boolean isUserStudent) {
 
         boolean isUserInResponseRecipientTeamAndRelatedResponseCommentVisibleToRecipients =
@@ -326,7 +326,7 @@ public final class FeedbackResponseCommentsLogic {
     }
 
     private boolean isVisibleToUser(String userEmail, FeedbackResponseAttributes response,
-            FeedbackQuestionAttributes relatedQuestion, FeedbackResponseCommentAttributes relatedComment,
+            FeedbackQuestionsVariousAttributes relatedQuestion, FeedbackResponseCommentAttributes relatedComment,
             boolean isVisibleToGiver, boolean isUserInstructor, boolean isUserStudent) {
 
         boolean isUserInstructorAndRelatedResponseCommentVisibleToInstructors =
@@ -353,7 +353,7 @@ public final class FeedbackResponseCommentsLogic {
                 || isUserStudentAndRelatedResponseCommentVisibleToStudents;
     }
 
-    private boolean isResponseCommentVisibleTo(FeedbackQuestionAttributes relatedQuestion,
+    private boolean isResponseCommentVisibleTo(FeedbackQuestionsVariousAttributes relatedQuestion,
                                                FeedbackResponseCommentAttributes relatedComment,
                                                FeedbackParticipantType viewerType) {
         boolean isVisibilityFollowingFeedbackQuestion = relatedComment.isVisibilityFollowingFeedbackQuestion();

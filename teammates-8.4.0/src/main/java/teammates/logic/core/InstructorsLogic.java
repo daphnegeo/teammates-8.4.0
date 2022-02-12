@@ -5,7 +5,7 @@ import java.util.List;
 
 import teammates.common.datatransfer.AttributesDeletionQuery;
 import teammates.common.datatransfer.FeedbackParticipantType;
-import teammates.common.datatransfer.attributes.FeedbackQuestionAttributes;
+import teammates.common.datatransfer.attributes.FeedbackQuestionsVariousAttributes;
 import teammates.common.datatransfer.attributes.FeedbackResponseAttributes;
 import teammates.common.datatransfer.attributes.InstructorAttributes;
 import teammates.common.exception.EntityAlreadyExistsException;
@@ -201,7 +201,7 @@ public final class InstructorsLogic {
                     frLogic.getFeedbackResponsesFromGiverForCourse(
                             originalInstructor.getCourseId(), originalInstructor.getEmail());
             for (FeedbackResponseAttributes responseFromUser : responsesFromUser) {
-                FeedbackQuestionAttributes question = fqLogic.getFeedbackQuestion(responseFromUser.getFeedbackQuestionId());
+                FeedbackQuestionsVariousAttributes question = fqLogic.getFeedbackQuestion(responseFromUser.getFeedbackQuestionId());
                 if (question.getGiverType() == FeedbackParticipantType.INSTRUCTORS
                         || question.getGiverType() == FeedbackParticipantType.SELF) {
                     try {
@@ -218,7 +218,7 @@ public final class InstructorsLogic {
                     frLogic.getFeedbackResponsesForReceiverForCourse(
                             originalInstructor.getCourseId(), originalInstructor.getEmail());
             for (FeedbackResponseAttributes responseToUser : responsesToUser) {
-                FeedbackQuestionAttributes question = fqLogic.getFeedbackQuestion(responseToUser.getFeedbackQuestionId());
+                FeedbackQuestionsVariousAttributes question = fqLogic.getFeedbackQuestion(responseToUser.getFeedbackQuestionId());
                 if (question.getRecipientType() == FeedbackParticipantType.INSTRUCTORS
                         || (question.getGiverType() == FeedbackParticipantType.INSTRUCTORS
                         && question.getRecipientType() == FeedbackParticipantType.SELF)) {

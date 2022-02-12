@@ -27,17 +27,6 @@ public class GetStudentsActionTest extends BaseActionTest<GetStudentsAction> {
     }
 
     @Test
-    @Override
-    protected void testExecute() {
-        InstructorAttributes instructor = typicalBundle.instructors.get("instructor1OfCourse1");
-        loginAsInstructor(instructor.getGoogleId());
-
-        ______TS("Invalid parameters");
-        // no parameters
-        verifyHttpParameterFailure();
-    }
-
-    @Test
     public void testExecute_withOnlyCourseId_shouldReturnAllStudentsOfTheCourse() {
         InstructorAttributes instructor = typicalBundle.instructors.get("instructor1OfCourse1");
         loginAsInstructor(instructor.getGoogleId());

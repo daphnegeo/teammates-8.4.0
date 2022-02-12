@@ -1,7 +1,7 @@
 package teammates.ui.webapi;
 
 import teammates.common.datatransfer.FeedbackParticipantType;
-import teammates.common.datatransfer.attributes.FeedbackQuestionAttributes;
+import teammates.common.datatransfer.attributes.FeedbackQuestionsVariousAttributes;
 import teammates.common.datatransfer.attributes.FeedbackResponseAttributes;
 import teammates.common.datatransfer.attributes.FeedbackResponseCommentAttributes;
 import teammates.common.datatransfer.attributes.FeedbackSessionAttributes;
@@ -45,7 +45,7 @@ class CreateFeedbackResponseCommentAction extends BasicCommentSubmissionAction {
         String feedbackSessionName = response.getFeedbackSessionName();
         FeedbackSessionAttributes session = getNonNullFeedbackSession(feedbackSessionName, courseId);
         String questionId = response.getFeedbackQuestionId();
-        FeedbackQuestionAttributes question = logic.getFeedbackQuestion(questionId);
+        FeedbackQuestionsVariousAttributes question = logic.getFeedbackQuestion(questionId);
         Intent intent = Intent.valueOf(getNonNullRequestParamValue(Const.ParamsNames.INTENT));
 
         switch (intent) {
@@ -118,7 +118,7 @@ class CreateFeedbackResponseCommentAction extends BasicCommentSubmissionAction {
             throw new InvalidHttpRequestBodyException(FEEDBACK_RESPONSE_COMMENT_EMPTY);
         }
         String questionId = response.getFeedbackQuestionId();
-        FeedbackQuestionAttributes question = logic.getFeedbackQuestion(questionId);
+        FeedbackQuestionsVariousAttributes question = logic.getFeedbackQuestion(questionId);
         String courseId = response.getCourseId();
         String email;
 

@@ -5,6 +5,7 @@ import teammates.common.datatransfer.attributes.AccountAttributes;
 import teammates.common.datatransfer.attributes.CourseAttributes;
 import teammates.common.datatransfer.attributes.EntityAttributes;
 import teammates.common.datatransfer.attributes.FeedbackQuestionAttributes;
+import teammates.common.datatransfer.attributes.FeedbackQuestionsVariousAttributes;
 import teammates.common.datatransfer.attributes.FeedbackResponseAttributes;
 import teammates.common.datatransfer.attributes.FeedbackResponseCommentAttributes;
 import teammates.common.datatransfer.attributes.FeedbackSessionAttributes;
@@ -57,7 +58,7 @@ public abstract class BaseTestCaseWithDatabaseAccess extends BaseTestCase {
             return getCourse((CourseAttributes) expected);
 
         } else if (expected instanceof FeedbackQuestionAttributes) {
-            return getFeedbackQuestion((FeedbackQuestionAttributes) expected);
+            return getFeedbackQuestion((FeedbackQuestionsVariousAttributes) expected);
 
         } else if (expected instanceof FeedbackResponseCommentAttributes) {
             return getFeedbackResponseComment((FeedbackResponseCommentAttributes) expected);
@@ -110,8 +111,8 @@ public abstract class BaseTestCaseWithDatabaseAccess extends BaseTestCase {
             assertEquals(JsonUtils.toJson(expectedCourse), JsonUtils.toJson(actualCourse));
 
         } else if (expected instanceof FeedbackQuestionAttributes) {
-            FeedbackQuestionAttributes expectedFq = (FeedbackQuestionAttributes) expected;
-            FeedbackQuestionAttributes actualFq = (FeedbackQuestionAttributes) actual;
+            FeedbackQuestionsVariousAttributes expectedFq = (FeedbackQuestionsVariousAttributes) expected;
+            FeedbackQuestionsVariousAttributes actualFq = (FeedbackQuestionsVariousAttributes) actual;
             equalizeIrrelevantData(expectedFq, actualFq);
             assertEquals(JsonUtils.toJson(expectedFq), JsonUtils.toJson(actualFq));
 
@@ -168,7 +169,7 @@ public abstract class BaseTestCaseWithDatabaseAccess extends BaseTestCase {
         expected.setCreatedAt(actual.getCreatedAt());
     }
 
-    private void equalizeIrrelevantData(FeedbackQuestionAttributes expected, FeedbackQuestionAttributes actual) {
+    private void equalizeIrrelevantData(FeedbackQuestionsVariousAttributes expected, FeedbackQuestionsVariousAttributes actual) {
         expected.setId(actual.getId());
     }
 
@@ -211,7 +212,7 @@ public abstract class BaseTestCaseWithDatabaseAccess extends BaseTestCase {
 
     protected abstract CourseAttributes getCourse(CourseAttributes course);
 
-    protected abstract FeedbackQuestionAttributes getFeedbackQuestion(FeedbackQuestionAttributes fq);
+    protected abstract FeedbackQuestionsVariousAttributes getFeedbackQuestion(FeedbackQuestionsVariousAttributes fq);
 
     protected abstract FeedbackResponseCommentAttributes getFeedbackResponseComment(FeedbackResponseCommentAttributes frc);
 

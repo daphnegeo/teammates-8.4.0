@@ -6,15 +6,13 @@ import java.util.Arrays;
 import org.testng.annotations.Test;
 
 import teammates.common.datatransfer.FeedbackParticipantType;
-import teammates.common.datatransfer.attributes.FeedbackQuestionAttributes;
+import teammates.common.datatransfer.attributes.FeedbackQuestionsVariousAttributes;
 import teammates.common.datatransfer.attributes.FeedbackSessionAttributes;
 import teammates.common.datatransfer.attributes.InstructorAttributes;
 import teammates.common.datatransfer.questions.FeedbackContributionQuestionDetails;
 import teammates.common.datatransfer.questions.FeedbackQuestionType;
 import teammates.common.datatransfer.questions.FeedbackTextQuestionDetails;
 import teammates.common.util.Const;
-import teammates.common.util.JsonUtils;
-import teammates.ui.output.FeedbackQuestionData;
 import teammates.ui.output.FeedbackVisibilityType;
 import teammates.ui.output.NumberOfEntitiesToGiveFeedbackToSetting;
 import teammates.ui.request.FeedbackQuestionUpdateRequest;
@@ -34,76 +32,11 @@ public class UpdateFeedbackQuestionActionTest extends BaseActionTest<UpdateFeedb
         return PUT;
     }
 
-    @Override
-    @Test
-    protected void testExecute() {
-        InstructorAttributes instructor1ofCourse1 = typicalBundle.instructors.get("instructor1OfCourse1");
-        FeedbackSessionAttributes session = typicalBundle.feedbackSessions.get("session1InCourse1");
-        FeedbackQuestionAttributes typicalQuestion =
-                logic.getFeedbackQuestion(session.getFeedbackSessionName(), session.getCourseId(), 1);
-        assertEquals(FeedbackQuestionType.TEXT, typicalQuestion.getQuestionType());
-
-        loginAsInstructor(instructor1ofCourse1.getGoogleId());
-
-        ______TS("Not enough parameters");
-
-        verifyHttpParameterFailure();
-
-        ______TS("success: Typical case");
-
-        String[] param = new String[] {
-                Const.ParamsNames.FEEDBACK_QUESTION_ID, typicalQuestion.getFeedbackQuestionId(),
-        };
-        FeedbackQuestionUpdateRequest updateRequest = getTypicalTextQuestionUpdateRequest();
-
-        UpdateFeedbackQuestionAction a = getAction(updateRequest, param);
-        JsonResult r = getJsonResult(a);
-
-        FeedbackQuestionData response = (FeedbackQuestionData) r.getOutput();
-
-        typicalQuestion = logic.getFeedbackQuestion(typicalQuestion.getId());
-        assertEquals(typicalQuestion.getQuestionNumber(), response.getQuestionNumber());
-        assertEquals(2, typicalQuestion.getQuestionNumber());
-
-        assertEquals(typicalQuestion.getQuestionDetailsCopy().getQuestionText(), response.getQuestionBrief());
-        assertEquals("this is the brief", typicalQuestion.getQuestionDetailsCopy().getQuestionText());
-
-        assertEquals(typicalQuestion.getQuestionDescription(), response.getQuestionDescription());
-        assertEquals("this is the description", typicalQuestion.getQuestionDescription());
-
-        assertEquals(typicalQuestion.getQuestionType(), response.getQuestionType());
-        assertEquals(FeedbackQuestionType.TEXT, typicalQuestion.getQuestionType());
-
-        assertEquals(JsonUtils.toJson(typicalQuestion.getQuestionDetailsCopy()),
-                JsonUtils.toJson(response.getQuestionDetails()));
-        assertEquals(800, ((FeedbackTextQuestionDetails)
-                typicalQuestion.getQuestionDetailsCopy()).getRecommendedLength().intValue());
-
-        assertEquals(typicalQuestion.getGiverType(), typicalQuestion.getGiverType());
-        assertEquals(FeedbackParticipantType.STUDENTS, typicalQuestion.getGiverType());
-
-        assertEquals(typicalQuestion.getRecipientType(), typicalQuestion.getRecipientType());
-        assertEquals(FeedbackParticipantType.INSTRUCTORS, typicalQuestion.getRecipientType());
-
-        assertEquals(NumberOfEntitiesToGiveFeedbackToSetting.UNLIMITED,
-                response.getNumberOfEntitiesToGiveFeedbackToSetting());
-        assertEquals(Const.MAX_POSSIBLE_RECIPIENTS, typicalQuestion.getNumberOfEntitiesToGiveFeedbackTo());
-
-        assertNull(response.getCustomNumberOfEntitiesToGiveFeedbackTo());
-
-        assertTrue(response.getShowResponsesTo().isEmpty());
-        assertTrue(typicalQuestion.getShowResponsesTo().isEmpty());
-        assertTrue(response.getShowGiverNameTo().isEmpty());
-        assertTrue(typicalQuestion.getShowGiverNameTo().isEmpty());
-        assertTrue(response.getShowRecipientNameTo().isEmpty());
-        assertTrue(typicalQuestion.getShowRecipientNameTo().isEmpty());
-    }
-
     @Test
     public void testExecute_customizedNumberOfRecipient_shouldUpdateSuccessfully() {
         InstructorAttributes instructor1ofCourse1 = typicalBundle.instructors.get("instructor1OfCourse1");
         FeedbackSessionAttributes session = typicalBundle.feedbackSessions.get("session1InCourse1");
-        FeedbackQuestionAttributes typicalQuestion =
+        FeedbackQuestionsVariousAttributes typicalQuestion =
                 logic.getFeedbackQuestion(session.getFeedbackSessionName(), session.getCourseId(), 1);
 
         loginAsInstructor(instructor1ofCourse1.getGoogleId());
@@ -127,7 +60,7 @@ public class UpdateFeedbackQuestionActionTest extends BaseActionTest<UpdateFeedb
     public void testExecute_anonymousTeamSession_shouldUpdateSuccessfully() {
         InstructorAttributes instructor1ofCourse1 = typicalBundle.instructors.get("instructor1OfCourse1");
         FeedbackSessionAttributes session = typicalBundle.feedbackSessions.get("session1InCourse1");
-        FeedbackQuestionAttributes typicalQuestion =
+        FeedbackQuestionsVariousAttributes typicalQuestion =
                 logic.getFeedbackQuestion(session.getFeedbackSessionName(), session.getCourseId(), 1);
 
         loginAsInstructor(instructor1ofCourse1.getGoogleId());
@@ -158,7 +91,7 @@ public class UpdateFeedbackQuestionActionTest extends BaseActionTest<UpdateFeedb
     public void testExecute_selfFeedback_shouldUpdateSuccessfully() {
         InstructorAttributes instructor1ofCourse1 = typicalBundle.instructors.get("instructor1OfCourse1");
         FeedbackSessionAttributes session = typicalBundle.feedbackSessions.get("session1InCourse1");
-        FeedbackQuestionAttributes typicalQuestion =
+        FeedbackQuestionsVariousAttributes typicalQuestion =
                 logic.getFeedbackQuestion(session.getFeedbackSessionName(), session.getCourseId(), 1);
 
         loginAsInstructor(instructor1ofCourse1.getGoogleId());
@@ -242,7 +175,7 @@ public class UpdateFeedbackQuestionActionTest extends BaseActionTest<UpdateFeedb
         ______TS("Change the feedback path of a question with no unique respondents, "
                 + "response rate should not be updated");
 
-        FeedbackQuestionAttributes fq =
+        FeedbackQuestionsVariousAttributes fq =
                 logic.getFeedbackQuestion(fs.getFeedbackSessionName(), fs.getCourseId(), 1);
         FeedbackQuestionUpdateRequest updateRequest = getTypicalTextQuestionUpdateRequest();
         updateRequest.setQuestionNumber(fq.getQuestionNumber());
@@ -357,7 +290,7 @@ public class UpdateFeedbackQuestionActionTest extends BaseActionTest<UpdateFeedb
     protected void testAccessControl() throws Exception {
         InstructorAttributes instructor1OfCourse1 = typicalBundle.instructors.get("instructor1OfCourse1");
         FeedbackSessionAttributes fs = typicalBundle.feedbackSessions.get("session1InCourse1");
-        FeedbackQuestionAttributes typicalQuestion =
+        FeedbackQuestionsVariousAttributes typicalQuestion =
                 logic.getFeedbackQuestion(fs.getFeedbackSessionName(), fs.getCourseId(), 1);
 
         ______TS("non-existent feedback question");

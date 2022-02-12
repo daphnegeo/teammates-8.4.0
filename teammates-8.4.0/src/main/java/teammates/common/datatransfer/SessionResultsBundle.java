@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import teammates.common.datatransfer.attributes.FeedbackQuestionAttributes;
+import teammates.common.datatransfer.attributes.FeedbackQuestionsVariousAttributes;
 import teammates.common.datatransfer.attributes.FeedbackResponseAttributes;
 import teammates.common.datatransfer.attributes.FeedbackResponseCommentAttributes;
 import teammates.common.util.Const;
@@ -49,11 +50,11 @@ public class SessionResultsBundle {
         // build question to response map
         Map<String, List<FeedbackResponseAttributes>> questionToResponseMap = new LinkedHashMap<>();
         List<FeedbackQuestionAttributes> questions = new ArrayList<>(questionsMap.values());
-        for (FeedbackQuestionAttributes question : questions) {
+        for (FeedbackQuestionsVariousAttributes question : questions) {
             questionToResponseMap.put(question.getId(), new ArrayList<>());
         }
         for (FeedbackResponseAttributes response : responses) {
-            FeedbackQuestionAttributes question = questionsMap.get(response.getFeedbackQuestionId());
+            FeedbackQuestionsVariousAttributes question = questionsMap.get(response.getFeedbackQuestionId());
             List<FeedbackResponseAttributes> responsesForQuestion = questionToResponseMap.get(question.getId());
             responsesForQuestion.add(response);
         }
@@ -80,7 +81,7 @@ public class SessionResultsBundle {
      * Checks if the giver/recipient for a response is visible/hidden from the current user.
      */
     private boolean isResponseParticipantVisible(boolean isGiver, FeedbackResponseAttributes response) {
-        FeedbackQuestionAttributes question = questionsMap.get(response.getFeedbackQuestionId());
+        FeedbackQuestionsVariousAttributes question = questionsMap.get(response.getFeedbackQuestionId());
         FeedbackParticipantType participantType;
         String responseId = response.getId();
 

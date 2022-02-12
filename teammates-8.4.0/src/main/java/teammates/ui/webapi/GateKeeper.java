@@ -3,7 +3,7 @@ package teammates.ui.webapi;
 import teammates.common.datatransfer.FeedbackParticipantType;
 import teammates.common.datatransfer.UserInfo;
 import teammates.common.datatransfer.attributes.CourseAttributes;
-import teammates.common.datatransfer.attributes.FeedbackQuestionAttributes;
+import teammates.common.datatransfer.attributes.FeedbackQuestionsVariousAttributes;
 import teammates.common.datatransfer.attributes.FeedbackResponseCommentAttributes;
 import teammates.common.datatransfer.attributes.FeedbackSessionAttributes;
 import teammates.common.datatransfer.attributes.InstructorAttributes;
@@ -208,7 +208,7 @@ final class GateKeeper {
     /**
      * Verifies that the feedback question is for student to answer.
      */
-    void verifyAnswerableForStudent(FeedbackQuestionAttributes feedbackQuestionAttributes)
+    void verifyAnswerableForStudent(FeedbackQuestionsVariousAttributes feedbackQuestionAttributes)
             throws UnauthorizedAccessException {
         verifyNotNull(feedbackQuestionAttributes, "feedback question");
 
@@ -221,7 +221,7 @@ final class GateKeeper {
     /**
      * Verifies that the feedback question is for instructor to answer.
      */
-    void verifyAnswerableForInstructor(FeedbackQuestionAttributes feedbackQuestionAttributes)
+    void verifyAnswerableForInstructor(FeedbackQuestionsVariousAttributes feedbackQuestionAttributes)
             throws UnauthorizedAccessException {
         verifyNotNull(feedbackQuestionAttributes, "feedback question");
 

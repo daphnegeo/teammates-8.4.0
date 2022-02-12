@@ -14,6 +14,7 @@ import teammates.common.datatransfer.attributes.AccountAttributes;
 import teammates.common.datatransfer.attributes.CourseAttributes;
 import teammates.common.datatransfer.attributes.EntityAttributes;
 import teammates.common.datatransfer.attributes.FeedbackQuestionAttributes;
+import teammates.common.datatransfer.attributes.FeedbackQuestionsVariousAttributes;
 import teammates.common.datatransfer.attributes.FeedbackResponseAttributes;
 import teammates.common.datatransfer.attributes.FeedbackResponseCommentAttributes;
 import teammates.common.datatransfer.attributes.FeedbackSessionAttributes;
@@ -192,7 +193,7 @@ public final class DataBundleLogic {
     }
 
     private void processQuestions(Collection<FeedbackQuestionAttributes> questions) {
-        for (FeedbackQuestionAttributes question : questions) {
+        for (FeedbackQuestionsVariousAttributes question : questions) {
             question.removeIrrelevantVisibilityOptions();
         }
     }
@@ -208,7 +209,7 @@ public final class DataBundleLogic {
 
     private Map<String, String> makeQuestionIdMap(List<FeedbackQuestionAttributes> createdQuestions) {
         Map<String, String> questionIdMap = new HashMap<>();
-        for (FeedbackQuestionAttributes createdQuestion : createdQuestions) {
+        for (FeedbackQuestionsVariousAttributes createdQuestion : createdQuestions) {
             String sessionKey = makeSessionKey(createdQuestion.getFeedbackSessionName(), createdQuestion.getCourseId());
             String questionKey = makeQuestionKey(sessionKey, createdQuestion.getQuestionNumber());
             questionIdMap.put(questionKey, createdQuestion.getId());

@@ -7,6 +7,7 @@ import java.util.Map;
 import org.testng.annotations.Test;
 
 import teammates.common.datatransfer.attributes.FeedbackQuestionAttributes;
+import teammates.common.datatransfer.attributes.FeedbackQuestionsVariousAttributes;
 import teammates.common.datatransfer.attributes.FeedbackResponseAttributes;
 import teammates.common.datatransfer.attributes.FeedbackSessionAttributes;
 import teammates.common.datatransfer.attributes.InstructorAttributes;
@@ -27,12 +28,6 @@ public class GetHasResponsesActionTest extends BaseActionTest<GetHasResponsesAct
     @Override
     protected String getRequestMethod() {
         return GET;
-    }
-
-    @Test
-    @Override
-    protected void testExecute() {
-        //set test cases below
     }
 
     @Test
@@ -123,7 +118,7 @@ public class GetHasResponsesActionTest extends BaseActionTest<GetHasResponsesAct
 
         InstructorAttributes instructor1OfCourse1 = typicalBundle.instructors.get("instructor1OfCourse1");
 
-        FeedbackQuestionAttributes fQuestion = typicalBundle.feedbackQuestions.get("qn1InSession1InCourse1");
+        FeedbackQuestionsVariousAttributes fQuestion = typicalBundle.feedbackQuestions.get("qn1InSession1InCourse1");
         fQuestion = logic.getFeedbackQuestion(fQuestion.getFeedbackSessionName(), fQuestion.getCourseId(),
                 fQuestion.getQuestionNumber());
 
@@ -171,7 +166,7 @@ public class GetHasResponsesActionTest extends BaseActionTest<GetHasResponsesAct
     protected void testExecute_asInstructorWithQuestionIdAndCourseId_preferQuestionId() {
         FeedbackSessionAttributes feedbackSessionAttributes = typicalBundle.feedbackSessions.get("awaiting.session");
         List<InstructorAttributes> instructors = logic.getInstructorsForCourse(feedbackSessionAttributes.getCourseId());
-        FeedbackQuestionAttributes fQuestion = typicalBundle.feedbackQuestions.get("qn1InSession4InCourse1");
+        FeedbackQuestionsVariousAttributes fQuestion = typicalBundle.feedbackQuestions.get("qn1InSession4InCourse1");
         fQuestion = logic.getFeedbackQuestion(fQuestion.getFeedbackSessionName(), fQuestion.getCourseId(),
                 fQuestion.getQuestionNumber());
 

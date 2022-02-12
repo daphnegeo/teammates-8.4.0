@@ -19,7 +19,7 @@ import teammates.common.util.Const;
 /**
  * Represents the "Sessions" page for Instructors.
  */
-public class InstructorFeedbackSessionsPage extends AppPage {
+public class InstructorFeedbackSessionsPage extends InstructorFeedbackPage {
 
     @FindBy(id = "btn-add-session")
     private WebElement addSessionButton;

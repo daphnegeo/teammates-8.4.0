@@ -6,7 +6,6 @@ import org.testng.annotations.Test;
 import teammates.common.datatransfer.attributes.InstructorAttributes;
 import teammates.common.datatransfer.attributes.StudentAttributes;
 import teammates.common.util.Const;
-import teammates.test.FileHelper;
 
 /**
  * SUT: {@link GetStudentProfilePictureAction}.
@@ -21,113 +20,6 @@ public class GetStudentProfilePictureActionTest extends BaseActionTest<GetStuden
     @Override
     protected String getRequestMethod() {
         return GET;
-    }
-
-    @Override
-    @Test
-    public void testExecute() throws Exception {
-        String student1PicPath = "src/test/resources/images/profile_pic.png";
-        byte[] student1PicBytes = FileHelper.readFileAsBytes(student1PicPath);
-
-        ______TS("Success case: student gets his own image");
-
-        StudentAttributes student1InCourse1 = typicalBundle.students.get("student1InCourse1");
-        loginAsStudent(student1InCourse1.getGoogleId());
-
-        writeFileToStorage(student1InCourse1.getGoogleId(), student1PicPath);
-
-        GetStudentProfilePictureAction action = getAction();
-        ImageResult imageResult = getImageResult(action);
-
-        assertArrayEquals(student1PicBytes, imageResult.getBytes());
-
-        ______TS("Success case: student passes in incomplete params but still gets his own image");
-
-        String[] submissionParams = new String[] {
-                Const.ParamsNames.COURSE_ID, student1InCourse1.getCourse(),
-        };
-
-        action = getAction(submissionParams);
-        imageResult = getImageResult(action);
-
-        submissionParams = new String[] {
-                Const.ParamsNames.STUDENT_EMAIL, student1InCourse1.getEmail(),
-        };
-
-        action = getAction(submissionParams);
-        imageResult = getImageResult(action);
-
-        assertArrayEquals(student1PicBytes, imageResult.getBytes());
-
-        ______TS("Success case: student gets his teammate's image");
-        StudentAttributes student2InCourse1 = typicalBundle.students.get("student2InCourse1");
-        logoutUser();
-        loginAsStudent(student2InCourse1.getGoogleId());
-
-        submissionParams = new String[] {
-                Const.ParamsNames.COURSE_ID, student1InCourse1.getCourse(),
-                Const.ParamsNames.STUDENT_EMAIL, student1InCourse1.getEmail(),
-        };
-
-        action = getAction(submissionParams);
-        imageResult = getImageResult(action);
-
-        assertArrayEquals(student1PicBytes, imageResult.getBytes());
-
-        ______TS("Success case: instructor with privilege views image of his student");
-        logoutUser();
-        InstructorAttributes instructor1OfCourse1 = typicalBundle.instructors.get("instructor1OfCourse1");
-        loginAsInstructor(instructor1OfCourse1.getGoogleId());
-
-        submissionParams = new String[] {
-                Const.ParamsNames.COURSE_ID, student1InCourse1.getCourse(),
-                Const.ParamsNames.STUDENT_EMAIL, student1InCourse1.getEmail(),
-        };
-
-        action = getAction(submissionParams);
-        imageResult = getImageResult(action);
-
-        assertArrayEquals(student1PicBytes, imageResult.getBytes());
-
-        ______TS("Failure case: requesting image of an unregistered student");
-
-        StudentAttributes unregStudent = typicalBundle.students.get("student1InUnregisteredCourse");
-
-        submissionParams = new String[] {
-                Const.ParamsNames.COURSE_ID, unregStudent.getCourse(),
-                Const.ParamsNames.STUDENT_EMAIL, unregStudent.getEmail(),
-        };
-
-        action = getAction(submissionParams);
-        imageResult = getImageResult(action);
-
-        assertEquals(HttpStatus.SC_NO_CONTENT, imageResult.getStatusCode());
-        assertEquals(0, imageResult.getBytes().length);
-
-        ______TS("Success case: requested student has no profile picture");
-
-        submissionParams = new String[] {
-                Const.ParamsNames.COURSE_ID, student2InCourse1.getCourse(),
-                Const.ParamsNames.STUDENT_EMAIL, student2InCourse1.getEmail(),
-        };
-
-        action = getAction(submissionParams);
-        imageResult = getImageResult(action);
-
-        assertEquals(HttpStatus.SC_NO_CONTENT, imageResult.getStatusCode());
-        assertEquals(0, imageResult.getBytes().length);
-
-        ______TS("Failure case: requesting image of a non-existing student");
-
-        submissionParams = new String[] {
-                Const.ParamsNames.COURSE_ID, student2InCourse1.getCourse(),
-                Const.ParamsNames.STUDENT_EMAIL, "non-existent@student.com",
-        };
-
-        EntityNotFoundException enfe = verifyEntityNotFound(submissionParams);
-        assertEquals("No student found", enfe.getMessage());
-
-        deleteFile(student1InCourse1.getGoogleId());
     }
 
     @Test

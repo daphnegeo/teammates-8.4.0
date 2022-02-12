@@ -1,7 +1,7 @@
 package teammates.ui.webapi;
 
 import teammates.common.datatransfer.FeedbackParticipantType;
-import teammates.common.datatransfer.attributes.FeedbackQuestionAttributes;
+import teammates.common.datatransfer.attributes.FeedbackQuestionsVariousAttributes;
 import teammates.common.datatransfer.attributes.FeedbackResponseAttributes;
 import teammates.common.datatransfer.attributes.FeedbackResponseCommentAttributes;
 import teammates.common.datatransfer.attributes.FeedbackSessionAttributes;
@@ -28,7 +28,7 @@ class DeleteFeedbackResponseCommentAction extends BasicCommentSubmissionAction {
             return;
         }
         FeedbackSessionAttributes session = getNonNullFeedbackSession(frc.getFeedbackSessionName(), frc.getCourseId());
-        FeedbackQuestionAttributes question = logic.getFeedbackQuestion(frc.getFeedbackQuestionId());
+        FeedbackQuestionsVariousAttributes question = logic.getFeedbackQuestion(frc.getFeedbackQuestionId());
 
         Intent intent = Intent.valueOf(getNonNullRequestParamValue(Const.ParamsNames.INTENT));
         String courseId = frc.getCourseId();

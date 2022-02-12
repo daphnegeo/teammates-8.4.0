@@ -14,6 +14,7 @@ import teammates.common.datatransfer.CourseRoster;
 import teammates.common.datatransfer.FeedbackParticipantType;
 import teammates.common.datatransfer.SessionResultsBundle;
 import teammates.common.datatransfer.attributes.FeedbackQuestionAttributes;
+import teammates.common.datatransfer.attributes.FeedbackQuestionsVariousAttributes;
 import teammates.common.datatransfer.attributes.FeedbackResponseAttributes;
 import teammates.common.datatransfer.attributes.FeedbackResponseCommentAttributes;
 import teammates.common.datatransfer.attributes.InstructorAttributes;
@@ -120,7 +121,7 @@ public class SessionResultsData extends ApiOutput {
 
     private static ResponseOutput buildSingleResponseForStudent(
             FeedbackResponseAttributes response, SessionResultsBundle bundle, StudentAttributes student) {
-        FeedbackQuestionAttributes question = bundle.getQuestionsMap().get(response.getFeedbackQuestionId());
+        FeedbackQuestionsVariousAttributes question = bundle.getQuestionsMap().get(response.getFeedbackQuestionId());
         boolean isUserInstructor = Const.USER_TEAM_FOR_INSTRUCTOR.equals(student.getTeam());
 
         // process giver
@@ -221,7 +222,7 @@ public class SessionResultsData extends ApiOutput {
         String giverName = getGiverNameOfResponse(response, bundle);
         String giverTeam = bundle.getRoster().getInfoForIdentifier(response.getGiver()).getTeamName();
         String giverSection = response.getGiverSection();
-        FeedbackQuestionAttributes question = bundle.getQuestionsMap().get(response.getFeedbackQuestionId());
+        FeedbackQuestionsVariousAttributes question = bundle.getQuestionsMap().get(response.getFeedbackQuestionId());
         if (question.getGiverType() == FeedbackParticipantType.INSTRUCTORS) {
             InstructorAttributes instructor = bundle.getRoster().getInstructorForEmail(response.getGiver());
             giverName = instructor.getName();
@@ -282,7 +283,7 @@ public class SessionResultsData extends ApiOutput {
      * <p>Anonymized the name if necessary.
      */
     private static String getGiverNameOfResponse(FeedbackResponseAttributes response, SessionResultsBundle bundle) {
-        FeedbackQuestionAttributes question = bundle.getQuestionsMap().get(response.getFeedbackQuestionId());
+        FeedbackQuestionsVariousAttributes question = bundle.getQuestionsMap().get(response.getFeedbackQuestionId());
         FeedbackParticipantType participantType = question.getGiverType();
 
         CourseRoster.ParticipantInfo userInfo = bundle.getRoster().getInfoForIdentifier(response.getGiver());
@@ -301,7 +302,7 @@ public class SessionResultsData extends ApiOutput {
      * <p>Anonymized the name if necessary.
      */
     private static String getRecipientNameOfResponse(FeedbackResponseAttributes response, SessionResultsBundle bundle) {
-        FeedbackQuestionAttributes question = bundle.getQuestionsMap().get(response.getFeedbackQuestionId());
+        FeedbackQuestionsVariousAttributes question = bundle.getQuestionsMap().get(response.getFeedbackQuestionId());
         FeedbackParticipantType participantType = question.getRecipientType();
         if (participantType == FeedbackParticipantType.SELF) {
             // recipient type for self-feedback is the same as the giver type
@@ -378,7 +379,7 @@ public class SessionResultsData extends ApiOutput {
         private final List<ResponseOutput> responsesFromSelf = new ArrayList<>();
         private final List<List<ResponseOutput>> otherResponses = new ArrayList<>();
 
-        private QuestionOutput(FeedbackQuestionAttributes feedbackQuestionAttributes, String questionStatistics) {
+        private QuestionOutput(FeedbackQuestionsVariousAttributes feedbackQuestionAttributes, String questionStatistics) {
             this.feedbackQuestion = new FeedbackQuestionData(feedbackQuestionAttributes);
             this.questionStatistics = questionStatistics;
         }

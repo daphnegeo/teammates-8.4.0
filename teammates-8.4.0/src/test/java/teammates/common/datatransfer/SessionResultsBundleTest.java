@@ -7,7 +7,7 @@ import java.util.Map;
 
 import org.testng.annotations.Test;
 
-import teammates.common.datatransfer.attributes.FeedbackQuestionAttributes;
+import teammates.common.datatransfer.attributes.FeedbackQuestionsVariousAttributes;
 import teammates.common.datatransfer.attributes.FeedbackResponseAttributes;
 import teammates.common.util.Const;
 import teammates.test.BaseTestCase;
@@ -34,7 +34,7 @@ public class SessionResultsBundleTest extends BaseTestCase {
                                 new ArrayList<>(responseBundle.instructors.values())));
 
         ______TS("Test question having responses");
-        FeedbackQuestionAttributes fqa = responseBundle.feedbackQuestions.get("qn1InSession1InCourse1");
+        FeedbackQuestionsVariousAttributes fqa = responseBundle.feedbackQuestions.get("qn1InSession1InCourse1");
         List<FeedbackResponseAttributes> allResponses = bundle.getQuestionResponseMap().get(fqa.getId());
         assertEquals(2, allResponses.size());
         List<String> allResponsesString = new ArrayList<>();
@@ -66,7 +66,7 @@ public class SessionResultsBundleTest extends BaseTestCase {
                                 new ArrayList<>(responseBundle.instructors.values())));
 
         ______TS("Test question having missing responses");
-        FeedbackQuestionAttributes fqa = responseBundle.feedbackQuestions.get("qn1InSession1InCourse1");
+        FeedbackQuestionsVariousAttributes fqa = responseBundle.feedbackQuestions.get("qn1InSession1InCourse1");
         List<FeedbackResponseAttributes> missingResponses = bundle.getQuestionMissingResponseMap().get(fqa.getId());
         assertEquals(2, missingResponses.size());
         List<String> missingResponsesString = new ArrayList<>();

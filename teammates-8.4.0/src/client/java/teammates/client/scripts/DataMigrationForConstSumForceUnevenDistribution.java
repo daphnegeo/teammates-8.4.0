@@ -3,6 +3,7 @@ package teammates.client.scripts;
 import com.googlecode.objectify.cmd.Query;
 
 import teammates.common.datatransfer.attributes.FeedbackQuestionAttributes;
+import teammates.common.datatransfer.attributes.FeedbackQuestionsVariousAttributes;
 import teammates.common.datatransfer.questions.FeedbackConstantSumDistributePointsType;
 import teammates.common.datatransfer.questions.FeedbackConstantSumQuestionDetails;
 import teammates.common.datatransfer.questions.FeedbackQuestionType;
@@ -33,7 +34,7 @@ public class DataMigrationForConstSumForceUnevenDistribution extends
 
     @Override
     protected boolean isMigrationNeeded(FeedbackQuestion question) {
-        FeedbackQuestionAttributes fqa = FeedbackQuestionAttributes.valueOf(question);
+        FeedbackQuestionsVariousAttributes fqa = FeedbackQuestionAttributes.valueOf(question);
         FeedbackConstantSumQuestionDetails fcsqd = (FeedbackConstantSumQuestionDetails) fqa.getQuestionDetails();
 
         return fcsqd.isForceUnevenDistribution()
@@ -42,7 +43,7 @@ public class DataMigrationForConstSumForceUnevenDistribution extends
 
     @Override
     protected void migrateEntity(FeedbackQuestion question) {
-        FeedbackQuestionAttributes fqa = FeedbackQuestionAttributes.valueOf(question);
+        FeedbackQuestionsVariousAttributes fqa = FeedbackQuestionAttributes.valueOf(question);
         FeedbackConstantSumQuestionDetails fcsqd = (FeedbackConstantSumQuestionDetails) fqa.getQuestionDetails();
 
         fcsqd.setDistributePointsFor(

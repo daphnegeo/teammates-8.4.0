@@ -5,7 +5,7 @@ import java.util.List;
 
 import teammates.common.datatransfer.DataBundle;
 import teammates.common.datatransfer.FeedbackParticipantType;
-import teammates.common.datatransfer.attributes.FeedbackQuestionAttributes;
+import teammates.common.datatransfer.attributes.FeedbackQuestionsVariousAttributes;
 import teammates.common.datatransfer.attributes.FeedbackResponseAttributes;
 import teammates.common.datatransfer.attributes.FeedbackResponseCommentAttributes;
 import teammates.common.datatransfer.attributes.FeedbackSessionAttributes;
@@ -22,7 +22,7 @@ import teammates.ui.webapi.UpdateFeedbackQuestionActionTest;
  */
 public class LogicExtension extends Logic {
 
-    public FeedbackQuestionAttributes getFeedbackQuestion(
+    public FeedbackQuestionsVariousAttributes getFeedbackQuestion(
             String feedbackSessionName, String courseId, int questionNumber) {
         return feedbackQuestionsLogic.getFeedbackQuestion(feedbackSessionName, courseId, questionNumber);
     }
@@ -55,7 +55,7 @@ public class LogicExtension extends Logic {
 	    updateFeedbackQuestionActionTest.loginAsInstructor(instructor1ofCourse1.getGoogleId());
 	
 	    FeedbackSessionAttributes fs = dataBundle.feedbackSessions.get("contribSession");
-	    FeedbackQuestionAttributes fq =
+	    FeedbackQuestionsVariousAttributes fq =
 	            getFeedbackQuestion(fs.getFeedbackSessionName(), fs.getCourseId(), 1);
 	
 	    BaseTestCase.______TS("Edit text won't delete response");

@@ -15,6 +15,7 @@ import org.testng.annotations.Test;
 import teammates.common.datatransfer.FeedbackParticipantType;
 import teammates.common.datatransfer.attributes.CourseAttributes;
 import teammates.common.datatransfer.attributes.FeedbackQuestionAttributes;
+import teammates.common.datatransfer.attributes.FeedbackQuestionsVariousAttributes;
 import teammates.common.datatransfer.attributes.FeedbackResponseAttributes;
 import teammates.common.datatransfer.attributes.FeedbackResponseCommentAttributes;
 import teammates.common.datatransfer.attributes.FeedbackSessionAttributes;
@@ -46,7 +47,7 @@ public class InstructorFeedbackReportPageE2ETest extends BaseE2ETestCase {
     private Map<FeedbackQuestionAttributes, Map<String, List<FeedbackResponseAttributes>>> questionToRecipientToResponses;
 
     // We either test all questions or just use qn2
-    private FeedbackQuestionAttributes qn2;
+    private FeedbackQuestionsVariousAttributes qn2;
     private List<FeedbackResponseAttributes> qn2Responses;
     private Map<String, List<FeedbackResponseAttributes>> qn2GiverResponses;
     private Map<String, List<FeedbackResponseAttributes>> qn2RecipientResponses;
@@ -170,7 +171,7 @@ public class InstructorFeedbackReportPageE2ETest extends BaseE2ETestCase {
         resultsPage.includeGroupingByTeam(true);
         resultsPage.includeMissingResponses(false);
 
-        for (FeedbackQuestionAttributes question : questionToResponses.keySet()) {
+        for (FeedbackQuestionsVariousAttributes question : questionToResponses.keySet()) {
             verifyGrqViewResponses(question, questionToGiverToResponses.get(question), isGroupedByTeam);
         }
 
@@ -205,7 +206,7 @@ public class InstructorFeedbackReportPageE2ETest extends BaseE2ETestCase {
         resultsPage.includeGroupingByTeam(true);
         resultsPage.includeMissingResponses(false);
 
-        for (FeedbackQuestionAttributes question : questionToResponses.keySet()) {
+        for (FeedbackQuestionsVariousAttributes question : questionToResponses.keySet()) {
             verifyRgqViewResponses(question, questionToRecipientToResponses.get(question), isGroupedByTeam);
         }
 
@@ -241,7 +242,7 @@ public class InstructorFeedbackReportPageE2ETest extends BaseE2ETestCase {
         resultsPage.includeGroupingByTeam(true);
         resultsPage.includeMissingResponses(false);
 
-        for (FeedbackQuestionAttributes question : questionToResponses.keySet()) {
+        for (FeedbackQuestionsVariousAttributes question : questionToResponses.keySet()) {
             verifyGqrViewResponses(question, questionToGiverToResponses.get(question), isGroupedByTeam);
         }
         verifyGqrViewStats(qn2, getResponsesByTeam(qn2, true), isGroupedByTeam);
@@ -285,7 +286,7 @@ public class InstructorFeedbackReportPageE2ETest extends BaseE2ETestCase {
         resultsPage.includeGroupingByTeam(true);
         resultsPage.includeMissingResponses(false);
 
-        for (FeedbackQuestionAttributes question : questionToResponses.keySet()) {
+        for (FeedbackQuestionsVariousAttributes question : questionToResponses.keySet()) {
             verifyRqgViewResponses(question, questionToRecipientToResponses.get(question), isGroupedByTeam);
         }
         verifyRqgViewStats(qn2, getResponsesByTeam(qn2, false), isGroupedByTeam);
@@ -425,7 +426,7 @@ public class InstructorFeedbackReportPageE2ETest extends BaseE2ETestCase {
 		return this.missingResponse.getTeamName(type, participant, students);
 	}
 
-    private Map<String, List<FeedbackResponseAttributes>> getResponsesByTeam(FeedbackQuestionAttributes question,
+    private Map<String, List<FeedbackResponseAttributes>> getResponsesByTeam(FeedbackQuestionsVariousAttributes question,
                                                                              boolean isGiver) {
         Map<String, List<FeedbackResponseAttributes>> userToResponses;
         if (isGiver) {
@@ -487,7 +488,7 @@ public class InstructorFeedbackReportPageE2ETest extends BaseE2ETestCase {
         return FeedbackResponseAttributes.builder(Integer.toString(qnNum), giver.getEmail(), recipient.getEmail()).build();
     }
 
-    private void verifyGqrViewResponses(FeedbackQuestionAttributes question,
+    private void verifyGqrViewResponses(FeedbackQuestionsVariousAttributes question,
                                         Map<String, List<FeedbackResponseAttributes>> giverToResponses,
                                         boolean isGroupedByTeam) {
         for (Map.Entry<String, List<FeedbackResponseAttributes>> entry : giverToResponses.entrySet()) {
@@ -495,7 +496,7 @@ public class InstructorFeedbackReportPageE2ETest extends BaseE2ETestCase {
         }
     }
 
-    private void verifyRqgViewResponses(FeedbackQuestionAttributes question,
+    private void verifyRqgViewResponses(FeedbackQuestionsVariousAttributes question,
                                         Map<String, List<FeedbackResponseAttributes>> recipientToResponses,
                                         boolean isGroupedByTeam) {
         for (Map.Entry<String, List<FeedbackResponseAttributes>> entry : recipientToResponses.entrySet()) {
@@ -503,7 +504,7 @@ public class InstructorFeedbackReportPageE2ETest extends BaseE2ETestCase {
         }
     }
 
-    private void verifyGrqViewResponses(FeedbackQuestionAttributes question,
+    private void verifyGrqViewResponses(FeedbackQuestionsVariousAttributes question,
                                         Map<String, List<FeedbackResponseAttributes>> giverToResponses,
                                         boolean isGroupedByTeam) {
         for (Map.Entry<String, List<FeedbackResponseAttributes>> entry : giverToResponses.entrySet()) {
@@ -511,7 +512,7 @@ public class InstructorFeedbackReportPageE2ETest extends BaseE2ETestCase {
         }
     }
 
-    private void verifyRgqViewResponses(FeedbackQuestionAttributes question,
+    private void verifyRgqViewResponses(FeedbackQuestionsVariousAttributes question,
                                         Map<String, List<FeedbackResponseAttributes>> recipientToResponses,
                                         boolean isGroupedByTeam) {
         for (Map.Entry<String, List<FeedbackResponseAttributes>> entry : recipientToResponses.entrySet()) {
@@ -519,7 +520,7 @@ public class InstructorFeedbackReportPageE2ETest extends BaseE2ETestCase {
         }
     }
 
-    private void verifyRqgViewStats(FeedbackQuestionAttributes question,
+    private void verifyRqgViewStats(FeedbackQuestionsVariousAttributes question,
                                     Map<String, List<FeedbackResponseAttributes>> responses,
                                     boolean isGroupedByTeam) {
         for (Map.Entry<String, List<FeedbackResponseAttributes>> entry : responses.entrySet()) {
@@ -527,7 +528,7 @@ public class InstructorFeedbackReportPageE2ETest extends BaseE2ETestCase {
         }
     }
 
-    private void verifyGqrViewStats(FeedbackQuestionAttributes question,
+    private void verifyGqrViewStats(FeedbackQuestionsVariousAttributes question,
                                     Map<String, List<FeedbackResponseAttributes>> responses,
                                     boolean isGroupedByTeam) {
         for (Map.Entry<String, List<FeedbackResponseAttributes>> entry : responses.entrySet()) {

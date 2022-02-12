@@ -7,6 +7,7 @@ import org.testng.annotations.Test;
 import teammates.common.datatransfer.DataBundle;
 import teammates.common.datatransfer.attributes.CourseAttributes;
 import teammates.common.datatransfer.attributes.FeedbackQuestionAttributes;
+import teammates.common.datatransfer.attributes.FeedbackQuestionsVariousAttributes;
 import teammates.common.exception.InvalidParametersException;
 import teammates.common.util.FieldValidator;
 
@@ -40,7 +41,7 @@ public class DataBundleLogicTest extends BaseLogicTest {
         DataBundle typicalDataBundle = getTypicalDataBundle();
         Map.Entry<String, FeedbackQuestionAttributes> originalFeedbackQuestionEntry = typicalDataBundle
                 .feedbackQuestions.entrySet().iterator().next();
-        FeedbackQuestionAttributes originalFeedbackQuestion = originalFeedbackQuestionEntry.getValue();
+        FeedbackQuestionsVariousAttributes originalFeedbackQuestion = originalFeedbackQuestionEntry.getValue();
         dataBundleLogic.persistDataBundle(typicalDataBundle);
         assertFalse(typicalDataBundle.feedbackQuestions.get(originalFeedbackQuestionEntry.getKey()).getId()
                 .equals(originalFeedbackQuestion.getId()));

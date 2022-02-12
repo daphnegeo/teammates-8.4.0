@@ -241,19 +241,28 @@ public class InstructorAttributesTest extends BaseAttributesTest {
 
         assertFalse("invalid value", i.isValid());
         errorMessage =
-                getPopulatedEmptyStringErrorMessage(
-                    FieldValidator.COURSE_ID_ERROR_MESSAGE_EMPTY_STRING,
-                    FieldValidator.COURSE_ID_FIELD_NAME, FieldValidator.COURSE_ID_MAX_LENGTH) + System.lineSeparator()
-                + getPopulatedEmptyStringErrorMessage(
-                      FieldValidator.SIZE_CAPPED_NON_EMPTY_STRING_ERROR_MESSAGE_EMPTY_STRING,
-                      FieldValidator.PERSON_NAME_FIELD_NAME, FieldValidator.PERSON_NAME_MAX_LENGTH) + System.lineSeparator()
-                + getPopulatedErrorMessage(
-                      FieldValidator.EMAIL_ERROR_MESSAGE, i.getEmail(),
-                      FieldValidator.EMAIL_FIELD_NAME, FieldValidator.REASON_INCORRECT_FORMAT,
-                      FieldValidator.EMAIL_MAX_LENGTH) + System.lineSeparator()
-                + String.format(FieldValidator.ROLE_ERROR_MESSAGE, i.getRole());
+                errorMessageGenerate(i);
         assertEquals("invalid value", errorMessage, StringHelper.toString(i.getInvalidityInfo()));
     }
+
+	/**
+	 * @param i
+	 * @return
+	 * @throws ReflectiveOperationException
+	 */
+	private String errorMessageGenerate(InstructorAttributes i) throws ReflectiveOperationException {
+		return getPopulatedEmptyStringErrorMessage(
+		    FieldValidator.COURSE_ID_ERROR_MESSAGE_EMPTY_STRING,
+		    FieldValidator.COURSE_ID_FIELD_NAME, FieldValidator.COURSE_ID_MAX_LENGTH) + System.lineSeparator()
+		+ getPopulatedEmptyStringErrorMessage(
+		      FieldValidator.SIZE_CAPPED_NON_EMPTY_STRING_ERROR_MESSAGE_EMPTY_STRING,
+		      FieldValidator.PERSON_NAME_FIELD_NAME, FieldValidator.PERSON_NAME_MAX_LENGTH) + System.lineSeparator()
+		+ getPopulatedErrorMessage(
+		      FieldValidator.EMAIL_ERROR_MESSAGE, i.getEmail(),
+		      FieldValidator.EMAIL_FIELD_NAME, FieldValidator.REASON_INCORRECT_FORMAT,
+		      FieldValidator.EMAIL_MAX_LENGTH) + System.lineSeparator()
+		+ String.format(FieldValidator.ROLE_ERROR_MESSAGE, i.getRole());
+	}
 
     @Test
     public void testSanitizeForSaving() {

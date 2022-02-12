@@ -5,14 +5,14 @@ import java.util.List;
 
 import org.testng.annotations.Test;
 
-import teammates.common.datatransfer.attributes.FeedbackQuestionAttributes;
+import teammates.common.datatransfer.attributes.FeedbackQuestionsVariousAttributes;
 import teammates.common.datatransfer.attributes.FeedbackResponseAttributes;
 import teammates.common.datatransfer.attributes.StudentAttributes;
 import teammates.common.datatransfer.questions.FeedbackContributionQuestionDetails;
 import teammates.common.datatransfer.questions.FeedbackContributionResponseDetails;
 import teammates.common.util.Const;
 import teammates.e2e.pageobjects.FeedbackSubmitPage;
-import teammates.e2e.pageobjects.InstructorFeedbackEditPage;
+import teammates.e2e.pageobjects.InstructorFeedbackPage;
 
 /**
  * SUT: {@link Const.WebPageURIs#INSTRUCTOR_SESSION_EDIT_PAGE}, {@link Const.WebPageURIs#SESSION_SUBMISSION_PAGE}
@@ -41,10 +41,10 @@ public class FeedbackContributionQuestionE2ETest extends BaseFeedbackQuestionE2E
 
     @Override
     protected void testEditPage() {
-        InstructorFeedbackEditPage feedbackEditPage = loginToFeedbackEditPage();
+        InstructorFeedbackPage feedbackEditPage = loginToFeedbackEditPage();
 
         ______TS("verify loaded question");
-        FeedbackQuestionAttributes loadedQuestion = testData.feedbackQuestions.get("qn1ForFirstSession").getCopy();
+        FeedbackQuestionsVariousAttributes loadedQuestion = testData.feedbackQuestions.get("qn1ForFirstSession").getCopy();
         FeedbackContributionQuestionDetails questionDetails =
                 (FeedbackContributionQuestionDetails) loadedQuestion.getQuestionDetailsCopy();
         feedbackEditPage.verifyContributionQuestionDetails(1, questionDetails);
@@ -58,7 +58,7 @@ public class FeedbackContributionQuestionE2ETest extends BaseFeedbackQuestionE2E
         verifyPresentInDatabase(loadedQuestion);
 
         ______TS("copy question");
-        FeedbackQuestionAttributes copiedQuestion = testData.feedbackQuestions.get("qn1ForSecondSession");
+        FeedbackQuestionsVariousAttributes copiedQuestion = testData.feedbackQuestions.get("qn1ForSecondSession");
         questionDetails = (FeedbackContributionQuestionDetails) copiedQuestion.getQuestionDetailsCopy();
         feedbackEditPage.copyQuestion(copiedQuestion.getCourseId(),
                 copiedQuestion.getQuestionDetailsCopy().getQuestionText());
@@ -85,7 +85,7 @@ public class FeedbackContributionQuestionE2ETest extends BaseFeedbackQuestionE2E
         FeedbackSubmitPage feedbackSubmitPage = loginToFeedbackSubmitPage();
 
         ______TS("verify loaded question");
-        FeedbackQuestionAttributes question = testData.feedbackQuestions.get("qn1ForFirstSession");
+        FeedbackQuestionsVariousAttributes question = testData.feedbackQuestions.get("qn1ForFirstSession");
         StudentAttributes receiver = testData.students.get("benny.tmms@FContrQn.CS2104");
         StudentAttributes receiver2 = testData.students.get("charlie.tmms@FContrQn.CS2104");
         feedbackSubmitPage.verifyContributionQuestion(1,

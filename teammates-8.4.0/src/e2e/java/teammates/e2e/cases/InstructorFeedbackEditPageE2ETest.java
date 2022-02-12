@@ -8,6 +8,7 @@ import org.testng.annotations.Test;
 import teammates.common.datatransfer.FeedbackParticipantType;
 import teammates.common.datatransfer.attributes.CourseAttributes;
 import teammates.common.datatransfer.attributes.FeedbackQuestionAttributes;
+import teammates.common.datatransfer.attributes.FeedbackQuestionsVariousAttributes;
 import teammates.common.datatransfer.attributes.FeedbackSessionAttributes;
 import teammates.common.datatransfer.attributes.InstructorAttributes;
 import teammates.common.datatransfer.questions.FeedbackContributionQuestionDetails;
@@ -16,6 +17,7 @@ import teammates.common.util.AppUrl;
 import teammates.common.util.Const;
 import teammates.e2e.pageobjects.FeedbackSubmitPage;
 import teammates.e2e.pageobjects.InstructorFeedbackEditPage;
+import teammates.e2e.pageobjects.InstructorFeedbackPage;
 import teammates.test.ThreadHelper;
 
 /**
@@ -44,7 +46,7 @@ public class InstructorFeedbackEditPageE2ETest extends BaseE2ETestCase {
         AppUrl url = createUrl(Const.WebPageURIs.INSTRUCTOR_SESSION_EDIT_PAGE)
                 .withCourseId(course.getId())
                 .withSessionName(feedbackSession.getFeedbackSessionName());
-        InstructorFeedbackEditPage feedbackEditPage =
+        InstructorFeedbackPage feedbackEditPage =
                 loginToPage(url, InstructorFeedbackEditPage.class, instructor.getGoogleId());
 
         ______TS("verify loaded data");
@@ -65,7 +67,7 @@ public class InstructorFeedbackEditPageE2ETest extends BaseE2ETestCase {
         verifyPresentInDatabase(feedbackSession);
 
         ______TS("add template question");
-        FeedbackQuestionAttributes templateQuestion = getTemplateQuestion();
+        FeedbackQuestionsVariousAttributes templateQuestion = getTemplateQuestion();
         feedbackEditPage.addTemplateQuestion(1);
 
         feedbackEditPage.verifyStatusMessage("The question has been added to this feedback session.");
@@ -74,7 +76,7 @@ public class InstructorFeedbackEditPageE2ETest extends BaseE2ETestCase {
         verifyPresentInDatabase(templateQuestion);
 
         ______TS("copy question from other session");
-        FeedbackQuestionAttributes questionToCopy = testData.feedbackQuestions.get("qn1");
+        FeedbackQuestionsVariousAttributes questionToCopy = testData.feedbackQuestions.get("qn1");
         questionToCopy.setCourseId(course.getId());
         questionToCopy.setFeedbackSessionName(feedbackSession.getFeedbackSessionName());
         questionToCopy.setQuestionNumber(2);
@@ -97,7 +99,7 @@ public class InstructorFeedbackEditPageE2ETest extends BaseE2ETestCase {
         feedbackEditPage.verifyQuestionDetails(2, templateQuestion);
 
         ______TS("edit question");
-        FeedbackQuestionAttributes editedQuestion = getTemplateQuestion();
+        FeedbackQuestionsVariousAttributes editedQuestion = getTemplateQuestion();
         editedQuestion.setQuestionNumber(1);
         String questionBrief = editedQuestion.getQuestionDetailsCopy().getQuestionText();
         editedQuestion.setQuestionDetails(new FeedbackTextQuestionDetails(questionBrief));
@@ -155,9 +157,9 @@ public class InstructorFeedbackEditPageE2ETest extends BaseE2ETestCase {
                 instructor.getGoogleId()));
     }
 
-    private void verifyReorder(FeedbackQuestionAttributes question) {
+    private void verifyReorder(FeedbackQuestionsVariousAttributes question) {
         int retryLimit = 5;
-        FeedbackQuestionAttributes actual = getFeedbackQuestion(question);
+        FeedbackQuestionsVariousAttributes actual = getFeedbackQuestion(question);
         while (!actual.equals(question) && retryLimit > 0) {
             retryLimit--;
             ThreadHelper.waitFor(1000);
@@ -166,7 +168,7 @@ public class InstructorFeedbackEditPageE2ETest extends BaseE2ETestCase {
         assertEquals(question, actual);
     }
 
-    private FeedbackQuestionAttributes getTemplateQuestion() {
+    private FeedbackQuestionsVariousAttributes getTemplateQuestion() {
         FeedbackContributionQuestionDetails detail = new FeedbackContributionQuestionDetails();
         detail.setQuestionText("How much work did each team member contribute?"
                 + " (response will be shown anonymously to each team member).");

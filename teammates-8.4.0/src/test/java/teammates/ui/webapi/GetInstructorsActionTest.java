@@ -29,25 +29,6 @@ public class GetInstructorsActionTest extends BaseActionTest<GetInstructorsActio
     }
 
     @Test
-    @Override
-    protected void testExecute() {
-        InstructorAttributes instructor = typicalBundle.instructors.get("instructor1OfCourse1");
-        loginAsInstructor(instructor.getGoogleId());
-
-        ______TS("Invalid parameters");
-        // no parameters
-        verifyHttpParameterFailure();
-
-        ______TS("unknown intent");
-        String[] submissionParams = new String[] {
-                Const.ParamsNames.COURSE_ID, instructor.getCourseId(),
-                Const.ParamsNames.INTENT, "Unknown",
-        };
-
-        verifyHttpParameterFailure(submissionParams);
-    }
-
-    @Test
     public void testExecute_withoutIntent_shouldReturnPartialData() {
         StudentAttributes studentAttributes = typicalBundle.students.get("student1InCourse1");
         loginAsStudent(studentAttributes.getGoogleId());

@@ -33,12 +33,6 @@ public class RestoreFeedbackSessionActionTest extends BaseActionTest<RestoreFeed
     }
 
     @Test
-    @Override
-    protected void testExecute() {
-        // See test cases below.
-    }
-
-    @Test
     protected void testExecute_withSessionInBin_shouldRestoreSession() throws Exception {
         loginAsInstructor(instructorId);
         logic.moveFeedbackSessionToRecycleBin(feedbackSessionName, courseId);

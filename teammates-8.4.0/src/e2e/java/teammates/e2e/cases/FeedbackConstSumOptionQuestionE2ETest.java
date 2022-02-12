@@ -5,12 +5,12 @@ import java.util.List;
 
 import org.testng.annotations.Test;
 
-import teammates.common.datatransfer.attributes.FeedbackQuestionAttributes;
+import teammates.common.datatransfer.attributes.FeedbackQuestionsVariousAttributes;
 import teammates.common.datatransfer.attributes.FeedbackResponseAttributes;
 import teammates.common.datatransfer.questions.FeedbackConstantSumQuestionDetails;
 import teammates.common.datatransfer.questions.FeedbackConstantSumResponseDetails;
 import teammates.e2e.pageobjects.FeedbackSubmitPage;
-import teammates.e2e.pageobjects.InstructorFeedbackEditPage;
+import teammates.e2e.pageobjects.InstructorFeedbackPage;
 
 /**
  * SUT: {@link Const.WebPageURIs#INSTRUCTOR_SESSION_EDIT_PAGE}, {@link Const.WebPageURIs#SESSION_SUBMISSION_PAGE}
@@ -39,10 +39,10 @@ public class FeedbackConstSumOptionQuestionE2ETest extends BaseFeedbackQuestionE
 
     @Override
     protected void testEditPage() {
-        InstructorFeedbackEditPage feedbackEditPage = loginToFeedbackEditPage();
+        InstructorFeedbackPage feedbackEditPage = loginToFeedbackEditPage();
 
         ______TS("verify loaded question");
-        FeedbackQuestionAttributes loadedQuestion = testData.feedbackQuestions.get("qn1ForFirstSession").getCopy();
+        FeedbackQuestionsVariousAttributes loadedQuestion = testData.feedbackQuestions.get("qn1ForFirstSession").getCopy();
         FeedbackConstantSumQuestionDetails questionDetails =
                 (FeedbackConstantSumQuestionDetails) loadedQuestion.getQuestionDetailsCopy();
         feedbackEditPage.verifyConstSumQuestionDetails(1, questionDetails);
@@ -56,7 +56,7 @@ public class FeedbackConstSumOptionQuestionE2ETest extends BaseFeedbackQuestionE
         verifyPresentInDatabase(loadedQuestion);
 
         ______TS("copy question");
-        FeedbackQuestionAttributes copiedQuestion = testData.feedbackQuestions.get("qn1ForSecondSession");
+        FeedbackQuestionsVariousAttributes copiedQuestion = testData.feedbackQuestions.get("qn1ForSecondSession");
         questionDetails = (FeedbackConstantSumQuestionDetails) copiedQuestion.getQuestionDetailsCopy();
         feedbackEditPage.copyQuestion(copiedQuestion.getCourseId(),
                 copiedQuestion.getQuestionDetailsCopy().getQuestionText());
@@ -89,7 +89,7 @@ public class FeedbackConstSumOptionQuestionE2ETest extends BaseFeedbackQuestionE
         FeedbackSubmitPage feedbackSubmitPage = loginToFeedbackSubmitPage();
 
         ______TS("verify loaded question");
-        FeedbackQuestionAttributes question = testData.feedbackQuestions.get("qn1ForFirstSession");
+        FeedbackQuestionsVariousAttributes question = testData.feedbackQuestions.get("qn1ForFirstSession");
         feedbackSubmitPage.verifyConstSumQuestion(1, "",
                 (FeedbackConstantSumQuestionDetails) question.getQuestionDetailsCopy());
 

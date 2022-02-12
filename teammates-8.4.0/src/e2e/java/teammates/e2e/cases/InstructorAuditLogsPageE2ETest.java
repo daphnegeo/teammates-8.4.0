@@ -3,7 +3,7 @@ package teammates.e2e.cases;
 import org.testng.annotations.Test;
 
 import teammates.common.datatransfer.attributes.CourseAttributes;
-import teammates.common.datatransfer.attributes.FeedbackQuestionAttributes;
+import teammates.common.datatransfer.attributes.FeedbackQuestionsVariousAttributes;
 import teammates.common.datatransfer.attributes.FeedbackSessionAttributes;
 import teammates.common.datatransfer.attributes.InstructorAttributes;
 import teammates.common.datatransfer.attributes.StudentAttributes;
@@ -16,7 +16,7 @@ public class InstructorAuditLogsPageE2ETest extends BaseE2ETestCase {
     public InstructorAttributes instructor;
     private CourseAttributes course;
     private FeedbackSessionAttributes feedbackSession;
-    private FeedbackQuestionAttributes feedbackQuestion;
+    private FeedbackQuestionsVariousAttributes feedbackQuestion;
     private StudentAttributes student;
 
     @Override

@@ -3,6 +3,7 @@ package teammates.client.scripts;
 import com.googlecode.objectify.cmd.Query;
 
 import teammates.common.datatransfer.attributes.FeedbackQuestionAttributes;
+import teammates.common.datatransfer.attributes.FeedbackQuestionsVariousAttributes;
 import teammates.common.datatransfer.questions.FeedbackQuestionType;
 import teammates.common.datatransfer.questions.FeedbackTextQuestionDetails;
 import teammates.storage.entity.FeedbackQuestion;
@@ -32,14 +33,14 @@ public class DataMigrationForTextQuestionRecommendedLength extends
 
     @Override
     protected boolean isMigrationNeeded(FeedbackQuestion question) {
-        FeedbackQuestionAttributes fqa = FeedbackQuestionAttributes.valueOf(question);
+        FeedbackQuestionsVariousAttributes fqa = FeedbackQuestionAttributes.valueOf(question);
         FeedbackTextQuestionDetails ftqd = (FeedbackTextQuestionDetails) fqa.getQuestionDetails();
         return ftqd.getRecommendedLength() != null && ftqd.getRecommendedLength() == 0;
     }
 
     @Override
     protected void migrateEntity(FeedbackQuestion question) {
-        FeedbackQuestionAttributes fqa = FeedbackQuestionAttributes.valueOf(question);
+        FeedbackQuestionsVariousAttributes fqa = FeedbackQuestionAttributes.valueOf(question);
         FeedbackTextQuestionDetails ftqd = (FeedbackTextQuestionDetails) fqa.getQuestionDetails();
         ftqd.setRecommendedLength(null);
 

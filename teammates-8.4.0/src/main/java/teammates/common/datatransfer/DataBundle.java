@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 import teammates.common.datatransfer.attributes.AccountAttributes;
 import teammates.common.datatransfer.attributes.CourseAttributes;
 import teammates.common.datatransfer.attributes.FeedbackQuestionAttributes;
+import teammates.common.datatransfer.attributes.FeedbackQuestionsVariousAttributes;
 import teammates.common.datatransfer.attributes.FeedbackResponseAttributes;
 import teammates.common.datatransfer.attributes.FeedbackResponseCommentAttributes;
 import teammates.common.datatransfer.attributes.FeedbackSessionAttributes;
@@ -369,7 +370,7 @@ public class DataBundle {
 	public void testExecute_invalidGiverRecipientType_shouldThrowException(UpdateFeedbackQuestionActionTest updateFeedbackQuestionActionTest) {
 	    InstructorAttributes instructor1ofCourse1 = instructors.get("instructor1OfCourse1");
 	    FeedbackSessionAttributes session = feedbackSessions.get("session1InCourse1");
-	    FeedbackQuestionAttributes typicalQuestion =
+	    FeedbackQuestionsVariousAttributes typicalQuestion =
 	            updateFeedbackQuestionActionTest.logic.getFeedbackQuestion(session.getFeedbackSessionName(), session.getCourseId(), 1);
 	
 	    updateFeedbackQuestionActionTest.loginAsInstructor(instructor1ofCourse1.getGoogleId());
@@ -391,7 +392,7 @@ public class DataBundle {
 	public void testExecute_invalidRecommendedLength_shouldThrowException(UpdateFeedbackQuestionActionTest updateFeedbackQuestionActionTest) {
 	    InstructorAttributes instructor1ofCourse1 = instructors.get("instructor1OfCourse1");
 	    FeedbackSessionAttributes session = feedbackSessions.get("session1InCourse1");
-	    FeedbackQuestionAttributes typicalQuestion =
+	    FeedbackQuestionsVariousAttributes typicalQuestion =
 	            updateFeedbackQuestionActionTest.logic.getFeedbackQuestion(session.getFeedbackSessionName(), session.getCourseId(), 1);
 	
 	    updateFeedbackQuestionActionTest.loginAsInstructor(instructor1ofCourse1.getGoogleId());
@@ -419,7 +420,7 @@ public class DataBundle {
 	public void testExecute_invalidQuestionNumber_shouldThrowException(UpdateFeedbackQuestionActionTest updateFeedbackQuestionActionTest) {
 	    InstructorAttributes instructor1ofCourse1 = instructors.get("instructor1OfCourse1");
 	    FeedbackSessionAttributes session = feedbackSessions.get("session1InCourse1");
-	    FeedbackQuestionAttributes typicalQuestion =
+	    FeedbackQuestionsVariousAttributes typicalQuestion =
 	            updateFeedbackQuestionActionTest.logic.getFeedbackQuestion(session.getFeedbackSessionName(), session.getCourseId(), 1);
 	
 	    updateFeedbackQuestionActionTest.loginAsInstructor(instructor1ofCourse1.getGoogleId());

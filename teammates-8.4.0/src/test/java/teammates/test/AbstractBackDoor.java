@@ -35,6 +35,7 @@ import teammates.common.datatransfer.FeedbackParticipantType;
 import teammates.common.datatransfer.attributes.AccountAttributes;
 import teammates.common.datatransfer.attributes.CourseAttributes;
 import teammates.common.datatransfer.attributes.FeedbackQuestionAttributes;
+import teammates.common.datatransfer.attributes.FeedbackQuestionsVariousAttributes;
 import teammates.common.datatransfer.attributes.FeedbackResponseAttributes;
 import teammates.common.datatransfer.attributes.FeedbackResponseCommentAttributes;
 import teammates.common.datatransfer.attributes.FeedbackSessionAttributes;
@@ -588,7 +589,7 @@ public abstract class AbstractBackDoor {
     /**
      * Get feedback question from database.
      */
-    public FeedbackQuestionAttributes getFeedbackQuestion(String courseId, String feedbackSessionName,
+    public FeedbackQuestionsVariousAttributes getFeedbackQuestion(String courseId, String feedbackSessionName,
                                                                  int qnNumber) {
         Map<String, String> params = new HashMap<>();
         params.put(Const.ParamsNames.COURSE_ID, courseId);
@@ -610,7 +611,7 @@ public abstract class AbstractBackDoor {
             return null;
         }
 
-        FeedbackQuestionAttributes questionAttr = FeedbackQuestionAttributes.builder()
+        FeedbackQuestionsVariousAttributes questionAttr = FeedbackQuestionAttributes.builder()
                 .withCourseId(courseId)
                 .withFeedbackSessionName(feedbackSessionName)
                 .withQuestionDetails(question.getQuestionDetails())

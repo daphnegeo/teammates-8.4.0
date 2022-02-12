@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import teammates.common.datatransfer.FeedbackParticipantType;
-import teammates.common.datatransfer.attributes.FeedbackQuestionAttributes;
+import teammates.common.datatransfer.attributes.FeedbackQuestionsVariousAttributes;
 
 /**
  * Contains specific structure and processing logic for MCQ feedback questions.
@@ -152,7 +152,7 @@ public class FeedbackMcqQuestionDetails extends FeedbackQuestionDetails {
     }
 
     @Override
-    public String validateGiverRecipientVisibility(FeedbackQuestionAttributes feedbackQuestionAttributes) {
+    public String validateGiverRecipientVisibility(FeedbackQuestionsVariousAttributes feedbackQuestionAttributes) {
         return "";
     }
 

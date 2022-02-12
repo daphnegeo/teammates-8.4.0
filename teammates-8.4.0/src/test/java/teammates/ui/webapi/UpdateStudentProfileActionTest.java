@@ -26,23 +26,6 @@ public class UpdateStudentProfileActionTest extends BaseActionTest<UpdateStudent
         return PUT;
     }
 
-    @Override
-    @Test
-    public void testExecute() throws Exception {
-        AccountAttributes student1 = typicalBundle.accounts.get("student1InCourse1");
-        AccountAttributes student2 = typicalBundle.accounts.get("student2InCourse1");
-
-        testActionWithInvalidParameters(student1);
-        testActionWithScriptInjection(student2);
-        testActionSuccess(student1, "Typical Case");
-        testActionInMasqueradeMode(student1);
-
-        student1 = typicalBundle.accounts.get("student1InTestingSanitizationCourse");
-        // simulate sanitization that occurs before persistence
-        student1.sanitizeForSaving();
-        testActionSuccess(student1, "Typical case: attempted script injection");
-    }
-
     private void testActionWithInvalidParameters(AccountAttributes student) throws Exception {
         loginAsStudent(student.getGoogleId());
         ______TS("Failure case: invalid parameters");

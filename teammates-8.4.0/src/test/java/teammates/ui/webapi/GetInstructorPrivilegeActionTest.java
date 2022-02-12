@@ -69,11 +69,6 @@ public class GetInstructorPrivilegeActionTest extends BaseActionTest<GetInstruct
         removeAndRestoreDataBundle(dataBundle);
     }
 
-    @Override
-    protected void testExecute() {
-        // see individual tests.
-    }
-
     @Test
     protected void testExecute_fetchPrivilegeOfNonExistInstructor_shouldFail() {
         InstructorAttributes instructor1ofCourse1 = dataBundle.instructors.get("instructor1OfCourse1");

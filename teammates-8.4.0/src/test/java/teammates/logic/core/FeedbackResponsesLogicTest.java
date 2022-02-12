@@ -15,7 +15,7 @@ import teammates.common.datatransfer.CourseRoster;
 import teammates.common.datatransfer.DataBundle;
 import teammates.common.datatransfer.FeedbackParticipantType;
 import teammates.common.datatransfer.SessionResultsBundle;
-import teammates.common.datatransfer.attributes.FeedbackQuestionAttributes;
+import teammates.common.datatransfer.attributes.FeedbackQuestionsVariousAttributes;
 import teammates.common.datatransfer.attributes.FeedbackResponseAttributes;
 import teammates.common.datatransfer.attributes.FeedbackResponseCommentAttributes;
 import teammates.common.datatransfer.attributes.FeedbackSessionAttributes;
@@ -59,8 +59,8 @@ public class FeedbackResponsesLogicTest extends BaseLogicTest {
 
     @Test
     public void testAreThereResponsesForQuestion() {
-        FeedbackQuestionAttributes questionWithResponse;
-        FeedbackQuestionAttributes questionWithoutResponse;
+        FeedbackQuestionsVariousAttributes questionWithResponse;
+        FeedbackQuestionsVariousAttributes questionWithoutResponse;
 
         ______TS("Check that a question has some responses");
 
@@ -178,7 +178,7 @@ public class FeedbackResponsesLogicTest extends BaseLogicTest {
         // Student 4 has 1 responses to him from team members,
         // 1 response from him a team member, and
         // 1 team response from him to another team.
-        FeedbackQuestionAttributes teamQuestion = getQuestionFromDatabase("team.members.feedback");
+        FeedbackQuestionsVariousAttributes teamQuestion = getQuestionFromDatabase("team.members.feedback");
         assertEquals(1, getFeedbackResponsesForReceiverForQuestion(
                 teamQuestion.getId(), studentToUpdate.getEmail()).size());
         assertEquals(1,
@@ -378,7 +378,7 @@ public class FeedbackResponsesLogicTest extends BaseLogicTest {
         StudentAttributes student3 = dataBundle.students.get("student3InCourse1");
         StudentAttributes student5 = dataBundle.students.get("student5InCourse1");
 
-        FeedbackQuestionAttributes fq = getQuestionFromDatabase("qn3InSession1InCourse1");
+        FeedbackQuestionsVariousAttributes fq = getQuestionFromDatabase("qn3InSession1InCourse1");
         FeedbackResponseAttributes fr = getResponseFromDatabase("response1ForQ3S1C1");
 
         CourseRoster roster = new CourseRoster(
@@ -545,7 +545,14 @@ public class FeedbackResponsesLogicTest extends BaseLogicTest {
 
     @Test
     public void testDeleteFeedbackResponsesForQuestionCascade_studentsQuestion_shouldUpdateRespondents() {
-        FeedbackResponseAttributes fra = getResponseFromDatabase("response1ForQ1S1C1");
+        feedbackResponseAttrMethod();
+    }
+
+	/**
+	 * 
+	 */
+	private void feedbackResponseAttrMethod() {
+		FeedbackResponseAttributes fra = getResponseFromDatabase("response1ForQ1S1C1");
 
         // this is the only response the student has given for the session
         assertEquals(1, frLogic.getFeedbackResponsesFromGiverForCourse(fra.getCourseId(), fra.getGiver()).stream()
@@ -562,27 +569,11 @@ public class FeedbackResponsesLogicTest extends BaseLogicTest {
         assertFalse(
                 frLogic.getGiverSetThatAnswerFeedbackSession(fra.getCourseId(),
                         fra.getFeedbackSessionName()).contains(fra.getGiver()));
-    }
+	}
 
     @Test
     public void testDeleteFeedbackResponsesForQuestionCascade_instructorsQuestion_shouldUpdateRespondents() {
-        FeedbackResponseAttributes fra = getResponseFromDatabase("response1ForQ3S1C1");
-
-        // this is the only response the instructor has given for the session
-        assertEquals(1, frLogic.getFeedbackResponsesFromGiverForCourse(fra.getCourseId(), fra.getGiver()).stream()
-                .filter(response -> response.getFeedbackSessionName().equals(fra.getFeedbackSessionName()))
-                .count());
-        // the instructor has answers for the session
-        assertTrue(
-                frLogic.getGiverSetThatAnswerFeedbackSession(fra.getCourseId(),
-                        fra.getFeedbackSessionName()).contains(fra.getGiver()));
-
-        frLogic.deleteFeedbackResponsesForQuestionCascade(fra.getFeedbackQuestionId());
-
-        // there is not instructor X in instructor respondents
-        assertFalse(
-                frLogic.getGiverSetThatAnswerFeedbackSession(fra.getCourseId(),
-                        fra.getFeedbackSessionName()).contains(fra.getGiver()));
+    	 feedbackResponseAttrMethod();
     }
 
     @Test
@@ -774,7 +765,7 @@ public class FeedbackResponsesLogicTest extends BaseLogicTest {
         // extra test data used on top of typical data bundle
         removeAndRestoreDataBundle(loadDataBundle("/SpecialCharacterTest.json"));
 
-        FeedbackQuestionAttributes question = fqLogic.getFeedbackQuestion(
+        FeedbackQuestionsVariousAttributes question = fqLogic.getFeedbackQuestion(
                 "First Session", "FQLogicPCT.CS2104", 1);
 
         // Alice will see 3 responses
@@ -939,7 +930,7 @@ public class FeedbackResponsesLogicTest extends BaseLogicTest {
 
     @Test
     public void testGetSessionResultsForCourse_specificQuestion_shouldHaveCorrectResponsesFiltered() {
-        FeedbackQuestionAttributes fq = getQuestionFromDatabase("qn3InSession1InCourse1");
+        FeedbackQuestionsVariousAttributes fq = getQuestionFromDatabase("qn3InSession1InCourse1");
         InstructorAttributes instructor = dataBundle.instructors.get("instructor1OfCourse1");
 
         // no section specified
@@ -1083,7 +1074,7 @@ public class FeedbackResponsesLogicTest extends BaseLogicTest {
         dataBundle = getTypicalDataBundle();
         removeAndRestoreDataBundle(dataBundle);
 
-        FeedbackQuestionAttributes fq = getQuestionFromDatabase("qn2InSession1InCourse1");
+        FeedbackQuestionsVariousAttributes fq = getQuestionFromDatabase("qn2InSession1InCourse1");
         FeedbackResponseAttributes existingResponse = getResponseFromDatabase(dataBundle, "response1ForQ2S1C1");
         // create a "null" response to simulate trying to get a null student's response
         FeedbackResponseAttributes newResponse =
@@ -1107,8 +1098,8 @@ public class FeedbackResponsesLogicTest extends BaseLogicTest {
         assertEquals(4, responseForQuestion.size());
     }
 
-    private FeedbackQuestionAttributes getQuestionFromDatabase(DataBundle dataBundle, String jsonId) {
-        FeedbackQuestionAttributes questionToGet = dataBundle.feedbackQuestions.get(jsonId);
+    private FeedbackQuestionsVariousAttributes getQuestionFromDatabase(DataBundle dataBundle, String jsonId) {
+        FeedbackQuestionsVariousAttributes questionToGet = dataBundle.feedbackQuestions.get(jsonId);
         questionToGet = fqLogic.getFeedbackQuestion(questionToGet.getFeedbackSessionName(),
                 questionToGet.getCourseId(),
                 questionToGet.getQuestionNumber());
@@ -1116,7 +1107,7 @@ public class FeedbackResponsesLogicTest extends BaseLogicTest {
         return questionToGet;
     }
 
-    private FeedbackQuestionAttributes getQuestionFromDatabase(String jsonId) {
+    private FeedbackQuestionsVariousAttributes getQuestionFromDatabase(String jsonId) {
         return getQuestionFromDatabase(dataBundle, jsonId);
     }
 

@@ -1,7 +1,5 @@
 package teammates.ui.webapi;
 
-import java.util.List;
-
 import org.testng.annotations.Test;
 
 import teammates.common.datatransfer.attributes.CourseAttributes;
@@ -22,65 +20,6 @@ public class BinCourseActionTest extends BaseActionTest<BinCourseAction> {
     @Override
     protected String getRequestMethod() {
         return PUT;
-    }
-
-    @Override
-    @Test
-    protected void testExecute() throws Exception {
-        InstructorAttributes instructor1OfCourse1 = typicalBundle.instructors.get("instructor1OfCourse1");
-        String instructorId = instructor1OfCourse1.getGoogleId();
-
-        loginAsInstructor(instructorId);
-
-        ______TS("Not enough parameters");
-
-        verifyHttpParameterFailure();
-
-        ______TS("Typical case, 2 courses. Expect 1 to be binned and 1 to stay.");
-
-        String[] submissionParams = new String[] {
-                Const.ParamsNames.COURSE_ID, instructor1OfCourse1.getCourseId(),
-        };
-
-        CourseAttributes courseToBeDeleted = logic.getCourse(instructor1OfCourse1.getCourseId());
-
-        logic.createCourseAndInstructor(instructorId,
-                CourseAttributes.builder("icdct.tpa.id1")
-                        .withName("New course")
-                        .withTimezone("UTC")
-                        .withInstitute("Test institute")
-                        .build());
-
-        BinCourseAction binCourseAction = getAction(submissionParams);
-        JsonResult result = getJsonResult(binCourseAction);
-        CourseData courseData = (CourseData) result.getOutput();
-
-        verifyCourseData(courseData, courseToBeDeleted.getId(), courseToBeDeleted.getName(),
-                courseToBeDeleted.getTimeZone());
-
-        List<InstructorAttributes> instructors = logic.getInstructorsForGoogleId(instructorId, false);
-        List<CourseAttributes> courseList = logic.getCoursesForInstructor(instructors);
-        assertEquals(1, courseList.size());
-        assertEquals("icdct.tpa.id1", courseList.get(0).getId());
-
-        assertNotNull(logic.getCourse(instructor1OfCourse1.getCourseId()).getDeletedAt());
-
-        ______TS("Masquerade mode, delete last course");
-
-        loginAsAdmin();
-
-        submissionParams = new String[] {
-                Const.ParamsNames.COURSE_ID, "icdct.tpa.id1",
-        };
-
-        binCourseAction = getAction(addUserIdToParams(instructorId, submissionParams));
-        result = getJsonResult(binCourseAction);
-
-        courseData = (CourseData) result.getOutput();
-
-        verifyCourseData(courseData, "icdct.tpa.id1", "New course", "UTC");
-        assertFalse(courseData.getDeletionTimestamp() == 0);
-        assertNotNull(logic.getCourse("icdct.tpa.id1").getDeletedAt());
     }
 
     @Test

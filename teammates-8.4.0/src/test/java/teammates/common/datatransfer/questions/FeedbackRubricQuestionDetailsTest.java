@@ -56,14 +56,7 @@ public class FeedbackRubricQuestionDetailsTest extends BaseTestCase {
 
     @Test
     public void testValidateResponseDetails_validAnswer_shouldReturnEmptyErrorList() {
-        FeedbackRubricQuestionDetails rubricQuestionDetails = new FeedbackRubricQuestionDetails();
-        rubricQuestionDetails.setHasAssignedWeights(false);
-        rubricQuestionDetails.setRubricWeightsForEachCell(new ArrayList<>());
-        rubricQuestionDetails.setNumOfRubricChoices(2);
-        rubricQuestionDetails.setNumOfRubricSubQuestions(2);
-        rubricQuestionDetails.setRubricChoices(Arrays.asList("a", "b"));
-        rubricQuestionDetails.setRubricSubQuestions(Arrays.asList("q1", "q2"));
-        rubricQuestionDetails.setRubricDescriptions(Arrays.asList(Arrays.asList("d1", "d2"), Arrays.asList("d3", "d4")));
+        FeedbackRubricQuestionDetails rubricQuestionDetails = validateAnswermethod();
 
         FeedbackRubricResponseDetails responseDetails = new FeedbackRubricResponseDetails();
 
@@ -77,9 +70,11 @@ public class FeedbackRubricQuestionDetailsTest extends BaseTestCase {
         assertTrue(rubricQuestionDetails.validateResponsesDetails(Collections.singletonList(responseDetails), 0).isEmpty());
     }
 
-    @Test
-    public void testValidateResponseDetails_invalidAnswer_shouldReturnNonEmptyErrorList() {
-        FeedbackRubricQuestionDetails rubricQuestionDetails = new FeedbackRubricQuestionDetails();
+	/**
+	 * @return
+	 */
+	private FeedbackRubricQuestionDetails validateAnswermethod() {
+		FeedbackRubricQuestionDetails rubricQuestionDetails = new FeedbackRubricQuestionDetails();
         rubricQuestionDetails.setHasAssignedWeights(false);
         rubricQuestionDetails.setRubricWeightsForEachCell(new ArrayList<>());
         rubricQuestionDetails.setNumOfRubricChoices(2);
@@ -87,6 +82,12 @@ public class FeedbackRubricQuestionDetailsTest extends BaseTestCase {
         rubricQuestionDetails.setRubricChoices(Arrays.asList("a", "b"));
         rubricQuestionDetails.setRubricSubQuestions(Arrays.asList("q1", "q2"));
         rubricQuestionDetails.setRubricDescriptions(Arrays.asList(Arrays.asList("d1", "d2"), Arrays.asList("d3", "d4")));
+		return rubricQuestionDetails;
+	}
+
+    @Test
+    public void testValidateResponseDetails_invalidAnswer_shouldReturnNonEmptyErrorList() {
+        FeedbackRubricQuestionDetails rubricQuestionDetails = validateAnswermethod();
 
         FeedbackRubricResponseDetails responseDetails = new FeedbackRubricResponseDetails();
 

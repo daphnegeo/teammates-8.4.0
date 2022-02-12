@@ -396,7 +396,14 @@ public class InstructorAttributes extends EntityAttributes<Instructor> {
 	        return;
 	    }
 	
-	    searchInstructorsActionTest.loginAsAdmin();
+	    instructorsParamsmethod(searchInstructorsActionTest);
+	}
+
+	/**
+	 * @param searchInstructorsActionTest
+	 */
+	private void instructorsParamsmethod(SearchInstructorsActionTest searchInstructorsActionTest) {
+		searchInstructorsActionTest.loginAsAdmin();
 	    String[] submissionParams = new String[] { ParamsNames.SEARCH_KEY, getName() };
 	    SearchInstructorsAction action = searchInstructorsActionTest.getAction(submissionParams);
 	    JsonResult result = searchInstructorsActionTest.getJsonResult(action);
@@ -415,17 +422,7 @@ public class InstructorAttributes extends EntityAttributes<Instructor> {
 	        return;
 	    }
 	
-	    searchInstructorsActionTest.loginAsAdmin();
-	    String[] submissionParams = new String[] { ParamsNames.SEARCH_KEY, getGoogleId() };
-	    SearchInstructorsAction action = searchInstructorsActionTest.getAction(submissionParams);
-	    JsonResult result = searchInstructorsActionTest.getJsonResult(action);
-	    InstructorsData response = (InstructorsData) result.getOutput();
-	    BaseTestCase.assertTrue(response.getInstructors().stream()
-	            .filter(i -> i.getName().equals(getName()))
-	            .findAny()
-	            .isPresent());
-	    BaseTestCase.assertTrue(response.getInstructors().get(0).getKey() != null);
-	    BaseTestCase.assertTrue(response.getInstructors().get(0).getInstitute() != null);
+	    instructorsParamsmethod(searchInstructorsActionTest);
 	}
 
 	@Test
@@ -434,17 +431,7 @@ public class InstructorAttributes extends EntityAttributes<Instructor> {
 	        return;
 	    }
 	
-	    searchInstructorsActionTest.loginAsAdmin();
-	    String[] submissionParams = new String[] { ParamsNames.SEARCH_KEY, getEmail() };
-	    SearchInstructorsAction action = searchInstructorsActionTest.getAction(submissionParams);
-	    JsonResult result = searchInstructorsActionTest.getJsonResult(action);
-	    InstructorsData response = (InstructorsData) result.getOutput();
-	    BaseTestCase.assertTrue(response.getInstructors().stream()
-	            .filter(i -> i.getName().equals(getName()))
-	            .findAny()
-	            .isPresent());
-	    BaseTestCase.assertTrue(response.getInstructors().get(0).getKey() != null);
-	    BaseTestCase.assertTrue(response.getInstructors().get(0).getInstitute() != null);
+	    instructorsParamsmethod(searchInstructorsActionTest);
 	}
 
 	@Test

@@ -14,6 +14,7 @@ import teammates.common.datatransfer.AttributesDeletionQuery;
 import teammates.common.datatransfer.CourseRoster;
 import teammates.common.datatransfer.FeedbackParticipantType;
 import teammates.common.datatransfer.attributes.FeedbackQuestionAttributes;
+import teammates.common.datatransfer.attributes.FeedbackQuestionsVariousAttributes;
 import teammates.common.datatransfer.attributes.FeedbackResponseAttributes;
 import teammates.common.datatransfer.attributes.FeedbackSessionAttributes;
 import teammates.common.datatransfer.attributes.InstructorAttributes;
@@ -85,7 +86,7 @@ public class FeedbackQuestionsLogicTest extends BaseLogicTest {
     }
 
     private void testGetRecipientsForQuestion() throws Exception {
-        FeedbackQuestionAttributes question;
+        FeedbackQuestionsVariousAttributes question;
         String email;
         Map<String, String> recipients;
 
@@ -155,7 +156,7 @@ public class FeedbackQuestionsLogicTest extends BaseLogicTest {
 
     @Test
     public void testGetRecipientsOfQuestion() throws Exception {
-        FeedbackQuestionAttributes question;
+        FeedbackQuestionsVariousAttributes question;
         StudentAttributes studentGiver;
         InstructorAttributes instructorGiver;
         CourseRoster courseRoster;
@@ -304,7 +305,7 @@ public class FeedbackQuestionsLogicTest extends BaseLogicTest {
         expectedList.add(q4);
         expectedList.add(q5);
 
-        FeedbackQuestionAttributes questionToUpdate = getQuestionFromDatabase("qn3InSession1InCourse1");
+        FeedbackQuestionsVariousAttributes questionToUpdate = getQuestionFromDatabase("qn3InSession1InCourse1");
         questionToUpdate.setQuestionNumber(1);
         fqLogic.updateFeedbackQuestionCascade(
                 FeedbackQuestionAttributes.updateOptionsBuilder(questionToUpdate.getId())
@@ -400,7 +401,7 @@ public class FeedbackQuestionsLogicTest extends BaseLogicTest {
         expectedList.add(q6);
 
         //Appends a question to the back of the current question list
-        FeedbackQuestionAttributes newQuestion = getQuestionFromDatabase("qn1InSession1InCourse1");
+        FeedbackQuestionsVariousAttributes newQuestion = getQuestionFromDatabase("qn1InSession1InCourse1");
         newQuestion.setQuestionNumber(6);
         newQuestion.setId(null); //new question should not have an ID.
         fqLogic.createFeedbackQuestion(newQuestion);
@@ -469,7 +470,7 @@ public class FeedbackQuestionsLogicTest extends BaseLogicTest {
     @Test
     public void testUpdateQuestionCascade() throws Exception {
         ______TS("standard update, no existing responses");
-        FeedbackQuestionAttributes questionToUpdate = getQuestionFromDatabase("qn2InSession1InCourse2");
+        FeedbackQuestionsVariousAttributes questionToUpdate = getQuestionFromDatabase("qn2InSession1InCourse2");
 
         FeedbackQuestionDetails fqd = new FeedbackTextQuestionDetails("new question text");
         questionToUpdate.setQuestionDetails(fqd);
@@ -478,14 +479,14 @@ public class FeedbackQuestionsLogicTest extends BaseLogicTest {
         newVisibility.add(FeedbackParticipantType.INSTRUCTORS);
         questionToUpdate.setShowResponsesTo(newVisibility);
 
-        FeedbackQuestionAttributes updatedQuestion = fqLogic.updateFeedbackQuestionCascade(
+        FeedbackQuestionsVariousAttributes updatedQuestion = fqLogic.updateFeedbackQuestionCascade(
                 FeedbackQuestionAttributes.updateOptionsBuilder(questionToUpdate.getId())
                         .withQuestionDetails(fqd)
                         .withQuestionNumber(questionToUpdate.getQuestionNumber())
                         .withShowResponsesTo(questionToUpdate.getShowResponsesTo())
                         .build());
 
-        FeedbackQuestionAttributes actualQuestion =
+        FeedbackQuestionsVariousAttributes actualQuestion =
                 fqLogic.getFeedbackQuestion(questionToUpdate.getId());
         assertEquals(questionToUpdate.toString(), actualQuestion.toString());
         assertEquals(questionToUpdate.toString(), updatedQuestion.toString());
@@ -534,7 +535,7 @@ public class FeedbackQuestionsLogicTest extends BaseLogicTest {
         ______TS("failure: question does not exist");
 
         questionToUpdate = getQuestionFromDatabase("qn3InSession1InCourse1");
-        FeedbackQuestionAttributes[] finalFq = new FeedbackQuestionAttributes[] { questionToUpdate };
+        FeedbackQuestionsVariousAttributes[] finalFq = new FeedbackQuestionsVariousAttributes[] { questionToUpdate };
         fqLogic.deleteFeedbackQuestionCascade(questionToUpdate.getId());
 
         EntityDoesNotExistException ednee = assertThrows(EntityDoesNotExistException.class,
@@ -565,7 +566,7 @@ public class FeedbackQuestionsLogicTest extends BaseLogicTest {
 
     @Test
     public void testDeleteFeedbackQuestionCascade_existentQuestion_shouldDoCascadeDeletion() {
-        FeedbackQuestionAttributes typicalQuestion = getQuestionFromDatabase("qn3InSession1InCourse1");
+        FeedbackQuestionsVariousAttributes typicalQuestion = getQuestionFromDatabase("qn3InSession1InCourse1");
         assertEquals(3, typicalQuestion.getQuestionNumber());
         assertEquals(4, getQuestionFromDatabase("qn4InSession1InCourse1").getQuestionNumber());
 
@@ -606,7 +607,7 @@ public class FeedbackQuestionsLogicTest extends BaseLogicTest {
     @Test
     public void testDeleteFeedbackQuestionCascade_cascadeDeleteResponseOfStudent_shouldUpdateRespondents() {
         FeedbackResponseAttributes fra = dataBundle.feedbackResponses.get("response1ForQ1S1C1");
-        FeedbackQuestionAttributes fqa = fqLogic.getFeedbackQuestion(
+        FeedbackQuestionsVariousAttributes fqa = fqLogic.getFeedbackQuestion(
                 fra.getFeedbackSessionName(), fra.getCourseId(), Integer.parseInt(fra.getFeedbackQuestionId()));
         FeedbackResponseAttributes responseInDb = frLogic.getFeedbackResponse(
                 fqa.getId(), fra.getGiver(), fra.getRecipient());
@@ -632,7 +633,7 @@ public class FeedbackQuestionsLogicTest extends BaseLogicTest {
     @Test
     public void testDeleteFeedbackQuestions_byCourseId_shouldDeleteQuestions() {
         String courseId = "idOfTypicalCourse2";
-        FeedbackQuestionAttributes deletedQuestion = getQuestionFromDatabase("qn1InSession1InCourse2");
+        FeedbackQuestionsVariousAttributes deletedQuestion = getQuestionFromDatabase("qn1InSession1InCourse2");
         assertNotNull(deletedQuestion);
 
         List<FeedbackQuestionAttributes> questions =
@@ -658,7 +659,7 @@ public class FeedbackQuestionsLogicTest extends BaseLogicTest {
         StudentAttributes typicalStudent = dataBundle.students.get("student1InCourse1");
         InstructorAttributes typicalInstructor = dataBundle.instructors.get("instructor1OfCourse1");
 
-        FeedbackQuestionAttributes fqa = dataBundle.feedbackQuestions.get("qn1InSession1InCourse1");
+        FeedbackQuestionsVariousAttributes fqa = dataBundle.feedbackQuestions.get("qn1InSession1InCourse1");
         // construct a typical question
         fqa = FeedbackQuestionAttributes.builder()
                         .withCourseId(fqa.getCourseId())
@@ -836,7 +837,7 @@ public class FeedbackQuestionsLogicTest extends BaseLogicTest {
         StudentAttributes typicalStudent = dataBundle.students.get("student1InCourse1");
         InstructorAttributes typicalInstructor = dataBundle.instructors.get("instructor1OfCourse1");
 
-        FeedbackQuestionAttributes fqa = dataBundle.feedbackQuestions.get("qn1InSession1InCourse1");
+        FeedbackQuestionsVariousAttributes fqa = dataBundle.feedbackQuestions.get("qn1InSession1InCourse1");
         // construct a typical question
         fqa = FeedbackQuestionAttributes.builder()
                 .withCourseId(fqa.getCourseId())
@@ -877,7 +878,7 @@ public class FeedbackQuestionsLogicTest extends BaseLogicTest {
         CourseRoster courseRoster = new CourseRoster(
                 studentsLogic.getStudentsForCourse("idOfTypicalCourse1"),
                 instructorsLogic.getInstructorsForCourse("idOfTypicalCourse1"));
-        FeedbackQuestionAttributes qn1InSession1InCourse1 = getQuestionFromDatabase("qn1InSession1InCourse1");
+        FeedbackQuestionsVariousAttributes qn1InSession1InCourse1 = getQuestionFromDatabase("qn1InSession1InCourse1");
 
         Map<String, Set<String>> completeGiverRecipientMap =
                 fqLogic.buildCompleteGiverRecipientMap(qn1InSession1InCourse1, courseRoster);
@@ -900,7 +901,7 @@ public class FeedbackQuestionsLogicTest extends BaseLogicTest {
         CourseRoster courseRoster = new CourseRoster(
                 studentsLogic.getStudentsForCourse("idOfTypicalCourse1"),
                 instructorsLogic.getInstructorsForCourse("idOfTypicalCourse1"));
-        FeedbackQuestionAttributes qn4InSession1InCourse1 = getQuestionFromDatabase("qn4InSession1InCourse1");
+        FeedbackQuestionsVariousAttributes qn4InSession1InCourse1 = getQuestionFromDatabase("qn4InSession1InCourse1");
 
         Map<String, Set<String>> completeGiverRecipientMap =
                 fqLogic.buildCompleteGiverRecipientMap(qn4InSession1InCourse1, courseRoster);
@@ -924,7 +925,7 @@ public class FeedbackQuestionsLogicTest extends BaseLogicTest {
         CourseRoster courseRoster = new CourseRoster(
                 studentsLogic.getStudentsForCourse("idOfTypicalCourse1"),
                 instructorsLogic.getInstructorsForCourse("idOfTypicalCourse1"));
-        FeedbackQuestionAttributes qn3InSession1InCourse1 = getQuestionFromDatabase("qn3InSession1InCourse1");
+        FeedbackQuestionsVariousAttributes qn3InSession1InCourse1 = getQuestionFromDatabase("qn3InSession1InCourse1");
         FeedbackSessionAttributes session1 = fsLogic.getFeedbackSession(
                 qn3InSession1InCourse1.getFeedbackSessionName(), qn3InSession1InCourse1.getCourseId());
 
@@ -941,7 +942,7 @@ public class FeedbackQuestionsLogicTest extends BaseLogicTest {
         CourseRoster courseRoster = new CourseRoster(
                 studentsLogic.getStudentsForCourse("idOfTypicalCourse1"),
                 instructorsLogic.getInstructorsForCourse("idOfTypicalCourse1"));
-        FeedbackQuestionAttributes teamFeedbackQuestion = getQuestionFromDatabase("team.feedback");
+        FeedbackQuestionsVariousAttributes teamFeedbackQuestion = getQuestionFromDatabase("team.feedback");
 
         Map<String, Set<String>> completeGiverRecipientMap =
                 fqLogic.buildCompleteGiverRecipientMap(teamFeedbackQuestion, courseRoster);
@@ -1094,7 +1095,7 @@ public class FeedbackQuestionsLogicTest extends BaseLogicTest {
     }
 
     private void testIsQuestionAnswered() throws Exception {
-        FeedbackQuestionAttributes question;
+        FeedbackQuestionsVariousAttributes question;
 
         ______TS("test question is fully answered by user");
 

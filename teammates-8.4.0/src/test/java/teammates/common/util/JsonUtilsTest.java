@@ -6,6 +6,7 @@ import org.testng.annotations.Test;
 
 import teammates.common.datatransfer.FeedbackParticipantType;
 import teammates.common.datatransfer.attributes.FeedbackQuestionAttributes;
+import teammates.common.datatransfer.attributes.FeedbackQuestionsVariousAttributes;
 import teammates.common.datatransfer.attributes.FeedbackResponseAttributes;
 import teammates.common.datatransfer.questions.FeedbackTextQuestionDetails;
 import teammates.common.datatransfer.questions.FeedbackTextResponseDetails;
@@ -24,7 +25,7 @@ public class JsonUtilsTest extends BaseTestCase {
         participants.add(FeedbackParticipantType.OWN_TEAM_MEMBERS);
         participants.add(FeedbackParticipantType.RECEIVER);
 
-        FeedbackQuestionAttributes fqa = FeedbackQuestionAttributes.builder()
+        FeedbackQuestionsVariousAttributes fqa = FeedbackQuestionAttributes.builder()
                 .withCourseId("testingCourse")
                 .withFeedbackSessionName("testFeedbackSession")
                 .withGiverType(FeedbackParticipantType.INSTRUCTORS)

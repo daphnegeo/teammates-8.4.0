@@ -24,11 +24,6 @@ public class UpdateInstructorPrivilegeActionTest extends BaseActionTest<UpdateIn
         return PUT;
     }
 
-    @Override
-    protected void testExecute() {
-        // see individual tests
-    }
-
     @Test
     protected void testExecute_validCourseLevelInput_shouldSucceed() {
         InstructorAttributes instructor1OfCourse1 = typicalBundle.instructors.get("instructor1OfCourse1");
@@ -77,7 +72,14 @@ public class UpdateInstructorPrivilegeActionTest extends BaseActionTest<UpdateIn
         InstructorAttributes instructor = logic.getInstructorForGoogleId(
                 instructor1OfCourse1.getCourseId(), instructor1OfCourse1.getGoogleId());
 
-        assertFalse(instructor.getPrivileges().isAllowedForPrivilege(
+        instructorAttributesGetMethod(instructor);
+    }
+
+	/**
+	 * @param instructor
+	 */
+	private void instructorAttributesGetMethod(InstructorAttributes instructor) {
+		assertFalse(instructor.getPrivileges().isAllowedForPrivilege(
                 Const.InstructorPermissions.CAN_MODIFY_COURSE));
         assertFalse(instructor.getPrivileges().isAllowedForPrivilege(
                 Const.InstructorPermissions.CAN_MODIFY_SESSION));
@@ -93,7 +95,7 @@ public class UpdateInstructorPrivilegeActionTest extends BaseActionTest<UpdateIn
                 Const.InstructorPermissions.CAN_VIEW_SESSION_IN_SECTIONS));
         assertFalse(instructor.getPrivileges().isAllowedForPrivilege(
                 Const.InstructorPermissions.CAN_MODIFY_SESSION_COMMENT_IN_SECTIONS));
-    }
+	}
 
     @Test
     protected void testExecute_validSectionLevelInput_shouldSucceed() {
@@ -140,22 +142,7 @@ public class UpdateInstructorPrivilegeActionTest extends BaseActionTest<UpdateIn
         InstructorAttributes instructor = logic.getInstructorForGoogleId(
                 helper1OfCourse1.getCourseId(), helper1OfCourse1.getGoogleId());
 
-        assertFalse(instructor.getPrivileges().isAllowedForPrivilege(
-                Const.InstructorPermissions.CAN_MODIFY_COURSE));
-        assertFalse(instructor.getPrivileges().isAllowedForPrivilege(
-                Const.InstructorPermissions.CAN_MODIFY_SESSION));
-        assertFalse(instructor.getPrivileges().isAllowedForPrivilege(
-                Const.InstructorPermissions.CAN_MODIFY_INSTRUCTOR));
-        assertFalse(instructor.getPrivileges().isAllowedForPrivilege(
-                Const.InstructorPermissions.CAN_MODIFY_STUDENT));
-        assertFalse(instructor.getPrivileges().isAllowedForPrivilege(
-                Const.InstructorPermissions.CAN_VIEW_STUDENT_IN_SECTIONS));
-        assertFalse(instructor.getPrivileges().isAllowedForPrivilege(
-                Const.InstructorPermissions.CAN_SUBMIT_SESSION_IN_SECTIONS));
-        assertFalse(instructor.getPrivileges().isAllowedForPrivilege(
-                Const.InstructorPermissions.CAN_VIEW_SESSION_IN_SECTIONS));
-        assertFalse(instructor.getPrivileges().isAllowedForPrivilege(
-                Const.InstructorPermissions.CAN_MODIFY_SESSION_COMMENT_IN_SECTIONS));
+        instructorAttributesGetMethod(instructor);
 
         assertTrue(instructor.getPrivileges().isAllowedForPrivilege(
                 "TUT1", Const.InstructorPermissions.CAN_VIEW_STUDENT_IN_SECTIONS));

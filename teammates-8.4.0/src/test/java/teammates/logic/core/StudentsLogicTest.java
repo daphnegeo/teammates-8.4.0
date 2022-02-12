@@ -10,7 +10,7 @@ import org.testng.annotations.Test;
 
 import teammates.common.datatransfer.AttributesDeletionQuery;
 import teammates.common.datatransfer.attributes.CourseAttributes;
-import teammates.common.datatransfer.attributes.FeedbackQuestionAttributes;
+import teammates.common.datatransfer.attributes.FeedbackQuestionsVariousAttributes;
 import teammates.common.datatransfer.attributes.FeedbackResponseAttributes;
 import teammates.common.datatransfer.attributes.StudentAttributes;
 import teammates.common.exception.EnrollException;
@@ -227,7 +227,7 @@ public class StudentsLogicTest extends BaseLogicTest {
         StudentAttributes student1InCourse1 = dataBundle.students.get("student1InCourse1");
 
         FeedbackResponseAttributes responseToBeDeleted = dataBundle.feedbackResponses.get("response2ForQ2S2C1");
-        FeedbackQuestionAttributes feedbackQuestionInDb =
+        FeedbackQuestionsVariousAttributes feedbackQuestionInDb =
                 fqLogic.getFeedbackQuestion(responseToBeDeleted.getFeedbackSessionName(),
                         responseToBeDeleted.getCourseId(),
                         Integer.parseInt(responseToBeDeleted.getFeedbackQuestionId()));

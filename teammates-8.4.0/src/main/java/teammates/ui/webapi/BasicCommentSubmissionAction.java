@@ -1,7 +1,7 @@
 package teammates.ui.webapi;
 
 import teammates.common.datatransfer.FeedbackParticipantType;
-import teammates.common.datatransfer.attributes.FeedbackQuestionAttributes;
+import teammates.common.datatransfer.attributes.FeedbackQuestionsVariousAttributes;
 import teammates.common.datatransfer.attributes.FeedbackResponseAttributes;
 import teammates.common.datatransfer.attributes.FeedbackResponseCommentAttributes;
 import teammates.common.datatransfer.attributes.InstructorAttributes;
@@ -17,7 +17,7 @@ abstract class BasicCommentSubmissionAction extends BasicFeedbackSubmissionActio
     /**
      * Validates the questionType of the corresponding question.
      */
-    void validQuestionForCommentInSubmission(FeedbackQuestionAttributes feedbackQuestion) {
+    void validQuestionForCommentInSubmission(FeedbackQuestionsVariousAttributes feedbackQuestion) {
         if (!feedbackQuestion.getQuestionDetailsCopy().isFeedbackParticipantCommentsOnResponsesAllowed()) {
             throw new InvalidHttpParameterException("Invalid question type for comment in submission");
         }
@@ -40,7 +40,7 @@ abstract class BasicCommentSubmissionAction extends BasicFeedbackSubmissionActio
      * Verify response ownership for student.
      */
     void verifyResponseOwnerShipForStudent(StudentAttributes student, FeedbackResponseAttributes response,
-                                           FeedbackQuestionAttributes question)
+                                           FeedbackQuestionsVariousAttributes question)
             throws UnauthorizedAccessException {
 
         if (question.getGiverType() == FeedbackParticipantType.TEAMS

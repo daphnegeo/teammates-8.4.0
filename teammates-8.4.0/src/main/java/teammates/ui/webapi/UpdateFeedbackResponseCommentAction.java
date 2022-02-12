@@ -4,7 +4,7 @@ import java.time.Instant;
 import java.util.List;
 
 import teammates.common.datatransfer.FeedbackParticipantType;
-import teammates.common.datatransfer.attributes.FeedbackQuestionAttributes;
+import teammates.common.datatransfer.attributes.FeedbackQuestionsVariousAttributes;
 import teammates.common.datatransfer.attributes.FeedbackResponseAttributes;
 import teammates.common.datatransfer.attributes.FeedbackResponseCommentAttributes;
 import teammates.common.datatransfer.attributes.FeedbackSessionAttributes;
@@ -44,7 +44,7 @@ class UpdateFeedbackResponseCommentAction extends BasicCommentSubmissionAction {
         FeedbackSessionAttributes session = getNonNullFeedbackSession(feedbackSessionName, courseId);
         assert response != null;
         String questionId = response.getFeedbackQuestionId();
-        FeedbackQuestionAttributes question = logic.getFeedbackQuestion(questionId);
+        FeedbackQuestionsVariousAttributes question = logic.getFeedbackQuestion(questionId);
         Intent intent = Intent.valueOf(getNonNullRequestParamValue(Const.ParamsNames.INTENT));
 
         switch (intent) {

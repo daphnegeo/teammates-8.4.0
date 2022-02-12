@@ -21,12 +21,6 @@ public class DeleteInstructorActionTest extends BaseActionTest<DeleteInstructorA
         return DELETE;
     }
 
-    @Override
-    @Test
-    protected void testExecute() {
-        //see test cases below
-    }
-
     @Test
     protected void testExecute_typicalCaseByGoogleId_shouldPass() {
         ______TS("Typical case: admin deletes an instructor by google id");
@@ -84,7 +78,17 @@ public class DeleteInstructorActionTest extends BaseActionTest<DeleteInstructorA
                 Const.ParamsNames.COURSE_ID, instructor1OfCourse1.getCourseId(),
         };
 
-        assertTrue(logic.getInstructorsForCourse(instructor1OfCourse1.getCourseId()).size() > 1);
+        deleteEmailActions(instructor1OfCourse1, instructor2OfCourse1, submissionParams);
+    }
+
+	/**
+	 * @param instructor1OfCourse1
+	 * @param instructor2OfCourse1
+	 * @param submissionParams
+	 */
+	private void deleteEmailActions(InstructorAttributes instructor1OfCourse1,
+			InstructorAttributes instructor2OfCourse1, String[] submissionParams) {
+		assertTrue(logic.getInstructorsForCourse(instructor1OfCourse1.getCourseId()).size() > 1);
 
         DeleteInstructorAction deleteInstructorAction = getAction(submissionParams);
         JsonResult response = getJsonResult(deleteInstructorAction);
@@ -94,7 +98,7 @@ public class DeleteInstructorActionTest extends BaseActionTest<DeleteInstructorA
 
         assertNull(logic.getInstructorForEmail(instructor2OfCourse1.getCourseId(), instructor2OfCourse1.getEmail()));
         assertNotNull(logic.getInstructorForEmail(instructor1OfCourse1.getCourseId(), instructor1OfCourse1.getEmail()));
-    }
+	}
 
     @Test
     protected void testExecute_adminDeletesLastInstructorByGoogleId_shouldPass() {
@@ -130,16 +134,7 @@ public class DeleteInstructorActionTest extends BaseActionTest<DeleteInstructorA
                 Const.ParamsNames.COURSE_ID, instructor1OfCourse1.getCourseId(),
         };
 
-        assertTrue(logic.getInstructorsForCourse(instructor1OfCourse1.getCourseId()).size() > 1);
-
-        DeleteInstructorAction deleteInstructorAction = getAction(submissionParams);
-        JsonResult response = getJsonResult(deleteInstructorAction);
-
-        MessageOutput msg = (MessageOutput) response.getOutput();
-        assertEquals("Instructor is successfully deleted.", msg.getMessage());
-
-        assertNull(logic.getInstructorForEmail(instructor2OfCourse1.getCourseId(), instructor2OfCourse1.getEmail()));
-        assertNotNull(logic.getInstructorForEmail(instructor1OfCourse1.getCourseId(), instructor1OfCourse1.getEmail()));
+        deleteEmailActions(instructor1OfCourse1, instructor2OfCourse1, submissionParams);
     }
 
     @Test

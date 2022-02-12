@@ -32,11 +32,6 @@ public class SearchStudentsActionTest extends BaseActionTest<SearchStudentsActio
         return GET;
     }
 
-    @Override
-    protected void testExecute() {
-        // See individual test cases below
-    }
-
     @Test
     public void execute_invalidParameters_parameterFailure() {
         loginAsAdmin();

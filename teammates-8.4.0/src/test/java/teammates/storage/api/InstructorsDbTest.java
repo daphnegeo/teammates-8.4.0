@@ -305,18 +305,7 @@ public class InstructorsDbTest extends BaseTestCaseWithLocalDatabaseAccess {
         assertEquals(instructorToEdit.getName(), actualInstructor.getName());
         assertEquals(instructorToEdit.getName(), updatedInstructor.getName());
         assertEquals(instructorToEdit.getEmail(), actualInstructor.getEmail());
-        assertEquals(instructorToEdit.getEmail(), updatedInstructor.getEmail());
-        assertTrue(actualInstructor.isArchived());
-        assertTrue(updatedInstructor.isArchived());
-        assertEquals(Const.InstructorPermissionRoleNames.INSTRUCTOR_PERMISSION_ROLE_OBSERVER, actualInstructor.getRole());
-        assertEquals(Const.InstructorPermissionRoleNames.INSTRUCTOR_PERMISSION_ROLE_OBSERVER, updatedInstructor.getRole());
-        assertFalse(actualInstructor.isDisplayedToStudents());
-        assertFalse(updatedInstructor.isDisplayedToStudents());
-        assertEquals("New Displayed Name", actualInstructor.getDisplayedName());
-        assertEquals("New Displayed Name", updatedInstructor.getDisplayedName());
-        assertTrue(actualInstructor.getPrivileges().hasObserverPrivileges());
-        assertTrue(updatedInstructor.getPrivileges().hasObserverPrivileges());
-        // Verifying less privileged 'Observer' role did not return false positive in case old 'Manager' role is unchanged.
+        insertAttributesmethod(instructorToEdit, updatedInstructor, actualInstructor);
         assertFalse(actualInstructor.getPrivileges().hasManagerPrivileges());
         assertFalse(updatedInstructor.getPrivileges().hasManagerPrivileges());
 
@@ -361,6 +350,27 @@ public class InstructorsDbTest extends BaseTestCaseWithLocalDatabaseAccess {
         assertThrows(AssertionError.class,
                 () -> instructorsDb.updateInstructorByGoogleId(null));
     }
+
+	/**
+	 * @param instructorToEdit
+	 * @param updatedInstructor
+	 * @param actualInstructor
+	 */
+	private void insertAttributesmethod(InstructorAttributes instructorToEdit, InstructorAttributes updatedInstructor,
+			InstructorAttributes actualInstructor) {
+		assertEquals(instructorToEdit.getEmail(), updatedInstructor.getEmail());
+        assertTrue(actualInstructor.isArchived());
+        assertTrue(updatedInstructor.isArchived());
+        assertEquals(Const.InstructorPermissionRoleNames.INSTRUCTOR_PERMISSION_ROLE_OBSERVER, actualInstructor.getRole());
+        assertEquals(Const.InstructorPermissionRoleNames.INSTRUCTOR_PERMISSION_ROLE_OBSERVER, updatedInstructor.getRole());
+        assertFalse(actualInstructor.isDisplayedToStudents());
+        assertFalse(updatedInstructor.isDisplayedToStudents());
+        assertEquals("New Displayed Name", actualInstructor.getDisplayedName());
+        assertEquals("New Displayed Name", updatedInstructor.getDisplayedName());
+        assertTrue(actualInstructor.getPrivileges().hasObserverPrivileges());
+        assertTrue(updatedInstructor.getPrivileges().hasObserverPrivileges());
+        // Verifying less privileged 'Observer' role did not return false positive in case old 'Manager' role is unchanged.
+	}
 
     @Test
     public void testUpdateInstructorByGoogleId_noChangeToInstructor_shouldNotIssueSaveRequest() throws Exception {
