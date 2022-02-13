@@ -5,12 +5,21 @@ import java.util.List;
 
 import org.testng.annotations.Test;
 
-import teammates.common.datatransfer.attributes.FeedbackQuestionsVariousAttributes;
+import teammates.common.datatransfer.DataBundle;
+import teammates.common.datatransfer.attributes.CourseAttributes;
+import teammates.common.datatransfer.attributes.EntityAttributes;
 import teammates.common.datatransfer.attributes.FeedbackResponseAttributes;
+import teammates.common.datatransfer.attributes.FeedbackResponseCommentAttributes;
+import teammates.common.datatransfer.attributes.FeedbackSessionAttributes;
+import teammates.common.datatransfer.attributes.InstructorAttributes;
+import teammates.common.datatransfer.attributes.StudentAttributes;
+import teammates.common.datatransfer.attributes.StudentProfileAttributes;
 import teammates.common.datatransfer.questions.FeedbackConstantSumQuestionDetails;
 import teammates.common.datatransfer.questions.FeedbackConstantSumResponseDetails;
+import teammates.e2e.pageobjects.AppPage;
 import teammates.e2e.pageobjects.FeedbackSubmitPage;
-import teammates.e2e.pageobjects.InstructorFeedbackPage;
+import teammates.storage.entity.Account;
+import teammates.storage.entity.FeedbackQuestion;
 
 /**
  * SUT: {@link Const.WebPageURIs#INSTRUCTOR_SESSION_EDIT_PAGE}, {@link Const.WebPageURIs#SESSION_SUBMISSION_PAGE}
@@ -39,10 +48,10 @@ public class FeedbackConstSumOptionQuestionE2ETest extends BaseFeedbackQuestionE
 
     @Override
     protected void testEditPage() {
-        InstructorFeedbackPage feedbackEditPage = loginToFeedbackEditPage();
+        AppPage feedbackEditPage = loginToFeedbackEditPage();
 
         ______TS("verify loaded question");
-        FeedbackQuestionsVariousAttributes loadedQuestion = testData.feedbackQuestions.get("qn1ForFirstSession").getCopy();
+        EntityAttributes<FeedbackQuestion> loadedQuestion = testData.feedbackQuestions.get("qn1ForFirstSession").getCopy();
         FeedbackConstantSumQuestionDetails questionDetails =
                 (FeedbackConstantSumQuestionDetails) loadedQuestion.getQuestionDetailsCopy();
         feedbackEditPage.verifyConstSumQuestionDetails(1, questionDetails);
@@ -56,7 +65,7 @@ public class FeedbackConstSumOptionQuestionE2ETest extends BaseFeedbackQuestionE
         verifyPresentInDatabase(loadedQuestion);
 
         ______TS("copy question");
-        FeedbackQuestionsVariousAttributes copiedQuestion = testData.feedbackQuestions.get("qn1ForSecondSession");
+        EntityAttributes<FeedbackQuestion> copiedQuestion = testData.feedbackQuestions.get("qn1ForSecondSession");
         questionDetails = (FeedbackConstantSumQuestionDetails) copiedQuestion.getQuestionDetailsCopy();
         feedbackEditPage.copyQuestion(copiedQuestion.getCourseId(),
                 copiedQuestion.getQuestionDetailsCopy().getQuestionText());
@@ -89,7 +98,7 @@ public class FeedbackConstSumOptionQuestionE2ETest extends BaseFeedbackQuestionE
         FeedbackSubmitPage feedbackSubmitPage = loginToFeedbackSubmitPage();
 
         ______TS("verify loaded question");
-        FeedbackQuestionsVariousAttributes question = testData.feedbackQuestions.get("qn1ForFirstSession");
+        EntityAttributes<FeedbackQuestion> question = testData.feedbackQuestions.get("qn1ForFirstSession");
         feedbackSubmitPage.verifyConstSumQuestion(1, "",
                 (FeedbackConstantSumQuestionDetails) question.getQuestionDetailsCopy());
 
@@ -120,4 +129,70 @@ public class FeedbackConstSumOptionQuestionE2ETest extends BaseFeedbackQuestionE
                 .withResponseDetails(details)
                 .build();
     }
+
+	@Override
+	protected boolean doPutDocuments(DataBundle testData) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	protected boolean doRemoveAndRestoreDataBundle(DataBundle testData) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	protected StudentAttributes getStudent(StudentAttributes student) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected InstructorAttributes getInstructor(InstructorAttributes instructor) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected FeedbackSessionAttributes getFeedbackSession(FeedbackSessionAttributes fs) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected FeedbackResponseAttributes getFeedbackResponse(FeedbackResponseAttributes fr) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected FeedbackResponseCommentAttributes getFeedbackResponseComment(FeedbackResponseCommentAttributes frc) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected EntityAttributes<FeedbackQuestion> getFeedbackQuestion(EntityAttributes<FeedbackQuestion> fq) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected CourseAttributes getCourse(CourseAttributes course) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected StudentProfileAttributes getStudentProfile(StudentProfileAttributes studentProfileAttributes) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected EntityAttributes<Account> getAccount(EntityAttributes<Account> account) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

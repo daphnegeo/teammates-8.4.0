@@ -34,11 +34,6 @@ public class AdminHomePage extends AppPage {
         super(browser);
     }
 
-    @Override
-    protected boolean containsExpectedPageContents() {
-        return getPageSource().contains("Add New Instructor</h1>");
-    }
-
     public void queueInstructorForAdding(String name, String email, String institute) {
         if (name != null) {
             fillTextBox(nameTextBox, name);

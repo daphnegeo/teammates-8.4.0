@@ -16,11 +16,6 @@ public class StudentHomePage extends AppPage {
         super(browser);
     }
 
-    @Override
-    protected boolean containsExpectedPageContents() {
-        return getPageTitle().equals("Student Home");
-    }
-
     private List<WebElement> getStudentHomeCoursePanels() {
         return browser.driver.findElements(By.cssSelector("div.card.bg-light"));
     }

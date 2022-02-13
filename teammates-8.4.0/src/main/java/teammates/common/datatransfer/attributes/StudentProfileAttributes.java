@@ -1,14 +1,7 @@
 package teammates.common.datatransfer.attributes;
 
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
 
-import teammates.common.util.FieldValidator;
-import teammates.common.util.JsonUtils;
-import teammates.common.util.SanitizationHelper;
-import teammates.common.util.StringHelper;
 import teammates.storage.entity.StudentProfile;
 
 /**
@@ -72,23 +65,6 @@ public class StudentProfileAttributes extends EntityAttributes<StudentProfile> {
         return new Builder(googleId);
     }
 
-    /**
-     * Gets a deep copy of this object.
-     */
-    public StudentProfileAttributes getCopy() {
-        StudentProfileAttributes studentProfileAttributes = new StudentProfileAttributes(googleId);
-
-        studentProfileAttributes.shortName = shortName;
-        studentProfileAttributes.email = email;
-        studentProfileAttributes.institute = institute;
-        studentProfileAttributes.gender = gender;
-        studentProfileAttributes.nationality = nationality;
-        studentProfileAttributes.moreInfo = moreInfo;
-        studentProfileAttributes.modifiedDate = modifiedDate;
-
-        return studentProfileAttributes;
-    }
-
     public String getGoogleId() {
         return googleId;
     }
@@ -147,99 +123,6 @@ public class StudentProfileAttributes extends EntityAttributes<StudentProfile> {
 
     public void setModifiedDate(Instant modifiedDate) {
         this.modifiedDate = modifiedDate;
-    }
-
-    @Override
-    public List<String> getInvalidityInfo() {
-        List<String> errors = new ArrayList<>();
-
-        addNonEmptyError(FieldValidator.getInvalidityInfoForGoogleId(googleId), errors);
-
-        // accept empty string values as it means the user has not specified anything yet.
-
-        if (!StringHelper.isEmpty(shortName)) {
-            addNonEmptyError(FieldValidator.getInvalidityInfoForPersonName(shortName), errors);
-        }
-
-        if (!StringHelper.isEmpty(email)) {
-            addNonEmptyError(FieldValidator.getInvalidityInfoForEmail(email), errors);
-        }
-
-        if (!StringHelper.isEmpty(institute)) {
-            addNonEmptyError(FieldValidator.getInvalidityInfoForInstituteName(institute), errors);
-        }
-
-        if (!StringHelper.isEmpty(nationality)) {
-            addNonEmptyError(FieldValidator.getInvalidityInfoForNationality(nationality), errors);
-        }
-
-        assert gender != null;
-
-        // No validation for modified date as it is determined by the system.
-        // No validation for More Info. It will properly sanitized.
-
-        return errors;
-    }
-
-    @Override
-    public String toString() {
-        return JsonUtils.toJson(this, StudentProfileAttributes.class);
-    }
-
-    @Override
-    public int hashCode() {
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(this.email).append(this.shortName).append(this.institute)
-                .append(this.googleId).append(this.gender.toString());
-        return stringBuilder.toString().hashCode();
-    }
-
-    @Override
-    public boolean equals(Object other) {
-        if (other == null) {
-            return false;
-        } else if (this == other) {
-            return true;
-        } else if (this.getClass() == other.getClass()) {
-            StudentProfileAttributes otherProfile = (StudentProfileAttributes) other;
-            return Objects.equals(this.email, otherProfile.email)
-                    && Objects.equals(this.shortName, otherProfile.shortName)
-                    && Objects.equals(this.institute, otherProfile.institute)
-                    && Objects.equals(this.googleId, otherProfile.googleId)
-                    && Objects.equals(this.gender, otherProfile.gender);
-        } else {
-            return false;
-        }
-    }
-
-    @Override
-    public StudentProfile toEntity() {
-        return new StudentProfile(googleId, shortName, email, institute, nationality, gender.name().toLowerCase(),
-                                  moreInfo);
-    }
-
-    @Override
-    public void sanitizeForSaving() {
-        this.googleId = SanitizationHelper.sanitizeGoogleId(this.googleId);
-    }
-
-    /**
-     * Updates with {@link UpdateOptions}.
-     */
-    public void update(UpdateOptions updateOptions) {
-        updateOptions.shortNameOption.ifPresent(s -> shortName = s);
-        updateOptions.emailOption.ifPresent(s -> email = s);
-        updateOptions.instituteOption.ifPresent(s -> institute = s);
-        updateOptions.nationalityOption.ifPresent(s -> nationality = s);
-        updateOptions.genderOption.ifPresent(s -> gender = s);
-        updateOptions.moreInfoOption.ifPresent(s -> moreInfo = s);
-    }
-
-    /**
-     * Returns a {@link UpdateOptions.Builder} to build {@link UpdateOptions} for a profile.
-     */
-    public static UpdateOptions.Builder updateOptionsBuilder(String googleId) {
-        return new UpdateOptions.Builder(googleId);
     }
 
     /**

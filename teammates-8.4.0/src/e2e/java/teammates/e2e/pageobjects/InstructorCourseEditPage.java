@@ -72,11 +72,6 @@ public class InstructorCourseEditPage extends AppPage {
         super(browser);
     }
 
-    @Override
-    protected boolean containsExpectedPageContents() {
-        return getPageTitle().contains("Edit Course Details");
-    }
-
     public void verifyCourseDetails(CourseAttributes course) {
         assertEquals(course.getId(), getCourseId());
         assertEquals(course.getName(), getCourseName());
@@ -331,18 +326,6 @@ public class InstructorCourseEditPage extends AppPage {
     }
 
     // Methods that return WebElements of the page
-
-    public String getCourseId() {
-        return courseIdTextBox.getAttribute("value");
-    }
-
-    public String getCourseName() {
-        return courseNameTextBox.getAttribute("value");
-    }
-
-    public String getTimeZone() {
-        return timeZoneDropDown.getAttribute("value");
-    }
 
     private WebElement getEditInstructorButton(int instrNum) {
         return browser.driver.findElement(By.id("btn-edit-instructor-" + instrNum));

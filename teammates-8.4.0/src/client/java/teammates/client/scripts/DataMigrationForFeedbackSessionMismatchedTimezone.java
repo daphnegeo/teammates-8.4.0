@@ -8,6 +8,7 @@ import com.googlecode.objectify.cmd.Query;
 import teammates.common.datatransfer.attributes.CourseAttributes;
 import teammates.common.util.TimeHelper;
 import teammates.logic.core.CoursesLogic;
+import teammates.storage.entity.Account;
 import teammates.storage.entity.FeedbackSession;
 
 /**
@@ -21,12 +22,6 @@ public class DataMigrationForFeedbackSessionMismatchedTimezone extends DataMigra
 
     public static void main(String[] args) {
         new DataMigrationForFeedbackSessionMismatchedTimezone().doOperationRemotely();
-    }
-
-    @Override
-    protected Query<FeedbackSession> getFilterQuery() {
-        return ofy().load().type(FeedbackSession.class)
-                .order("courseId");
     }
 
     @Override
@@ -72,5 +67,17 @@ public class DataMigrationForFeedbackSessionMismatchedTimezone extends DataMigra
 
         saveEntityDeferred(session);
     }
+
+	@Override
+	protected String generateNewGoogleId(Account oldAccount) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected boolean isMigrationOfGoogleIdNeeded(Account account) {
+		// TODO Auto-generated method stub
+		return false;
+	}
 
 }

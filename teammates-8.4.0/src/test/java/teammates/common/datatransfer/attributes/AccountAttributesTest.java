@@ -2,11 +2,13 @@ package teammates.common.datatransfer.attributes;
 
 import org.testng.annotations.Test;
 
+import teammates.common.datatransfer.DataBundle;
 import teammates.common.util.FieldValidator;
 import teammates.common.util.SanitizationHelper;
 import teammates.common.util.StringHelper;
 import teammates.common.util.StringHelperExtension;
 import teammates.storage.entity.Account;
+import teammates.storage.entity.FeedbackQuestion;
 
 /**
  * SUT: {@link AccountAttributes}.
@@ -17,7 +19,7 @@ public class AccountAttributesTest extends BaseAttributesTest {
     public void testGetInvalidStateInfo() throws Exception {
         ______TS("valid account");
 
-        AccountAttributes account = createValidAccountAttributesObject();
+        EntityAttributes<Account> account = createValidAccountAttributesObject();
         assertTrue("all valid values", account.isValid());
 
         ______TS("invalid account");
@@ -48,7 +50,7 @@ public class AccountAttributesTest extends BaseAttributesTest {
     @Override
     @Test
     public void testToEntity() {
-        AccountAttributes account = createValidAccountAttributesObject();
+        EntityAttributes<Account> account = createValidAccountAttributesObject();
         Account expectedAccount = new Account(account.getGoogleId(), account.getName(),
                 account.isInstructor(), account.getEmail(), account.getInstitute());
 
@@ -63,9 +65,9 @@ public class AccountAttributesTest extends BaseAttributesTest {
 
     @Test
     public void testToString() {
-        AccountAttributes account = createValidAccountAttributesObject();
-        AccountAttributes account1 = createValidAccountAttributesObject();
-        AccountAttributes account2 = createInvalidAccountAttributesObject();
+        EntityAttributes<Account> account = createValidAccountAttributesObject();
+        EntityAttributes<Account> account1 = createValidAccountAttributesObject();
+        EntityAttributes<Account> account2 = createInvalidAccountAttributesObject();
 
         assertEquals(account.toString(), account1.toString());
         assertFalse("different accounts have different toString() values",
@@ -74,8 +76,8 @@ public class AccountAttributesTest extends BaseAttributesTest {
 
     @Test
     public void testSanitizeForSaving() {
-        AccountAttributes actualAccount = createAccountAttributesToSanitize();
-        AccountAttributes expectedAccount = createAccountAttributesToSanitize();
+        EntityAttributes<Account> actualAccount = createAccountAttributesToSanitize();
+        EntityAttributes<Account> expectedAccount = createAccountAttributesToSanitize();
         actualAccount.sanitizeForSaving();
 
         assertEquals(SanitizationHelper.sanitizeGoogleId(expectedAccount.getGoogleId()), actualAccount.getGoogleId());
@@ -86,7 +88,7 @@ public class AccountAttributesTest extends BaseAttributesTest {
 
     @Test
     public void testBuilder_buildNothing_shouldUseDefaultValues() {
-        AccountAttributes observedAccountAttributes = AccountAttributes.builder("id").build();
+        EntityAttributes<Account> observedAccountAttributes = AccountAttributes.builder("id").build();
 
         assertEquals("id", observedAccountAttributes.getGoogleId());
 
@@ -104,7 +106,7 @@ public class AccountAttributesTest extends BaseAttributesTest {
         String expectedName = "dummyName";
         String expectedInstitute = "dummyInstitute";
 
-        AccountAttributes observedAccountAttributes = AccountAttributes.builder(expectedGoogleId)
+        EntityAttributes<Account> observedAccountAttributes = AccountAttributes.builder(expectedGoogleId)
                 .withEmail(expectedEmail)
                 .withName(expectedName)
                 .withInstitute(expectedInstitute)
@@ -153,7 +155,7 @@ public class AccountAttributesTest extends BaseAttributesTest {
     public void testValueOf() {
         Account genericAccount = new Account("id", "Joe", true, "joe@example.com", "Teammates Institute");
 
-        AccountAttributes observedAccountAttributes = AccountAttributes.valueOf(genericAccount);
+        EntityAttributes<Account> observedAccountAttributes = AccountAttributes.valueOf(genericAccount);
 
         assertEquals(genericAccount.getGoogleId(), observedAccountAttributes.getGoogleId());
         assertEquals(genericAccount.getName(), observedAccountAttributes.getName());
@@ -165,9 +167,9 @@ public class AccountAttributesTest extends BaseAttributesTest {
 
     @Test
     public void testGetCopy_typicalData_createsCopyCorrectly() {
-        AccountAttributes account = createValidAccountAttributesObject();
+        EntityAttributes<Account> account = createValidAccountAttributesObject();
 
-        AccountAttributes copy = account.getCopy();
+        EntityAttributes<Account> copy = account.getCopy();
 
         assertNotSame(account, copy);
         assertFalse(account.isInstructor());
@@ -180,9 +182,9 @@ public class AccountAttributesTest extends BaseAttributesTest {
 
     @Test
     public void testGetCopy_allFieldsNull_createsCopyCorrectly() {
-        AccountAttributes account = AccountAttributes.builder("id").build();
+        EntityAttributes<Account> account = AccountAttributes.builder("id").build();
 
-        AccountAttributes copy = account.getCopy();
+        EntityAttributes<Account> copy = account.getCopy();
 
         assertNotSame(account, copy);
         assertFalse(account.isInstructor());
@@ -203,7 +205,7 @@ public class AccountAttributesTest extends BaseAttributesTest {
 
         assertEquals("testGoogleId", updateOptions.getGoogleId());
 
-        AccountAttributes accountAttributes =
+        EntityAttributes<Account> accountAttributes =
                 AccountAttributes.builder("testGoogleId").withIsInstructor(false).build();
 
         accountAttributes.update(updateOptions);
@@ -213,19 +215,19 @@ public class AccountAttributesTest extends BaseAttributesTest {
 
     @Test
     public void testEquals() {
-        AccountAttributes account = createValidAccountAttributesObject();
-        AccountAttributes accountCopy = account.getCopy();
+        EntityAttributes<Account> account = createValidAccountAttributesObject();
+        EntityAttributes<Account> accountCopy = account.getCopy();
 
         // When the two accounts are exact copy of each other
         assertTrue(account.equals(accountCopy));
 
         // When the two accounts have same values but created at different time
-        AccountAttributes accountSimilar = createValidAccountAttributesObject();
+        EntityAttributes<Account> accountSimilar = createValidAccountAttributesObject();
 
         assertTrue(account.equals(accountSimilar));
 
         // When the two accounts are different
-        AccountAttributes accountDifferent = AccountAttributes.builder("another")
+        EntityAttributes<Account> accountDifferent = AccountAttributes.builder("another")
                 .withName("Another Name")
                 .withEmail("Another Email")
                 .withInstitute("Another Institute")
@@ -240,18 +242,18 @@ public class AccountAttributesTest extends BaseAttributesTest {
 
     @Test
     public void testHashCode() {
-        AccountAttributes account = createValidAccountAttributesObject();
-        AccountAttributes accountCopy = account.getCopy();
+        EntityAttributes<Account> account = createValidAccountAttributesObject();
+        EntityAttributes<Account> accountCopy = account.getCopy();
         // When the two accounts are exact copy of each other, they should have the same hash code
         assertTrue(account.hashCode() == accountCopy.hashCode());
 
         // When the two accounts have same values but created at different time,
         // they should have the same hash code
-        AccountAttributes accountSimilar = createValidAccountAttributesObject();
+        EntityAttributes<Account> accountSimilar = createValidAccountAttributesObject();
         assertTrue(account.hashCode() == accountSimilar.hashCode());
 
         // When the two accounts have different values, they should have different hash code
-        AccountAttributes accountDifferent = AccountAttributes.builder("another")
+        EntityAttributes<Account> accountDifferent = AccountAttributes.builder("another")
                 .withName("Another Name")
                 .withEmail("Another Email")
                 .withInstitute("Another Institute")
@@ -267,7 +269,7 @@ public class AccountAttributesTest extends BaseAttributesTest {
                 AccountAttributes.updateOptionsBuilder(null));
     }
 
-    private AccountAttributes createInvalidAccountAttributesObject() {
+    private EntityAttributes<Account> createInvalidAccountAttributesObject() {
 
         String googleId = "invalid google id";
         String name = ""; //invalid name
@@ -283,7 +285,7 @@ public class AccountAttributesTest extends BaseAttributesTest {
                 .build();
     }
 
-    private AccountAttributes createValidAccountAttributesObject() {
+    private EntityAttributes<Account> createValidAccountAttributesObject() {
 
         String googleId = "valid.google.id";
         String name = "valid name";
@@ -299,7 +301,7 @@ public class AccountAttributesTest extends BaseAttributesTest {
                 .build();
     }
 
-    private AccountAttributes createAccountAttributesToSanitize() {
+    private EntityAttributes<Account> createAccountAttributesToSanitize() {
         return AccountAttributes.builder("    google'Id@gmail.com\t")
                         .withName("'n    \t\t    a me'\n\n")
                         .withInstitute("Some\t  \\       institute   \n/")
@@ -307,5 +309,71 @@ public class AccountAttributesTest extends BaseAttributesTest {
                         .withIsInstructor(true)
                         .build();
     }
+
+	@Override
+	protected EntityAttributes<Account> getAccount(EntityAttributes<Account> account) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected StudentProfileAttributes getStudentProfile(StudentProfileAttributes studentProfileAttributes) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected CourseAttributes getCourse(CourseAttributes course) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected EntityAttributes<FeedbackQuestion> getFeedbackQuestion(EntityAttributes<FeedbackQuestion> fq) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected FeedbackResponseCommentAttributes getFeedbackResponseComment(FeedbackResponseCommentAttributes frc) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected FeedbackResponseAttributes getFeedbackResponse(FeedbackResponseAttributes fr) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected FeedbackSessionAttributes getFeedbackSession(FeedbackSessionAttributes fs) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected InstructorAttributes getInstructor(InstructorAttributes instructor) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected StudentAttributes getStudent(StudentAttributes student) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected boolean doRemoveAndRestoreDataBundle(DataBundle testData) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	protected boolean doPutDocuments(DataBundle testData) {
+		// TODO Auto-generated method stub
+		return false;
+	}
 
 }

@@ -43,11 +43,6 @@ public class InstructorCourseDetailsPage extends AppPage {
         super(browser);
     }
 
-    @Override
-    protected boolean containsExpectedPageContents() {
-        return getPageTitle().contains("Course Details");
-    }
-
     public void verifyCourseDetails(CourseAttributes course, InstructorAttributes[] instructors,
                                     int numSections, int numTeams, int numStudents) {
         assertEquals(course.getId(), courseIdField.getText());

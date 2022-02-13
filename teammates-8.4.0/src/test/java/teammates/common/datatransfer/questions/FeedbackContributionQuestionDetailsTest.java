@@ -11,9 +11,18 @@ import teammates.common.datatransfer.CourseRoster;
 import teammates.common.datatransfer.DataBundle;
 import teammates.common.datatransfer.FeedbackParticipantType;
 import teammates.common.datatransfer.SessionResultsBundle;
+import teammates.common.datatransfer.attributes.CourseAttributes;
+import teammates.common.datatransfer.attributes.EntityAttributes;
 import teammates.common.datatransfer.attributes.FeedbackQuestionAttributes;
-import teammates.common.datatransfer.attributes.FeedbackQuestionsVariousAttributes;
+import teammates.common.datatransfer.attributes.FeedbackResponseAttributes;
+import teammates.common.datatransfer.attributes.FeedbackResponseCommentAttributes;
+import teammates.common.datatransfer.attributes.FeedbackSessionAttributes;
+import teammates.common.datatransfer.attributes.InstructorAttributes;
+import teammates.common.datatransfer.attributes.StudentAttributes;
+import teammates.common.datatransfer.attributes.StudentProfileAttributes;
 import teammates.common.util.Const;
+import teammates.storage.entity.Account;
+import teammates.storage.entity.FeedbackQuestion;
 import teammates.test.BaseTestCase;
 
 /**
@@ -74,7 +83,7 @@ public class FeedbackContributionQuestionDetailsTest extends BaseTestCase {
 
         SessionResultsBundle bundle = responsebundle(responseBundle);
 
-        FeedbackQuestionsVariousAttributes fqa;
+        EntityAttributes<FeedbackQuestion> fqa;
 
         ______TS("(student email specified): all students have response");
         question1(feedbackContributionQuestionDetails, responseBundle, bundle);
@@ -103,7 +112,7 @@ public class FeedbackContributionQuestionDetailsTest extends BaseTestCase {
 	 */
 	private void qn3course1(FeedbackContributionQuestionDetails feedbackContributionQuestionDetails,
 			DataBundle responseBundle, SessionResultsBundle bundle) {
-		FeedbackQuestionsVariousAttributes fqa;
+		EntityAttributes<FeedbackQuestion> fqa;
 		fqa = responseBundle.feedbackQuestions.get("qn3InSession1InCourse1");
         assertEquals("{\n"
                 + "  \"results\": {\n"
@@ -210,7 +219,7 @@ public class FeedbackContributionQuestionDetailsTest extends BaseTestCase {
 	 */
 	private void qn2course1(FeedbackContributionQuestionDetails feedbackContributionQuestionDetails,
 			DataBundle responseBundle, SessionResultsBundle bundle) {
-		FeedbackQuestionsVariousAttributes fqa;
+		EntityAttributes<FeedbackQuestion> fqa;
 		fqa = responseBundle.feedbackQuestions.get("qn2InSession1InCourse1");
         assertEquals("{\n"
                         + "  \"results\": {\n"
@@ -317,7 +326,7 @@ public class FeedbackContributionQuestionDetailsTest extends BaseTestCase {
 	 */
 	private void qn1course1(FeedbackContributionQuestionDetails feedbackContributionQuestionDetails,
 			DataBundle responseBundle, SessionResultsBundle bundle) {
-		FeedbackQuestionsVariousAttributes fqa;
+		EntityAttributes<FeedbackQuestion> fqa;
 		fqa = responseBundle.feedbackQuestions.get("qn1InSession1InCourse1");
         assertEquals("{\n"
                 + "  \"results\": {\n"
@@ -424,7 +433,7 @@ public class FeedbackContributionQuestionDetailsTest extends BaseTestCase {
 	 */
 	private void qn3(FeedbackContributionQuestionDetails feedbackContributionQuestionDetails, DataBundle responseBundle,
 			SessionResultsBundle bundle) {
-		FeedbackQuestionsVariousAttributes fqa;
+		EntityAttributes<FeedbackQuestion> fqa;
 		fqa = responseBundle.feedbackQuestions.get("qn3InSession1InCourse1");
         assertEquals("{\n"
                 + "  \"results\": {}\n"
@@ -439,7 +448,7 @@ public class FeedbackContributionQuestionDetailsTest extends BaseTestCase {
 	 */
 	private void qn2(FeedbackContributionQuestionDetails feedbackContributionQuestionDetails, DataBundle responseBundle,
 			SessionResultsBundle bundle) {
-		FeedbackQuestionsVariousAttributes fqa;
+		EntityAttributes<FeedbackQuestion> fqa;
 		fqa = responseBundle.feedbackQuestions.get("qn2InSession1InCourse1");
         assertEquals("{\n"
                 + "  \"results\": {\n"
@@ -467,7 +476,7 @@ public class FeedbackContributionQuestionDetailsTest extends BaseTestCase {
 	 */
 	private void question1(FeedbackContributionQuestionDetails feedbackContributionQuestionDetails,
 			DataBundle responseBundle, SessionResultsBundle bundle) {
-		FeedbackQuestionsVariousAttributes fqa;
+		EntityAttributes<FeedbackQuestion> fqa;
 		fqa = responseBundle.feedbackQuestions.get("qn1InSession1InCourse1");
         assertEquals("{\n"
                 + "  \"results\": {\n"
@@ -609,7 +618,7 @@ public class FeedbackContributionQuestionDetailsTest extends BaseTestCase {
     @Test
     public void testValidateGiverRecipientVisibility() {
         FeedbackContributionQuestionDetails details = new FeedbackContributionQuestionDetails();
-        FeedbackQuestionsVariousAttributes feedbackQuestionAttributes = FeedbackQuestionAttributes.builder()
+        EntityAttributes<FeedbackQuestion> feedbackQuestionAttributes = FeedbackQuestionAttributes.builder()
                 .withCourseId("course")
                 .withFeedbackSessionName("session")
                 .withGiverType(FeedbackParticipantType.STUDENTS)
@@ -696,5 +705,71 @@ public class FeedbackContributionQuestionDetailsTest extends BaseTestCase {
                 feedbackQuestionAttributes.getShowResponsesTo());
 
     }
+
+	@Override
+	protected EntityAttributes<Account> getAccount(EntityAttributes<Account> account) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected StudentProfileAttributes getStudentProfile(StudentProfileAttributes studentProfileAttributes) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected CourseAttributes getCourse(CourseAttributes course) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected EntityAttributes<FeedbackQuestion> getFeedbackQuestion(EntityAttributes<FeedbackQuestion> fq) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected FeedbackResponseCommentAttributes getFeedbackResponseComment(FeedbackResponseCommentAttributes frc) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected FeedbackResponseAttributes getFeedbackResponse(FeedbackResponseAttributes fr) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected FeedbackSessionAttributes getFeedbackSession(FeedbackSessionAttributes fs) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected InstructorAttributes getInstructor(InstructorAttributes instructor) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected StudentAttributes getStudent(StudentAttributes student) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected boolean doRemoveAndRestoreDataBundle(DataBundle testData) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	protected boolean doPutDocuments(DataBundle testData) {
+		// TODO Auto-generated method stub
+		return false;
+	}
 
 }

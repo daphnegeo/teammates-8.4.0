@@ -25,6 +25,7 @@ public class JsonResult extends ActionResult {
 
     private final ApiOutput output;
     private List<Cookie> cookies;
+	private final int statusCode;
 
     JsonResult(ApiOutput output) {
         super(HttpStatus.SC_OK);
@@ -51,7 +52,6 @@ public class JsonResult extends ActionResult {
         return output;
     }
 
-    @Override
     public void send(HttpServletResponse resp) throws IOException {
         output.setRequestId(RequestTracer.getTraceId());
         for (Cookie cookie : cookies) {
@@ -67,5 +67,9 @@ public class JsonResult extends ActionResult {
     List<Cookie> getCookies() {
         return cookies;
     }
+
+	public int getStatusCode() {
+	    return statusCode;
+	}
 
 }

@@ -2,12 +2,23 @@ package teammates.storage.api;
 
 import org.testng.annotations.Test;
 
+import teammates.common.datatransfer.DataBundle;
 import teammates.common.datatransfer.attributes.AccountAttributes;
+import teammates.common.datatransfer.attributes.CourseAttributes;
+import teammates.common.datatransfer.attributes.EntityAttributes;
+import teammates.common.datatransfer.attributes.FeedbackResponseAttributes;
+import teammates.common.datatransfer.attributes.FeedbackResponseCommentAttributes;
+import teammates.common.datatransfer.attributes.FeedbackSessionAttributes;
+import teammates.common.datatransfer.attributes.InstructorAttributes;
+import teammates.common.datatransfer.attributes.StudentAttributes;
+import teammates.common.datatransfer.attributes.StudentProfileAttributes;
 import teammates.common.exception.EntityAlreadyExistsException;
 import teammates.common.exception.EntityDoesNotExistException;
 import teammates.common.exception.InvalidParametersException;
 import teammates.common.util.FieldValidator;
 import teammates.common.util.JsonUtils;
+import teammates.storage.entity.Account;
+import teammates.storage.entity.FeedbackQuestion;
 import teammates.test.AssertHelper;
 import teammates.test.BaseTestCaseWithLocalDatabaseAccess;
 
@@ -20,10 +31,10 @@ public class AccountsDbTest extends BaseTestCaseWithLocalDatabaseAccess {
 
     @Test
     public void testGetAccount() throws Exception {
-        AccountAttributes a = createNewAccount();
+        EntityAttributes<Account> a = createNewAccount();
 
         ______TS("typical success case without");
-        AccountAttributes retrieved = accountsDb.getAccount(a.getGoogleId());
+        EntityAttributes<Account> retrieved = accountsDb.getAccount(a.getGoogleId());
         assertNotNull(retrieved);
 
         ______TS("typical success with student profile");
@@ -86,9 +97,9 @@ public class AccountsDbTest extends BaseTestCaseWithLocalDatabaseAccess {
 
     @Test
     public void testUpdateAccount_noChangeToAccount_shouldNotIssueSaveRequest() throws Exception {
-        AccountAttributes a = createNewAccount();
+        EntityAttributes<Account> a = createNewAccount();
 
-        AccountAttributes updatedAccount =
+        EntityAttributes<Account> updatedAccount =
                 accountsDb.updateAccount(
                         AccountAttributes.updateOptionsBuilder(a.getGoogleId())
                                 .build());
@@ -108,17 +119,17 @@ public class AccountsDbTest extends BaseTestCaseWithLocalDatabaseAccess {
 
     @Test
     public void testUpdateAccount() throws Exception {
-        AccountAttributes a = createNewAccount();
+        EntityAttributes<Account> a = createNewAccount();
 
         ______TS("typical edit success case");
         assertFalse(a.isInstructor());
-        AccountAttributes updatedAccount = accountsDb.updateAccount(
+        EntityAttributes<Account> updatedAccount = accountsDb.updateAccount(
                 AccountAttributes.updateOptionsBuilder(a.getGoogleId())
                         .withIsInstructor(true)
                         .build()
         );
 
-        AccountAttributes actualAccount = accountsDb.getAccount(a.getGoogleId());
+        EntityAttributes<Account> actualAccount = accountsDb.getAccount(a.getGoogleId());
 
         assertTrue(actualAccount.isInstructor());
         assertTrue(updatedAccount.isInstructor());
@@ -144,21 +155,21 @@ public class AccountsDbTest extends BaseTestCaseWithLocalDatabaseAccess {
     // the test is to ensure that optimized saving policy is implemented without false negative
     @Test
     public void testUpdateAccount_singleFieldUpdate_shouldUpdateCorrectly() throws Exception {
-        AccountAttributes typicalAccount = createNewAccount();
+        EntityAttributes<Account> typicalAccount = createNewAccount();
 
         assertFalse(typicalAccount.isInstructor());
-        AccountAttributes updatedAccount = accountsDb.updateAccount(
+        EntityAttributes<Account> updatedAccount = accountsDb.updateAccount(
                 AccountAttributes.updateOptionsBuilder(typicalAccount.getGoogleId())
                         .withIsInstructor(true)
                         .build());
-        AccountAttributes actualAccount = accountsDb.getAccount(typicalAccount.getGoogleId());
+        EntityAttributes<Account> actualAccount = accountsDb.getAccount(typicalAccount.getGoogleId());
         assertTrue(actualAccount.isInstructor());
         assertTrue(updatedAccount.isInstructor());
     }
 
     @Test
     public void testDeleteAccount() throws Exception {
-        AccountAttributes a = createNewAccount();
+        EntityAttributes<Account> a = createNewAccount();
 
         ______TS("silent deletion of non-existent account");
 
@@ -166,12 +177,12 @@ public class AccountsDbTest extends BaseTestCaseWithLocalDatabaseAccess {
         assertNotNull(accountsDb.getAccount(a.getGoogleId()));
 
         ______TS("typical success case");
-        AccountAttributes newAccount = accountsDb.getAccount(a.getGoogleId());
+        EntityAttributes<Account> newAccount = accountsDb.getAccount(a.getGoogleId());
         assertNotNull(newAccount);
 
         accountsDb.deleteAccount(a.getGoogleId());
 
-        AccountAttributes newAccountDeleted = accountsDb.getAccount(a.getGoogleId());
+        EntityAttributes<Account> newAccountDeleted = accountsDb.getAccount(a.getGoogleId());
         assertNull(newAccountDeleted);
 
         ______TS("silent deletion of same account");
@@ -183,12 +194,12 @@ public class AccountsDbTest extends BaseTestCaseWithLocalDatabaseAccess {
                 () -> accountsDb.deleteAccount(null));
     }
 
-    private AccountAttributes createNewAccount() throws Exception {
-        AccountAttributes a = getNewAccountAttributes();
+    private EntityAttributes<Account> createNewAccount() throws Exception {
+        EntityAttributes<Account> a = getNewAccountAttributes();
         return accountsDb.putEntity(a);
     }
 
-    private AccountAttributes getNewAccountAttributes() {
+    private EntityAttributes<Account> getNewAccountAttributes() {
         return AccountAttributes.builder("valid.googleId")
                 .withName("Valid Fresh Account")
                 .withIsInstructor(false)
@@ -196,4 +207,70 @@ public class AccountsDbTest extends BaseTestCaseWithLocalDatabaseAccess {
                 .withInstitute("TEAMMATES Test Institute 1")
                 .build();
     }
+
+	@Override
+	protected EntityAttributes<Account> getAccount(EntityAttributes<Account> account) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected StudentProfileAttributes getStudentProfile(StudentProfileAttributes studentProfileAttributes) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected CourseAttributes getCourse(CourseAttributes course) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected EntityAttributes<FeedbackQuestion> getFeedbackQuestion(EntityAttributes<FeedbackQuestion> fq) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected FeedbackResponseCommentAttributes getFeedbackResponseComment(FeedbackResponseCommentAttributes frc) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected FeedbackResponseAttributes getFeedbackResponse(FeedbackResponseAttributes fr) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected FeedbackSessionAttributes getFeedbackSession(FeedbackSessionAttributes fs) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected InstructorAttributes getInstructor(InstructorAttributes instructor) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected StudentAttributes getStudent(StudentAttributes student) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected boolean doRemoveAndRestoreDataBundle(DataBundle testData) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	protected boolean doPutDocuments(DataBundle testData) {
+		// TODO Auto-generated method stub
+		return false;
+	}
 }

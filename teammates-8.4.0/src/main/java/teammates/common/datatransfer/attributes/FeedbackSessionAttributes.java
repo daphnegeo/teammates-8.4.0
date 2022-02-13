@@ -6,7 +6,6 @@ import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -14,7 +13,6 @@ import teammates.common.datatransfer.questions.FeedbackTextResponseDetails;
 import teammates.common.util.AppUrl;
 import teammates.common.util.Const;
 import teammates.common.util.Const.WebPageURIs;
-import teammates.common.util.FieldValidator;
 import teammates.common.util.SanitizationHelper;
 import teammates.e2e.cases.BaseE2ETestCase;
 import teammates.e2e.cases.FeedbackResultsPageE2ETest;
@@ -23,6 +21,7 @@ import teammates.e2e.cases.InstructorAuditLogsPageE2ETest;
 import teammates.e2e.pageobjects.FeedbackResultsPage;
 import teammates.e2e.pageobjects.FeedbackSubmitPage;
 import teammates.e2e.pageobjects.InstructorAuditLogsPage;
+import teammates.storage.entity.FeedbackQuestion;
 import teammates.storage.entity.FeedbackSession;
 import teammates.test.BaseTestCase;
 
@@ -108,21 +107,6 @@ public class FeedbackSessionAttributes extends EntityAttributes<FeedbackSession>
     }
 
     /**
-     * Gets a deep copy of this object.
-     */
-    public FeedbackSessionAttributes getCopy() {
-        return valueOf(toEntity());
-    }
-
-    public String getCourseId() {
-        return courseId;
-    }
-
-    public String getFeedbackSessionName() {
-        return feedbackSessionName;
-    }
-
-    /**
      * Gets the instructions of the feedback session.
      */
     public String getInstructionsString() {
@@ -131,80 +115,6 @@ public class FeedbackSessionAttributes extends EntityAttributes<FeedbackSession>
         }
 
         return SanitizationHelper.sanitizeForRichText(instructions);
-    }
-
-    @Override
-    public FeedbackSession toEntity() {
-        return new FeedbackSession(feedbackSessionName, courseId, creatorEmail, instructions,
-                createdTime, deletedTime, startTime, endTime, sessionVisibleFromTime, resultsVisibleFromTime,
-                timeZone, getGracePeriodMinutes(),
-                sentOpeningSoonEmail, sentOpenEmail, sentClosingEmail, sentClosedEmail, sentPublishedEmail,
-                isOpeningEmailEnabled, isClosingEmailEnabled, isPublishedEmailEnabled);
-    }
-
-    @Override
-    public List<String> getInvalidityInfo() {
-        List<String> errors = new ArrayList<>();
-
-        // Check for null fields.
-
-        addNonEmptyError(FieldValidator.getValidityInfoForNonNullField(
-                FieldValidator.FEEDBACK_SESSION_NAME_FIELD_NAME, feedbackSessionName), errors);
-
-        addNonEmptyError(FieldValidator.getValidityInfoForNonNullField(
-                FieldValidator.COURSE_ID_FIELD_NAME, courseId), errors);
-
-        addNonEmptyError(FieldValidator.getValidityInfoForNonNullField("instructions to students", instructions), errors);
-
-        addNonEmptyError(FieldValidator.getValidityInfoForNonNullField(
-                "time for the session to become visible", sessionVisibleFromTime), errors);
-
-        addNonEmptyError(FieldValidator.getValidityInfoForNonNullField("session time zone", timeZone), errors);
-
-        addNonEmptyError(FieldValidator.getValidityInfoForNonNullField("creator's email", creatorEmail), errors);
-
-        addNonEmptyError(FieldValidator.getValidityInfoForNonNullField("session creation time", createdTime), errors);
-
-        // Early return if any null fields
-        if (!errors.isEmpty()) {
-            return errors;
-        }
-
-        addNonEmptyError(FieldValidator.getInvalidityInfoForFeedbackSessionName(feedbackSessionName), errors);
-
-        addNonEmptyError(FieldValidator.getInvalidityInfoForCourseId(courseId), errors);
-
-        addNonEmptyError(FieldValidator.getInvalidityInfoForEmail(creatorEmail), errors);
-
-        addNonEmptyError(FieldValidator.getInvalidityInfoForGracePeriod(gracePeriod), errors);
-
-        addNonEmptyError(FieldValidator.getValidityInfoForNonNullField("submission opening time", startTime), errors);
-
-        addNonEmptyError(FieldValidator.getValidityInfoForNonNullField("submission closing time", endTime), errors);
-
-        addNonEmptyError(FieldValidator.getValidityInfoForNonNullField(
-                "time for the responses to become visible", resultsVisibleFromTime), errors);
-
-        // Early return if any null fields
-        if (!errors.isEmpty()) {
-            return errors;
-        }
-
-        addNonEmptyError(FieldValidator.getInvalidityInfoForTimeForSessionStartAndEnd(startTime, endTime), errors);
-
-        addNonEmptyError(FieldValidator.getInvalidityInfoForTimeForVisibilityStartAndSessionStart(
-                sessionVisibleFromTime, startTime), errors);
-
-        Instant actualSessionVisibleFromTime = sessionVisibleFromTime;
-
-        if (actualSessionVisibleFromTime.equals(Const.TIME_REPRESENTS_FOLLOW_OPENING)) {
-            actualSessionVisibleFromTime = startTime;
-        }
-
-        addNonEmptyError(FieldValidator.getInvalidityInfoForTimeForVisibilityStartAndResultsPublish(
-                actualSessionVisibleFromTime, resultsVisibleFromTime), errors);
-
-        return errors;
     }
 
     /**
@@ -333,66 +243,6 @@ public class FeedbackSessionAttributes extends EntityAttributes<FeedbackSession>
      */
     public boolean isCreator(String instructorEmail) {
         return creatorEmail.equals(instructorEmail);
-    }
-
-    @Override
-    public void sanitizeForSaving() {
-        this.instructions = SanitizationHelper.sanitizeForRichText(instructions);
-    }
-
-    @Override
-    public String toString() {
-        return "FeedbackSessionAttributes [feedbackSessionName="
-               + feedbackSessionName + ", courseId=" + courseId
-               + ", creatorEmail=" + creatorEmail + ", instructions=" + instructions
-               + ", createdTime=" + createdTime + ", deletedTime=" + deletedTime
-               + ", startTime=" + startTime
-               + ", endTime=" + endTime + ", sessionVisibleFromTime="
-               + sessionVisibleFromTime + ", resultsVisibleFromTime="
-               + resultsVisibleFromTime + ", timeZone=" + timeZone
-               + ", gracePeriod=" + getGracePeriodMinutes() + "min"
-               + ", sentOpeningSoonEmail=" + sentOpeningSoonEmail
-               + ", sentOpenEmail=" + sentOpenEmail
-               + ", sentClosingEmail=" + sentClosingEmail
-               + ", sentClosedEmail=" + sentClosedEmail
-               + ", sentPublishedEmail=" + sentPublishedEmail
-               + ", isOpeningEmailEnabled=" + isOpeningEmailEnabled
-               + ", isClosingEmailEnabled=" + isClosingEmailEnabled
-               + ", isPublishedEmailEnabled=" + isPublishedEmailEnabled
-               + "]";
-    }
-
-    @Override
-    public int hashCode() {
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(this.feedbackSessionName).append(this.courseId)
-                .append(this.instructions).append(this.creatorEmail);
-        return stringBuilder.toString().hashCode();
-    }
-
-    @Override
-    public boolean equals(Object other) {
-        if (other == null) {
-            return false;
-        } else if (this == other) {
-            return true;
-        } else if (this.getClass() == other.getClass()) {
-            FeedbackSessionAttributes otherFeedbackSession = (FeedbackSessionAttributes) other;
-            return Objects.equals(this.feedbackSessionName, otherFeedbackSession.feedbackSessionName)
-                    && Objects.equals(this.courseId, otherFeedbackSession.courseId)
-                    && Objects.equals(this.instructions, otherFeedbackSession.instructions)
-                    && Objects.equals(this.creatorEmail, otherFeedbackSession.creatorEmail);
-        } else {
-            return false;
-        }
-    }
-
-    public void setFeedbackSessionName(String feedbackSessionName) {
-        this.feedbackSessionName = feedbackSessionName;
-    }
-
-    public void setCourseId(String courseId) {
-        this.courseId = courseId;
     }
 
     public String getCreatorEmail() {
@@ -541,26 +391,6 @@ public class FeedbackSessionAttributes extends EntityAttributes<FeedbackSession>
 
     public void setPublishedEmailEnabled(boolean isPublishedEmailEnabled) {
         this.isPublishedEmailEnabled = isPublishedEmailEnabled;
-    }
-
-    /**
-     * Updates with {@link UpdateOptions}.
-     */
-    public void update(UpdateOptions updateOptions) {
-        updateOptions.instructionsOption.ifPresent(s -> instructions = s);
-        updateOptions.startTimeOption.ifPresent(s -> startTime = s);
-        updateOptions.endTimeOption.ifPresent(s -> endTime = s);
-        updateOptions.sessionVisibleFromTimeOption.ifPresent(s -> sessionVisibleFromTime = s);
-        updateOptions.resultsVisibleFromTimeOption.ifPresent(s -> resultsVisibleFromTime = s);
-        updateOptions.timeZoneOption.ifPresent(s -> timeZone = s);
-        updateOptions.gracePeriodOption.ifPresent(s -> gracePeriod = s);
-        updateOptions.sentOpeningSoonEmailOption.ifPresent(s -> sentOpeningSoonEmail = s);
-        updateOptions.sentOpenEmailOption.ifPresent(s -> sentOpenEmail = s);
-        updateOptions.sentClosingEmailOption.ifPresent(s -> sentClosingEmail = s);
-        updateOptions.sentClosedEmailOption.ifPresent(s -> sentClosedEmail = s);
-        updateOptions.sentPublishedEmailOption.ifPresent(s -> sentPublishedEmail = s);
-        updateOptions.isClosingEmailEnabledOption.ifPresent(s -> isClosingEmailEnabled = s);
-        updateOptions.isPublishedEmailEnabledOption.ifPresent(s -> isPublishedEmailEnabled = s);
     }
 
     /**
@@ -818,7 +648,7 @@ public class FeedbackSessionAttributes extends EntityAttributes<FeedbackSession>
 	    BaseTestCase.______TS("can submit in grace period");
 	    AppUrl gracePeriodSessionUrl = feedbackSubmitPageE2ETest.getStudentSubmitPageUrl(feedbackSubmitPageE2ETest.student, feedbackSubmitPageE2ETest.gracePeriodSession);
 	    submitPage = feedbackSubmitPageE2ETest.getNewPageInstance(gracePeriodSessionUrl, FeedbackSubmitPage.class);
-	    FeedbackQuestionsVariousAttributes question = feedbackSubmitPageE2ETest.testData.feedbackQuestions.get("qn1InGracePeriodSession");
+	    EntityAttributes<FeedbackQuestion> question = feedbackSubmitPageE2ETest.testData.feedbackQuestions.get("qn1InGracePeriodSession");
 	    String questionId = feedbackSubmitPageE2ETest.getFeedbackQuestion(question).getId();
 	    String recipient = "Team 2";
 	    FeedbackResponseAttributes response = feedbackSubmitPageE2ETest.getMcqResponse(questionId, recipient, false, "UI");
@@ -926,7 +756,7 @@ public class FeedbackSessionAttributes extends EntityAttributes<FeedbackSession>
 	            FeedbackSubmitPage.class, instructorAuditLogsPageE2ETest.student.getGoogleId());
 	
 	    StudentAttributes receiver = instructorAuditLogsPageE2ETest.testData.students.get("benny.tmms@IAuditLogs.CS2104");
-	    FeedbackQuestionsVariousAttributes question = instructorAuditLogsPageE2ETest.testData.feedbackQuestions.get("qn1");
+	    EntityAttributes<FeedbackQuestion> question = instructorAuditLogsPageE2ETest.testData.feedbackQuestions.get("qn1");
 	    String questionId = instructorAuditLogsPageE2ETest.getFeedbackQuestion(question).getId();
 	    FeedbackTextResponseDetails details = new FeedbackTextResponseDetails("Response");
 	    FeedbackResponseAttributes response =

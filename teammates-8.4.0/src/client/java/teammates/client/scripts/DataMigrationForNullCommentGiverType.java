@@ -3,6 +3,7 @@ package teammates.client.scripts;
 import com.googlecode.objectify.cmd.Query;
 
 import teammates.common.datatransfer.FeedbackParticipantType;
+import teammates.storage.entity.Account;
 import teammates.storage.entity.FeedbackResponseComment;
 
 /**
@@ -15,12 +16,6 @@ public class DataMigrationForNullCommentGiverType extends
 
     public static void main(String[] args) {
         new DataMigrationForNullCommentGiverType().doOperationRemotely();
-    }
-
-    @Override
-    protected Query<FeedbackResponseComment> getFilterQuery() {
-        return ofy().load().type(FeedbackResponseComment.class)
-                .filter("commentGiverType =", null);
     }
 
     @Override
@@ -40,5 +35,17 @@ public class DataMigrationForNullCommentGiverType extends
 
         saveEntityDeferred(comment);
     }
+
+	@Override
+	protected String generateNewGoogleId(Account oldAccount) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected boolean isMigrationOfGoogleIdNeeded(Account account) {
+		// TODO Auto-generated method stub
+		return false;
+	}
 
 }

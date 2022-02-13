@@ -19,12 +19,6 @@ public class DevServerLoginPage extends AppPage {
         super(browser);
     }
 
-    @Override
-    protected boolean containsExpectedPageContents() {
-        waitForElementVisibility(By.tagName("h3"));
-        return getPageSource().contains("<h3>Not logged in</h3>");
-    }
-
     public void loginAsUser(String username) {
         fillTextBox(emailTextBox, username);
         click(loginButton);

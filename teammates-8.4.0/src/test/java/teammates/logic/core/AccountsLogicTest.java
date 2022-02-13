@@ -3,7 +3,13 @@ package teammates.logic.core;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import teammates.common.datatransfer.DataBundle;
 import teammates.common.datatransfer.attributes.AccountAttributes;
+import teammates.common.datatransfer.attributes.CourseAttributes;
+import teammates.common.datatransfer.attributes.EntityAttributes;
+import teammates.common.datatransfer.attributes.FeedbackResponseAttributes;
+import teammates.common.datatransfer.attributes.FeedbackResponseCommentAttributes;
+import teammates.common.datatransfer.attributes.FeedbackSessionAttributes;
 import teammates.common.datatransfer.attributes.InstructorAttributes;
 import teammates.common.datatransfer.attributes.StudentAttributes;
 import teammates.common.datatransfer.attributes.StudentProfileAttributes;
@@ -13,6 +19,8 @@ import teammates.common.exception.InvalidParametersException;
 import teammates.common.util.FieldValidator;
 import teammates.common.util.StringHelper;
 import teammates.storage.api.AccountsDb;
+import teammates.storage.entity.Account;
+import teammates.storage.entity.FeedbackQuestion;
 import teammates.test.AssertHelper;
 
 /**
@@ -268,7 +276,7 @@ public class AccountsLogicTest extends BaseLogicTest {
                 instructorsLogic.getInstructorForEmail(instructor.getCourseId(), instructor.getEmail());
         assertEquals(loggedInGoogleId, joinedInstructor.getGoogleId());
 
-        AccountAttributes accountCreated = accountsLogic.getAccount(loggedInGoogleId);
+        EntityAttributes<Account> accountCreated = accountsLogic.getAccount(loggedInGoogleId);
         assertNotNull(accountCreated);
 
         ______TS("success: instructor joined but Account object creation goes wrong");
@@ -289,7 +297,7 @@ public class AccountsLogicTest extends BaseLogicTest {
 
         ______TS("success: instructor joined but account already exists");
 
-        AccountAttributes nonInstrAccount = dataBundle.accounts.get("student1InCourse1");
+        EntityAttributes<Account> nonInstrAccount = dataBundle.accounts.get("student1InCourse1");
         InstructorAttributes newIns = InstructorAttributes
                 .builder(instructor.getCourseId(), nonInstrAccount.getEmail())
                 .withName(nonInstrAccount.getName())
@@ -333,7 +341,7 @@ public class AccountsLogicTest extends BaseLogicTest {
         assertEquals(nonInstrAccount.getGoogleId(), joinedInstructor.getGoogleId());
         assertTrue(accountsLogic.isAccountAnInstructor(nonInstrAccount.getGoogleId()));
 
-        AccountAttributes instructorAccount = accountsLogic.getAccount(nonInstrAccount.getGoogleId());
+        EntityAttributes<Account> instructorAccount = accountsLogic.getAccount(nonInstrAccount.getGoogleId());
         assertEquals("TEAMMATES Test Institute 1", instructorAccount.getInstitute());
 
         accountsLogic.deleteAccountCascade(nonInstrAccount.getGoogleId());
@@ -368,7 +376,7 @@ public class AccountsLogicTest extends BaseLogicTest {
     @Test
     public void testDeleteAccountCascade_lastInstructorInCourse_shouldDeleteOrphanCourse() throws Exception {
         InstructorAttributes instructor = dataBundle.instructors.get("instructor5");
-        AccountAttributes account = dataBundle.accounts.get("instructor5");
+        EntityAttributes<Account> account = dataBundle.accounts.get("instructor5");
         // create a profile for the account
         StudentProfileAttributes studentProfile = StudentProfileAttributes.builder(account.getGoogleId())
                 .withShortName("Test")
@@ -451,4 +459,70 @@ public class AccountsLogicTest extends BaseLogicTest {
         assertNotNull(instructorsLogic.getInstructorForEmail(
                 instructor1OfCourse1.getCourseId(), instructor1OfCourse1.getEmail()));
     }
+
+	@Override
+	protected EntityAttributes<Account> getAccount(EntityAttributes<Account> account) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected StudentProfileAttributes getStudentProfile(StudentProfileAttributes studentProfileAttributes) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected CourseAttributes getCourse(CourseAttributes course) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected EntityAttributes<FeedbackQuestion> getFeedbackQuestion(EntityAttributes<FeedbackQuestion> fq) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected FeedbackResponseCommentAttributes getFeedbackResponseComment(FeedbackResponseCommentAttributes frc) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected FeedbackResponseAttributes getFeedbackResponse(FeedbackResponseAttributes fr) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected FeedbackSessionAttributes getFeedbackSession(FeedbackSessionAttributes fs) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected InstructorAttributes getInstructor(InstructorAttributes instructor) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected StudentAttributes getStudent(StudentAttributes student) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected boolean doRemoveAndRestoreDataBundle(DataBundle testData) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	protected boolean doPutDocuments(DataBundle testData) {
+		// TODO Auto-generated method stub
+		return false;
+	}
 }

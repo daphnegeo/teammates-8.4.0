@@ -7,8 +7,8 @@ import java.util.stream.Collectors;
 
 import teammates.common.datatransfer.attributes.AccountAttributes;
 import teammates.common.datatransfer.attributes.CourseAttributes;
+import teammates.common.datatransfer.attributes.EntityAttributes;
 import teammates.common.datatransfer.attributes.FeedbackQuestionAttributes;
-import teammates.common.datatransfer.attributes.FeedbackQuestionsVariousAttributes;
 import teammates.common.datatransfer.attributes.FeedbackResponseAttributes;
 import teammates.common.datatransfer.attributes.FeedbackResponseCommentAttributes;
 import teammates.common.datatransfer.attributes.FeedbackSessionAttributes;
@@ -29,6 +29,7 @@ import teammates.e2e.cases.BaseE2ETestCase;
 import teammates.e2e.cases.StudentHomePageE2ETest;
 import teammates.e2e.pageobjects.StudentHomePage;
 import teammates.logic.core.FeedbackResponseCommentsLogicTest;
+import teammates.storage.entity.FeedbackQuestion;
 import teammates.test.BaseTestCase;
 import teammates.ui.output.InstructorPrivilegeData;
 import teammates.ui.output.MessageOutput;
@@ -370,7 +371,7 @@ public class DataBundle {
 	public void testExecute_invalidGiverRecipientType_shouldThrowException(UpdateFeedbackQuestionActionTest updateFeedbackQuestionActionTest) {
 	    InstructorAttributes instructor1ofCourse1 = instructors.get("instructor1OfCourse1");
 	    FeedbackSessionAttributes session = feedbackSessions.get("session1InCourse1");
-	    FeedbackQuestionsVariousAttributes typicalQuestion =
+	    EntityAttributes<FeedbackQuestion> typicalQuestion =
 	            updateFeedbackQuestionActionTest.logic.getFeedbackQuestion(session.getFeedbackSessionName(), session.getCourseId(), 1);
 	
 	    updateFeedbackQuestionActionTest.loginAsInstructor(instructor1ofCourse1.getGoogleId());
@@ -392,7 +393,7 @@ public class DataBundle {
 	public void testExecute_invalidRecommendedLength_shouldThrowException(UpdateFeedbackQuestionActionTest updateFeedbackQuestionActionTest) {
 	    InstructorAttributes instructor1ofCourse1 = instructors.get("instructor1OfCourse1");
 	    FeedbackSessionAttributes session = feedbackSessions.get("session1InCourse1");
-	    FeedbackQuestionsVariousAttributes typicalQuestion =
+	    EntityAttributes<FeedbackQuestion> typicalQuestion =
 	            updateFeedbackQuestionActionTest.logic.getFeedbackQuestion(session.getFeedbackSessionName(), session.getCourseId(), 1);
 	
 	    updateFeedbackQuestionActionTest.loginAsInstructor(instructor1ofCourse1.getGoogleId());
@@ -420,7 +421,7 @@ public class DataBundle {
 	public void testExecute_invalidQuestionNumber_shouldThrowException(UpdateFeedbackQuestionActionTest updateFeedbackQuestionActionTest) {
 	    InstructorAttributes instructor1ofCourse1 = instructors.get("instructor1OfCourse1");
 	    FeedbackSessionAttributes session = feedbackSessions.get("session1InCourse1");
-	    FeedbackQuestionsVariousAttributes typicalQuestion =
+	    EntityAttributes<FeedbackQuestion> typicalQuestion =
 	            updateFeedbackQuestionActionTest.logic.getFeedbackQuestion(session.getFeedbackSessionName(), session.getCourseId(), 1);
 	
 	    updateFeedbackQuestionActionTest.loginAsInstructor(instructor1ofCourse1.getGoogleId());

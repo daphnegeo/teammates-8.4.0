@@ -5,7 +5,8 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
-import teammates.common.datatransfer.attributes.FeedbackQuestionsVariousAttributes;
+import teammates.common.datatransfer.attributes.EntityAttributes;
+import teammates.storage.entity.FeedbackQuestion;
 
 /**
  * Contains specific structure and processing logic for text feedback questions.
@@ -58,7 +59,7 @@ public class FeedbackTextQuestionDetails extends FeedbackQuestionDetails {
     }
 
     @Override
-    public String validateGiverRecipientVisibility(FeedbackQuestionsVariousAttributes feedbackQuestionAttributes) {
+    public String validateGiverRecipientVisibility(EntityAttributes<FeedbackQuestion> feedbackQuestionAttributes) {
         return "";
     }
 

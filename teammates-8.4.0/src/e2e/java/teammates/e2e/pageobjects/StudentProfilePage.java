@@ -57,11 +57,6 @@ public class StudentProfilePage extends AppPage {
         super(browser);
     }
 
-    @Override
-    protected boolean containsExpectedPageContents() {
-        return getPageTitle().contains("Student Profile");
-    }
-
     public void editProfileThroughUi(String shortName, String email, String institute,
                                      String nationality, StudentProfileAttributes.Gender gender, String moreInfo) {
         fillShortName(shortName);

@@ -15,6 +15,7 @@ import teammates.common.util.Const;
 import teammates.common.util.FieldValidator;
 import teammates.common.util.JsonUtils;
 import teammates.common.util.StringHelper;
+import teammates.storage.entity.Account;
 import teammates.storage.entity.FeedbackQuestion;
 
 /**
@@ -27,7 +28,7 @@ public class FeedbackQuestionAttributesTest extends BaseAttributesTest {
     @Override
     @Test
     public void testToEntity() {
-        FeedbackQuestionsVariousAttributes fqa = getNewFeedbackQuestionAttributes();
+        EntityAttributes<FeedbackQuestion> fqa = getNewFeedbackQuestionAttributes();
         FeedbackQuestion expectedQuestion = new FeedbackQuestion(fqa.getFeedbackSessionName(), fqa.getCourseId(),
                 fqa.getSerializedQuestionDetails(), fqa.getQuestionDescription(), fqa.getQuestionNumber(),
                 fqa.getQuestionType(), fqa.getGiverType(), fqa.getRecipientType(), fqa.getNumberOfEntitiesToGiveFeedbackTo(),
@@ -61,7 +62,7 @@ public class FeedbackQuestionAttributesTest extends BaseAttributesTest {
                 new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
         qn.setFeedbackQuestionId(1L);
 
-        FeedbackQuestionsVariousAttributes feedbackQuestionAttributes = feedbackQuestionAttributesMethod(qn);
+        EntityAttributes<FeedbackQuestion> feedbackQuestionAttributes = feedbackQuestionAttributesMethod(qn);
 
         assertEquals(qn.getCreatedAt(), feedbackQuestionAttributes.getCreatedAt());
         assertEquals(qn.getUpdatedAt(), feedbackQuestionAttributes.getUpdatedAt());
@@ -71,8 +72,8 @@ public class FeedbackQuestionAttributesTest extends BaseAttributesTest {
 	 * @param qn
 	 * @return
 	 */
-	private FeedbackQuestionsVariousAttributes feedbackQuestionAttributesMethod(FeedbackQuestion qn) {
-		FeedbackQuestionsVariousAttributes feedbackQuestionAttributes = FeedbackQuestionAttributes.valueOf(qn);
+	private EntityAttributes<FeedbackQuestion> feedbackQuestionAttributesMethod(FeedbackQuestion qn) {
+		EntityAttributes<FeedbackQuestion> feedbackQuestionAttributes = FeedbackQuestionAttributes.valueOf(qn);
 
         assertEquals(qn.getId(), feedbackQuestionAttributes.getId());
         assertEquals(qn.getFeedbackSessionName(), feedbackQuestionAttributes.getFeedbackSessionName());
@@ -109,7 +110,7 @@ public class FeedbackQuestionAttributesTest extends BaseAttributesTest {
         assertNull(qn.getShowRecipientNameTo());
         assertNull(qn.getShowResponsesTo());
 
-        FeedbackQuestionsVariousAttributes feedbackQuestionAttributes = FeedbackQuestionAttributes.valueOf(qn);
+        EntityAttributes<FeedbackQuestion> feedbackQuestionAttributes = FeedbackQuestionAttributes.valueOf(qn);
 
         assertEquals(qn.getId(), feedbackQuestionAttributes.getId());
         assertEquals(qn.getFeedbackSessionName(), feedbackQuestionAttributes.getFeedbackSessionName());
@@ -141,7 +142,7 @@ public class FeedbackQuestionAttributesTest extends BaseAttributesTest {
 
         qn.setFeedbackQuestionId(1L);
 
-        FeedbackQuestionsVariousAttributes feedbackQuestionAttributes = FeedbackQuestionAttributes.valueOf(qn);
+        EntityAttributes<FeedbackQuestion> feedbackQuestionAttributes = FeedbackQuestionAttributes.valueOf(qn);
 
         feedbackQuestionAttributes.getShowResponsesTo().add(FeedbackParticipantType.STUDENTS);
         feedbackQuestionAttributes.getShowGiverNameTo().add(FeedbackParticipantType.STUDENTS);
@@ -158,7 +159,7 @@ public class FeedbackQuestionAttributesTest extends BaseAttributesTest {
         participants.add(FeedbackParticipantType.OWN_TEAM_MEMBERS);
         participants.add(FeedbackParticipantType.RECEIVER);
 
-        FeedbackQuestionsVariousAttributes feedbackQuestionAttributes = FeedbackQuestionAttributes.builder()
+        EntityAttributes<FeedbackQuestion> feedbackQuestionAttributes = FeedbackQuestionAttributes.builder()
                 .withCourseId("testingCourse")
                 .withFeedbackSessionName("testFeedbackSession")
                 .withGiverType(FeedbackParticipantType.INSTRUCTORS)
@@ -201,7 +202,7 @@ public class FeedbackQuestionAttributesTest extends BaseAttributesTest {
                 + "  \"questionText\": \"normal question\"\n"
                 + "}";
         qn.setQuestionText(jsonQuestionText);
-        FeedbackQuestionsVariousAttributes fqaJson = FeedbackQuestionAttributes.valueOf(qn);
+        EntityAttributes<FeedbackQuestion> fqaJson = FeedbackQuestionAttributes.valueOf(qn);
         assertEquals("normal question", fqaJson.getQuestionDetails().getQuestionText());
         assertEquals(70, ((FeedbackTextQuestionDetails) fqaJson.getQuestionDetails()).getRecommendedLength().intValue());
     }
@@ -283,7 +284,7 @@ public class FeedbackQuestionAttributesTest extends BaseAttributesTest {
 
     @Test
     public void testBuilder_withDescriptionNull_shouldBuildCorrectAttributes() {
-        FeedbackQuestionsVariousAttributes feedbackQuestionAttributes = FeedbackQuestionAttributes.builder()
+        EntityAttributes<FeedbackQuestion> feedbackQuestionAttributes = FeedbackQuestionAttributes.builder()
                 .withQuestionDescription(null)
                 .build();
 
@@ -305,7 +306,7 @@ public class FeedbackQuestionAttributesTest extends BaseAttributesTest {
         List<FeedbackParticipantType> participants = new ArrayList<>();
         participants.add(FeedbackParticipantType.RECEIVER);
 
-        FeedbackQuestionsVariousAttributes feedbackQuestionAttributes = FeedbackQuestionAttributes.builder()
+        EntityAttributes<FeedbackQuestion> feedbackQuestionAttributes = FeedbackQuestionAttributes.builder()
                 .withFeedbackSessionName(feedbackSession)
                 .withCourseId(courseId)
                 .withQuestionDetails(questionDetails)
@@ -339,7 +340,7 @@ public class FeedbackQuestionAttributesTest extends BaseAttributesTest {
 
     @Test
     public void testBuilder_buildNothing_shouldUseDefaultValues() {
-        FeedbackQuestionsVariousAttributes observedFeedbackQuestionAttributes =
+        EntityAttributes<FeedbackQuestion> observedFeedbackQuestionAttributes =
                 FeedbackQuestionAttributes.builder().build();
 
         assertEquals(0, observedFeedbackQuestionAttributes.getQuestionNumber());
@@ -372,7 +373,7 @@ public class FeedbackQuestionAttributesTest extends BaseAttributesTest {
         showResponseToList.add(FeedbackParticipantType.NONE);
         showResponseToList.add(FeedbackParticipantType.SELF);
 
-        FeedbackQuestionsVariousAttributes fq = FeedbackQuestionAttributes.builder()
+        EntityAttributes<FeedbackQuestion> fq = FeedbackQuestionAttributes.builder()
                 .withFeedbackSessionName("")
                 .withCourseId("")
                 .withGiverType(FeedbackParticipantType.NONE)
@@ -486,7 +487,7 @@ public class FeedbackQuestionAttributesTest extends BaseAttributesTest {
 
         ______TS("Text question: new Json format");
 
-        FeedbackQuestionsVariousAttributes fq = typicalBundle.feedbackQuestions.get("qn5InSession1InCourse1");
+        EntityAttributes<FeedbackQuestion> fq = typicalBundle.feedbackQuestions.get("qn5InSession1InCourse1");
         FeedbackTextQuestionDetails questionDetails = new FeedbackTextQuestionDetails("New format text question");
         fq.setQuestionDetails(questionDetails);
 
@@ -511,7 +512,7 @@ public class FeedbackQuestionAttributesTest extends BaseAttributesTest {
         List<FeedbackParticipantType> participantsForShowResponseTo = new ArrayList<>(participants);
         participantsForShowResponseTo.add(FeedbackParticipantType.STUDENTS);
 
-        FeedbackQuestionsVariousAttributes question = FeedbackQuestionAttributes.builder()
+        EntityAttributes<FeedbackQuestion> question = FeedbackQuestionAttributes.builder()
                 .withFeedbackSessionName("test session")
                 .withCourseId("some course")
                 .withQuestionDetails(new FeedbackTextQuestionDetails("test qn from teams->none."))
@@ -651,7 +652,7 @@ public class FeedbackQuestionAttributesTest extends BaseAttributesTest {
 
     @Test
     public void testGetQuestionDetails_shouldDoDeepCopy() {
-        FeedbackQuestionsVariousAttributes fqa = getNewFeedbackQuestionAttributes();
+        EntityAttributes<FeedbackQuestion> fqa = getNewFeedbackQuestionAttributes();
         FeedbackQuestionDetails details = fqa.getQuestionDetailsCopy();
         fqa.getQuestionDetails().setQuestionText("updated question");
 
@@ -661,7 +662,7 @@ public class FeedbackQuestionAttributesTest extends BaseAttributesTest {
 
     @Test
     public void testSetQuestionDetails_shouldDoDeepCopy() {
-        FeedbackQuestionsVariousAttributes fqa = getNewFeedbackQuestionAttributes();
+        EntityAttributes<FeedbackQuestion> fqa = getNewFeedbackQuestionAttributes();
         FeedbackQuestionDetails details = new FeedbackTextQuestionDetails("my question");
         fqa.setQuestionDetails(details);
         details.setQuestionText("updated question");
@@ -688,7 +689,7 @@ public class FeedbackQuestionAttributesTest extends BaseAttributesTest {
 
         assertEquals("questionId", updateOptions.getFeedbackQuestionId());
 
-        FeedbackQuestionsVariousAttributes questionAttributes =
+        EntityAttributes<FeedbackQuestion> questionAttributes =
                 FeedbackQuestionAttributes.builder()
                         .withCourseId("courseId")
                         .withFeedbackSessionName("session")
@@ -726,7 +727,7 @@ public class FeedbackQuestionAttributesTest extends BaseAttributesTest {
                         .withQuestionDescription(null)
                         .build();
 
-        FeedbackQuestionsVariousAttributes questionAttributes =
+        EntityAttributes<FeedbackQuestion> questionAttributes =
                 FeedbackQuestionAttributes.builder()
                         .withCourseId("courseId")
                         .withFeedbackSessionName("session")
@@ -804,20 +805,20 @@ public class FeedbackQuestionAttributesTest extends BaseAttributesTest {
 
     @Test
     public void testEquals() {
-        FeedbackQuestionsVariousAttributes feedbackQuestion = getNewFeedbackQuestionAttributes();
+        EntityAttributes<FeedbackQuestion> feedbackQuestion = getNewFeedbackQuestionAttributes();
 
         // When the two feedback questions are copies of each other
-        FeedbackQuestionsVariousAttributes feedbackQuestionCopy = getNewFeedbackQuestionAttributes();
+        EntityAttributes<FeedbackQuestion> feedbackQuestionCopy = getNewFeedbackQuestionAttributes();
 
         assertTrue(feedbackQuestion.equals(feedbackQuestionCopy));
 
         // When the two feedback questions have same values but created at different time
-        FeedbackQuestionsVariousAttributes feedbackQuestionSimilar = getNewFeedbackQuestionAttributes();
+        EntityAttributes<FeedbackQuestion> feedbackQuestionSimilar = getNewFeedbackQuestionAttributes();
 
         assertTrue(feedbackQuestion.equals(feedbackQuestionSimilar));
 
         // When the two feedback questions are different
-        FeedbackQuestionsVariousAttributes feedbackQuestionDifferent = FeedbackQuestionAttributes.builder()
+        EntityAttributes<FeedbackQuestion> feedbackQuestionDifferent = FeedbackQuestionAttributes.builder()
                 .withCourseId("differentCourse")
                 .withFeedbackSessionName("testFeedbackSession")
                 .build();
@@ -830,21 +831,21 @@ public class FeedbackQuestionAttributesTest extends BaseAttributesTest {
 
     @Test
     public void testHashCode() {
-        FeedbackQuestionsVariousAttributes feedbackQuestion = getNewFeedbackQuestionAttributes();
+        EntityAttributes<FeedbackQuestion> feedbackQuestion = getNewFeedbackQuestionAttributes();
 
         // When the two feedback questions are copies of each other, they should have the same hash code
-        FeedbackQuestionsVariousAttributes feedbackQuestionCopy = getNewFeedbackQuestionAttributes();
+        EntityAttributes<FeedbackQuestion> feedbackQuestionCopy = getNewFeedbackQuestionAttributes();
 
         assertTrue(feedbackQuestion.hashCode() == feedbackQuestionCopy.hashCode());
 
         // When the two feedback questions have same values but created at different time,
         // they should still have the same hash code
-        FeedbackQuestionsVariousAttributes feedbackQuestionSimilar = getNewFeedbackQuestionAttributes();
+        EntityAttributes<FeedbackQuestion> feedbackQuestionSimilar = getNewFeedbackQuestionAttributes();
 
         assertTrue(feedbackQuestion.hashCode() == feedbackQuestionSimilar.hashCode());
 
         // When the two feedback questions are different, they should have different hash code
-        FeedbackQuestionsVariousAttributes feedbackQuestionDifferent = FeedbackQuestionAttributes.builder()
+        EntityAttributes<FeedbackQuestion> feedbackQuestionDifferent = FeedbackQuestionAttributes.builder()
                 .withCourseId("differentCourse")
                 .withFeedbackSessionName("testFeedbackSession")
                 .build();
@@ -852,7 +853,7 @@ public class FeedbackQuestionAttributesTest extends BaseAttributesTest {
         assertFalse(feedbackQuestion.hashCode() == feedbackQuestionDifferent.hashCode());
     }
 
-    private FeedbackQuestionsVariousAttributes getNewFeedbackQuestionAttributes() {
+    private EntityAttributes<FeedbackQuestion> getNewFeedbackQuestionAttributes() {
         FeedbackTextQuestionDetails questionDetails = new FeedbackTextQuestionDetails("Question text.");
 
         List<FeedbackParticipantType> participants = new ArrayList<>();
@@ -872,5 +873,71 @@ public class FeedbackQuestionAttributesTest extends BaseAttributesTest {
                 .withShowResponsesTo(new ArrayList<>(participants))
                 .build();
     }
+
+	@Override
+	protected EntityAttributes<Account> getAccount(EntityAttributes<Account> account) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected StudentProfileAttributes getStudentProfile(StudentProfileAttributes studentProfileAttributes) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected CourseAttributes getCourse(CourseAttributes course) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected EntityAttributes<FeedbackQuestion> getFeedbackQuestion(EntityAttributes<FeedbackQuestion> fq) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected FeedbackResponseCommentAttributes getFeedbackResponseComment(FeedbackResponseCommentAttributes frc) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected FeedbackResponseAttributes getFeedbackResponse(FeedbackResponseAttributes fr) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected FeedbackSessionAttributes getFeedbackSession(FeedbackSessionAttributes fs) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected InstructorAttributes getInstructor(InstructorAttributes instructor) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected StudentAttributes getStudent(StudentAttributes student) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected boolean doRemoveAndRestoreDataBundle(DataBundle testData) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	protected boolean doPutDocuments(DataBundle testData) {
+		// TODO Auto-generated method stub
+		return false;
+	}
 
 }

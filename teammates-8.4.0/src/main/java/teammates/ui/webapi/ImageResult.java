@@ -14,6 +14,7 @@ import org.apache.http.HttpStatus;
 class ImageResult extends ActionResult {
 
     private byte[] bytes;
+	private final int statusCode;
 
     ImageResult() {
         super(HttpStatus.SC_NO_CONTENT);
@@ -29,7 +30,6 @@ class ImageResult extends ActionResult {
         return this.bytes;
     }
 
-    @Override
     public void send(HttpServletResponse resp) throws IOException {
         String contentType = URLConnection.guessContentTypeFromStream(new ByteArrayInputStream(bytes));
 
@@ -42,5 +42,9 @@ class ImageResult extends ActionResult {
         resp.setContentType(contentType);
         resp.getOutputStream().write(bytes);
     }
+
+	public int getStatusCode() {
+	    return statusCode;
+	}
 
 }

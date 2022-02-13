@@ -36,11 +36,6 @@ public class InstructorStudentRecordsPage extends AppPage {
         super(browser);
     }
 
-    @Override
-    protected boolean containsExpectedPageContents() {
-        return getPageSource().contains("'s Records");
-    }
-
     public void verifyIsCorrectPage(String courseId, String studentName) {
         String expected = String.format("%s's Records - %s", studentName, courseId);
         assertEquals(expected, headerText.getText());

@@ -24,11 +24,6 @@ public class InstructorStudentListPage extends AppPage {
         super(browser);
     }
 
-    @Override
-    protected boolean containsExpectedPageContents() {
-        return getPageSource().contains("Students");
-    }
-
     private List<WebElement> getCoursesTabs() {
         return browser.driver.findElements(By.className("course-table"));
     }

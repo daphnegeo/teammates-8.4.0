@@ -1,11 +1,12 @@
 package teammates.ui.webapi;
 
 import teammates.common.datatransfer.FeedbackParticipantType;
-import teammates.common.datatransfer.attributes.FeedbackQuestionsVariousAttributes;
+import teammates.common.datatransfer.attributes.EntityAttributes;
 import teammates.common.datatransfer.attributes.FeedbackResponseAttributes;
 import teammates.common.datatransfer.attributes.FeedbackResponseCommentAttributes;
 import teammates.common.datatransfer.attributes.InstructorAttributes;
 import teammates.common.datatransfer.attributes.StudentAttributes;
+import teammates.storage.entity.FeedbackQuestion;
 
 /**
  * Basic action class for feedback response comment related operation.
@@ -17,7 +18,7 @@ abstract class BasicCommentSubmissionAction extends BasicFeedbackSubmissionActio
     /**
      * Validates the questionType of the corresponding question.
      */
-    void validQuestionForCommentInSubmission(FeedbackQuestionsVariousAttributes feedbackQuestion) {
+    void validQuestionForCommentInSubmission(EntityAttributes<FeedbackQuestion> feedbackQuestion) {
         if (!feedbackQuestion.getQuestionDetailsCopy().isFeedbackParticipantCommentsOnResponsesAllowed()) {
             throw new InvalidHttpParameterException("Invalid question type for comment in submission");
         }
@@ -40,7 +41,7 @@ abstract class BasicCommentSubmissionAction extends BasicFeedbackSubmissionActio
      * Verify response ownership for student.
      */
     void verifyResponseOwnerShipForStudent(StudentAttributes student, FeedbackResponseAttributes response,
-                                           FeedbackQuestionsVariousAttributes question)
+                                           EntityAttributes<FeedbackQuestion> question)
             throws UnauthorizedAccessException {
 
         if (question.getGiverType() == FeedbackParticipantType.TEAMS

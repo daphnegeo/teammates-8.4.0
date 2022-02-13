@@ -10,9 +10,8 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 
 import teammates.common.datatransfer.DataBundle;
-import teammates.common.datatransfer.attributes.AccountAttributes;
 import teammates.common.datatransfer.attributes.CourseAttributes;
-import teammates.common.datatransfer.attributes.FeedbackQuestionsVariousAttributes;
+import teammates.common.datatransfer.attributes.EntityAttributes;
 import teammates.common.datatransfer.attributes.FeedbackResponseAttributes;
 import teammates.common.datatransfer.attributes.FeedbackResponseCommentAttributes;
 import teammates.common.datatransfer.attributes.FeedbackSessionAttributes;
@@ -29,6 +28,8 @@ import teammates.e2e.pageobjects.HomePage;
 import teammates.e2e.util.BackDoor;
 import teammates.e2e.util.EmailAccount;
 import teammates.e2e.util.TestProperties;
+import teammates.storage.entity.Account;
+import teammates.storage.entity.FeedbackQuestion;
 import teammates.test.BaseTestCaseWithDatabaseAccess;
 import teammates.test.FileHelper;
 import teammates.test.ThreadHelper;
@@ -215,12 +216,12 @@ public abstract class BaseE2ETestCase extends BaseTestCaseWithDatabaseAccess {
         }
     }
 
-    AccountAttributes getAccount(String googleId) {
+    EntityAttributes<Account> getAccount(String googleId) {
         return BACKDOOR.getAccount(googleId);
     }
 
     @Override
-    protected AccountAttributes getAccount(AccountAttributes account) {
+    protected EntityAttributes<Account> getAccount(EntityAttributes<Account> account) {
         return getAccount(account.getGoogleId());
     }
 
@@ -243,12 +244,12 @@ public abstract class BaseE2ETestCase extends BaseTestCaseWithDatabaseAccess {
         return BACKDOOR.getArchivedCourse(instructorId, courseId);
     }
 
-    FeedbackQuestionsVariousAttributes getFeedbackQuestion(String courseId, String feedbackSessionName, int qnNumber) {
+    EntityAttributes<FeedbackQuestion> getFeedbackQuestion(String courseId, String feedbackSessionName, int qnNumber) {
         return BACKDOOR.getFeedbackQuestion(courseId, feedbackSessionName, qnNumber);
     }
 
     @Override
-    protected FeedbackQuestionsVariousAttributes getFeedbackQuestion(FeedbackQuestionsVariousAttributes fq) {
+    protected EntityAttributes<FeedbackQuestion> getFeedbackQuestion(EntityAttributes<FeedbackQuestion> fq) {
         return getFeedbackQuestion(fq.getCourseId(), fq.getFeedbackSessionName(), fq.getQuestionNumber());
     }
 

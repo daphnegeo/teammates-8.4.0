@@ -12,6 +12,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.stream.Collectors;
 
 import com.google.cloud.datastore.Cursor;
 import com.google.cloud.datastore.QueryResults;
@@ -19,7 +20,16 @@ import com.googlecode.objectify.Key;
 import com.googlecode.objectify.cmd.Query;
 
 import teammates.client.connector.DatastoreClient;
+import teammates.client.util.BackDoor;
+import teammates.client.util.ClientProperties;
+import teammates.common.datatransfer.DataBundle;
+import teammates.common.datatransfer.attributes.InstructorAttributes;
+import teammates.common.util.Config;
+import teammates.storage.entity.Account;
 import teammates.storage.entity.BaseEntity;
+import teammates.storage.entity.CourseStudent;
+import teammates.storage.entity.Instructor;
+import teammates.storage.entity.StudentProfile;
 import teammates.test.FileHelper;
 
 /**
@@ -64,11 +74,6 @@ public abstract class DataMigrationEntitiesBaseScript<T extends BaseEntity> exte
 
         entitiesSavingBuffer = new ArrayList<>();
     }
-
-    /**
-     * Gets the query for the entities that need data migration.
-     */
-    protected abstract Query<T> getFilterQuery();
 
     /**
      * If true, the script will not perform actual data migration.
@@ -286,7 +291,96 @@ public abstract class DataMigrationEntitiesBaseScript<T extends BaseEntity> exte
         log("[ERROR]" + logLine);
     }
 
-    /**
+    @Override
+	protected Query<Account> getFilterQuery() {
+	    return ofy().load().type(Account.class);
+	}
+
+	@Override
+	protected boolean isMigrationNeeded(Account account) {
+	    if (!isMigrationOfGoogleIdNeeded(account)) {
+	        return false;
+	    }
+	
+	    String newGoogleId = generateNewGoogleId(account);
+	    log(String.format("Going to migrate account with googleId %s to new googleId %s",
+	            account.getGoogleId(), newGoogleId));
+	
+	    return true;
+	}
+
+	@Override
+	protected void migrateEntity(Account oldAccount) throws Exception {
+	    String oldGoogleId = oldAccount.getGoogleId();
+	    String newGoogleId = generateNewGoogleId(oldAccount);
+	
+	    Key<Account> oldAccountKey = Key.create(Account.class, oldAccount.getGoogleId());
+	    Key<StudentProfile> oldStudentProfileKey = Key.create(oldAccountKey, StudentProfile.class, oldGoogleId);
+	    StudentProfile oldStudentProfile = ofy().load().key(oldStudentProfileKey).now();
+	
+	    List<CourseStudent> oldStudents = ofy().load().type(CourseStudent.class)
+	            .filter("googleId =", oldGoogleId).list();
+	
+	    List<Instructor> oldInstructors = ofy().load().type(Instructor.class)
+	            .filter("googleId =", oldGoogleId).list();
+	
+	    // update students and instructors
+	
+	    if (!oldStudents.isEmpty()) {
+	        oldStudents.forEach(student -> student.setGoogleId(newGoogleId));
+	        ofy().save().entities(oldStudents).now();
+	    }
+	
+	    if (!oldInstructors.isEmpty()) {
+	        oldInstructors.forEach(instructor -> instructor.setGoogleId(newGoogleId));
+	        ofy().save().entities(oldInstructors).now();
+	
+	        DataBundle bundle = new DataBundle();
+	        oldInstructors.stream()
+	                .map(InstructorAttributes::valueOf)
+	                .collect(Collectors.toList())
+	                .forEach(instructor -> bundle.instructors.put(instructor.getEmail(), instructor));
+	        BackDoor.getInstance().putDocuments(bundle);
+	    }
+	
+	    // recreate account and student profile
+	
+	    oldAccount.setGoogleId(newGoogleId);
+	    if (ofy().load().type(Account.class).id(newGoogleId).now() == null) {
+	        ofy().save().entity(oldAccount).now();
+	    } else {
+	        log(String.format("Skip creation of new account as account (%s) already exists", newGoogleId));
+	    }
+	    ofy().delete().type(Account.class).id(oldGoogleId).now();
+	
+	    if (oldStudentProfile != null) {
+	        if (!ClientProperties.isTargetUrlDevServer()) {
+	            Storage storage = StorageOptions.newBuilder().setProjectId(Config.APP_ID).build().getService();
+	            Blob blob = storage.get(Config.PRODUCTION_GCS_BUCKETNAME, oldGoogleId);
+	            blob.copyTo(Config.PRODUCTION_GCS_BUCKETNAME, newGoogleId);
+	            blob.delete();
+	        }
+	
+	        oldStudentProfile.setGoogleId(newGoogleId);
+	        ofy().save().entity(oldStudentProfile).now();
+	        ofy().delete().key(oldStudentProfileKey).now();
+	    }
+	
+	    log(String.format("Complete migration for account with googleId %s. The new googleId is %s",
+	            oldGoogleId, newGoogleId));
+	}
+
+	/**
+	 * Checks whether the googleId of the {@code account} is needed to be migrated or not.
+	 */
+	protected abstract boolean isMigrationOfGoogleIdNeeded(Account account);
+
+	/**
+	 * Generates a new googleId based on the {@code oldAccount}.
+	 */
+	protected abstract String generateNewGoogleId(Account oldAccount);
+
+	/**
      * Returns true if {@code text} contains at least one of the {@code strings} or if {@code strings} is empty.
      * If {@code text} is null, false is returned.
      */

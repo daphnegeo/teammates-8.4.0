@@ -5,13 +5,14 @@ import java.util.List;
 
 import teammates.common.datatransfer.DataBundle;
 import teammates.common.datatransfer.FeedbackParticipantType;
-import teammates.common.datatransfer.attributes.FeedbackQuestionsVariousAttributes;
+import teammates.common.datatransfer.attributes.EntityAttributes;
 import teammates.common.datatransfer.attributes.FeedbackResponseAttributes;
 import teammates.common.datatransfer.attributes.FeedbackResponseCommentAttributes;
 import teammates.common.datatransfer.attributes.FeedbackSessionAttributes;
 import teammates.common.datatransfer.attributes.InstructorAttributes;
 import teammates.common.util.Const;
 import teammates.common.util.Const.ParamsNames;
+import teammates.storage.entity.FeedbackQuestion;
 import teammates.test.BaseTestCase;
 import teammates.ui.request.FeedbackQuestionUpdateRequest;
 import teammates.ui.webapi.UpdateFeedbackQuestionAction;
@@ -22,7 +23,7 @@ import teammates.ui.webapi.UpdateFeedbackQuestionActionTest;
  */
 public class LogicExtension extends Logic {
 
-    public FeedbackQuestionsVariousAttributes getFeedbackQuestion(
+    public EntityAttributes<FeedbackQuestion> getFeedbackQuestion(
             String feedbackSessionName, String courseId, int questionNumber) {
         return feedbackQuestionsLogic.getFeedbackQuestion(feedbackSessionName, courseId, questionNumber);
     }
@@ -55,7 +56,7 @@ public class LogicExtension extends Logic {
 	    updateFeedbackQuestionActionTest.loginAsInstructor(instructor1ofCourse1.getGoogleId());
 	
 	    FeedbackSessionAttributes fs = dataBundle.feedbackSessions.get("contribSession");
-	    FeedbackQuestionsVariousAttributes fq =
+	    EntityAttributes<FeedbackQuestion> fq =
 	            getFeedbackQuestion(fs.getFeedbackSessionName(), fs.getCourseId(), 1);
 	
 	    BaseTestCase.______TS("Edit text won't delete response");

@@ -2,7 +2,7 @@ package teammates.ui.webapi;
 
 import org.apache.http.HttpStatus;
 
-import teammates.common.datatransfer.attributes.FeedbackQuestionsVariousAttributes;
+import teammates.common.datatransfer.attributes.EntityAttributes;
 import teammates.common.datatransfer.attributes.FeedbackResponseAttributes;
 import teammates.common.datatransfer.attributes.FeedbackResponseCommentAttributes;
 import teammates.common.datatransfer.attributes.FeedbackSessionAttributes;
@@ -11,6 +11,7 @@ import teammates.common.datatransfer.attributes.StudentAttributes;
 import teammates.common.exception.InvalidParametersException;
 import teammates.common.util.Const;
 import teammates.common.util.StringHelper;
+import teammates.storage.entity.FeedbackQuestion;
 import teammates.ui.output.FeedbackResponseCommentData;
 import teammates.ui.request.Intent;
 
@@ -42,7 +43,7 @@ class GetFeedbackResponseCommentAction extends BasicCommentSubmissionAction {
         FeedbackSessionAttributes feedbackSession =
                 getNonNullFeedbackSession(feedbackResponseAttributes.getFeedbackSessionName(),
                         feedbackResponseAttributes.getCourseId());
-        FeedbackQuestionsVariousAttributes feedbackQuestion =
+        EntityAttributes<FeedbackQuestion> feedbackQuestion =
                 logic.getFeedbackQuestion(feedbackResponseAttributes.getFeedbackQuestionId());
 
         verifyInstructorCanSeeQuestionIfInModeration(feedbackQuestion);

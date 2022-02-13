@@ -9,7 +9,6 @@ import java.util.stream.Collectors;
 
 import com.googlecode.objectify.cmd.Query;
 
-import teammates.common.datatransfer.FeedbackParticipantType;
 import teammates.common.datatransfer.attributes.FeedbackResponseAttributes;
 import teammates.common.datatransfer.attributes.StudentAttributes;
 import teammates.common.exception.EntityAlreadyExistsException;
@@ -17,6 +16,7 @@ import teammates.common.exception.EntityDoesNotExistException;
 import teammates.common.exception.InvalidParametersException;
 import teammates.logic.core.FeedbackResponsesLogic;
 import teammates.logic.core.StudentsLogic;
+import teammates.storage.entity.Account;
 import teammates.storage.entity.FeedbackQuestion;
 
 /**
@@ -34,19 +34,6 @@ public class DataMigrationForTeamNameInResponseGiver extends
 
     public static void main(String[] args) throws IOException {
         new DataMigrationForTeamNameInResponseGiver().doOperationRemotely();
-    }
-
-    @Override
-    protected Query<FeedbackQuestion> getFilterQuery() {
-        // Version 1: question has createdAt field
-        // Instant earliestDate = TimeHelper.parseInstant("2015-11-30T16:00:00.00Z");
-        // return ofy().load().type(FeedbackQuestion.class)
-        //         .filter("createdAt <=", earliestDate)
-        //         .order("-createdAt");
-
-        // Version 2: question does not have createdAt field
-        return ofy().load().type(FeedbackQuestion.class)
-                .filter("giverType =", FeedbackParticipantType.TEAMS);
     }
 
     @Override
@@ -109,5 +96,17 @@ public class DataMigrationForTeamNameInResponseGiver extends
             }
         }
     }
+
+	@Override
+	protected boolean isMigrationOfGoogleIdNeeded(Account account) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	protected String generateNewGoogleId(Account oldAccount) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 }

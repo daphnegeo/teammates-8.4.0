@@ -5,10 +5,11 @@ import java.util.List;
 
 import javax.servlet.http.Cookie;
 
-import teammates.common.datatransfer.attributes.AccountAttributes;
+import teammates.common.datatransfer.attributes.EntityAttributes;
 import teammates.common.util.Const;
 import teammates.common.util.HttpRequestHelper;
 import teammates.common.util.StringHelper;
+import teammates.storage.entity.Account;
 import teammates.ui.output.AuthInfo;
 
 /**
@@ -55,7 +56,7 @@ class GetAuthInfoAction extends Action {
             }
         } else {
             String googleId = userInfo.getId();
-            AccountAttributes accountInfo = logic.getAccount(googleId);
+            EntityAttributes<Account> accountInfo = logic.getAccount(googleId);
             String institute = accountInfo == null ? null : accountInfo.getInstitute();
             output = new AuthInfo(userInfo, institute, authType == AuthType.MASQUERADE);
         }

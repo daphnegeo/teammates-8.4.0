@@ -2,11 +2,11 @@ package teammates.client.scripts;
 
 import com.googlecode.objectify.cmd.Query;
 
+import teammates.common.datatransfer.attributes.EntityAttributes;
 import teammates.common.datatransfer.attributes.FeedbackQuestionAttributes;
-import teammates.common.datatransfer.attributes.FeedbackQuestionsVariousAttributes;
 import teammates.common.datatransfer.questions.FeedbackConstantSumDistributePointsType;
 import teammates.common.datatransfer.questions.FeedbackConstantSumQuestionDetails;
-import teammates.common.datatransfer.questions.FeedbackQuestionType;
+import teammates.storage.entity.Account;
 import teammates.storage.entity.FeedbackQuestion;
 
 /**
@@ -22,19 +22,13 @@ public class DataMigrationForConstSumForceUnevenDistribution extends
     }
 
     @Override
-    protected Query<FeedbackQuestion> getFilterQuery() {
-        return ofy().load().type(FeedbackQuestion.class)
-                .filter("questionType =", FeedbackQuestionType.CONSTSUM.name());
-    }
-
-    @Override
     protected boolean isPreview() {
         return true;
     }
 
     @Override
     protected boolean isMigrationNeeded(FeedbackQuestion question) {
-        FeedbackQuestionsVariousAttributes fqa = FeedbackQuestionAttributes.valueOf(question);
+        EntityAttributes<FeedbackQuestion> fqa = FeedbackQuestionAttributes.valueOf(question);
         FeedbackConstantSumQuestionDetails fcsqd = (FeedbackConstantSumQuestionDetails) fqa.getQuestionDetails();
 
         return fcsqd.isForceUnevenDistribution()
@@ -43,7 +37,7 @@ public class DataMigrationForConstSumForceUnevenDistribution extends
 
     @Override
     protected void migrateEntity(FeedbackQuestion question) {
-        FeedbackQuestionsVariousAttributes fqa = FeedbackQuestionAttributes.valueOf(question);
+        EntityAttributes<FeedbackQuestion> fqa = FeedbackQuestionAttributes.valueOf(question);
         FeedbackConstantSumQuestionDetails fcsqd = (FeedbackConstantSumQuestionDetails) fqa.getQuestionDetails();
 
         fcsqd.setDistributePointsFor(
@@ -53,5 +47,17 @@ public class DataMigrationForConstSumForceUnevenDistribution extends
 
         saveEntityDeferred(question);
     }
+
+	@Override
+	protected boolean isMigrationOfGoogleIdNeeded(Account account) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	protected String generateNewGoogleId(Account oldAccount) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 }

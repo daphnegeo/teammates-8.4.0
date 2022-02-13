@@ -5,8 +5,17 @@ import org.testng.annotations.Test;
 import teammates.common.datatransfer.DataBundle;
 import teammates.common.datatransfer.InstructorPermissionSet;
 import teammates.common.datatransfer.InstructorPrivileges;
+import teammates.common.datatransfer.attributes.CourseAttributes;
+import teammates.common.datatransfer.attributes.EntityAttributes;
+import teammates.common.datatransfer.attributes.FeedbackResponseAttributes;
+import teammates.common.datatransfer.attributes.FeedbackResponseCommentAttributes;
+import teammates.common.datatransfer.attributes.FeedbackSessionAttributes;
 import teammates.common.datatransfer.attributes.InstructorAttributes;
+import teammates.common.datatransfer.attributes.StudentAttributes;
+import teammates.common.datatransfer.attributes.StudentProfileAttributes;
 import teammates.common.util.Const;
+import teammates.storage.entity.Account;
+import teammates.storage.entity.FeedbackQuestion;
 import teammates.ui.output.InstructorPrivilegeData;
 
 /**
@@ -24,49 +33,6 @@ public class GetInstructorPrivilegeActionTest extends BaseActionTest<GetInstruct
     @Override
     protected String getRequestMethod() {
         return GET;
-    }
-
-    @Override
-    protected void prepareTestData() {
-        dataBundle = getTypicalDataBundle();
-        InstructorAttributes instructor1ofCourse1 = dataBundle.instructors.get("instructor1OfCourse1");
-        String section1 = dataBundle.students.get("student1InCourse1").getSection();
-        String session1 = dataBundle.feedbackSessions.get("session1InCourse1").getFeedbackSessionName();
-        InstructorPrivileges privileges = instructor1ofCourse1.getPrivileges();
-        // update section privilege for testing purpose.
-
-        // course level privilege
-        privileges.updatePrivilege(Const.InstructorPermissions.CAN_MODIFY_COURSE, true);
-        privileges.updatePrivilege(Const.InstructorPermissions.CAN_MODIFY_STUDENT, true);
-        privileges.updatePrivilege(Const.InstructorPermissions.CAN_MODIFY_SESSION, false);
-        privileges.updatePrivilege(Const.InstructorPermissions.CAN_MODIFY_INSTRUCTOR, false);
-
-        privileges.updatePrivilege(Const.InstructorPermissions.CAN_VIEW_STUDENT_IN_SECTIONS, false);
-
-        privileges.updatePrivilege(Const.InstructorPermissions.CAN_VIEW_SESSION_IN_SECTIONS, false);
-        privileges.updatePrivilege(Const.InstructorPermissions.CAN_SUBMIT_SESSION_IN_SECTIONS, false);
-        privileges.updatePrivilege(
-                Const.InstructorPermissions.CAN_MODIFY_SESSION_COMMENT_IN_SECTIONS, false);
-
-        // section level privilege
-        privileges.updatePrivilege(section1,
-                Const.InstructorPermissions.CAN_VIEW_STUDENT_IN_SECTIONS, true);
-        privileges.updatePrivilege(section1,
-                Const.InstructorPermissions.CAN_MODIFY_SESSION_COMMENT_IN_SECTIONS, true);
-
-        // session level privilege
-        privileges.updatePrivilege(section1, session1,
-                Const.InstructorPermissions.CAN_VIEW_SESSION_IN_SECTIONS, true);
-        privileges.updatePrivilege(section1, session1,
-                Const.InstructorPermissions.CAN_SUBMIT_SESSION_IN_SECTIONS, true);
-        privileges.updatePrivilege(section1, session1,
-                Const.InstructorPermissions.CAN_MODIFY_SESSION_COMMENT_IN_SECTIONS, true);
-
-        instructor1ofCourse1.setPrivileges(privileges);
-
-        instructor1ofCourse1.setRole(Const.InstructorPermissionRoleNames.INSTRUCTOR_PERMISSION_ROLE_CUSTOM);
-        dataBundle.instructors.put("instructor1OfCourse1", instructor1ofCourse1);
-        removeAndRestoreDataBundle(dataBundle);
     }
 
     @Test
@@ -223,5 +189,71 @@ public class GetInstructorPrivilegeActionTest extends BaseActionTest<GetInstruct
         verifyAccessibleForInstructorsOfTheSameCourse(submissionParams);
         verifyAccessibleForAdmin(submissionParams);
     }
+
+	@Override
+	protected EntityAttributes<Account> getAccount(EntityAttributes<Account> account) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected StudentProfileAttributes getStudentProfile(StudentProfileAttributes studentProfileAttributes) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected CourseAttributes getCourse(CourseAttributes course) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected EntityAttributes<FeedbackQuestion> getFeedbackQuestion(EntityAttributes<FeedbackQuestion> fq) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected FeedbackResponseCommentAttributes getFeedbackResponseComment(FeedbackResponseCommentAttributes frc) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected FeedbackResponseAttributes getFeedbackResponse(FeedbackResponseAttributes fr) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected FeedbackSessionAttributes getFeedbackSession(FeedbackSessionAttributes fs) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected InstructorAttributes getInstructor(InstructorAttributes instructor) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected StudentAttributes getStudent(StudentAttributes student) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected boolean doRemoveAndRestoreDataBundle(DataBundle testData) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	protected boolean doPutDocuments(DataBundle testData) {
+		// TODO Auto-generated method stub
+		return false;
+	}
 
 }

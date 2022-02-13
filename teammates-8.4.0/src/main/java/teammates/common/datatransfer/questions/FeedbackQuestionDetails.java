@@ -4,8 +4,9 @@ import java.util.List;
 
 import teammates.common.datatransfer.FeedbackParticipantType;
 import teammates.common.datatransfer.SessionResultsBundle;
-import teammates.common.datatransfer.attributes.FeedbackQuestionsVariousAttributes;
+import teammates.common.datatransfer.attributes.EntityAttributes;
 import teammates.common.util.JsonUtils;
+import teammates.storage.entity.FeedbackQuestion;
 
 /**
  * A class holding the details for a specific question type.
@@ -17,6 +18,9 @@ import teammates.common.util.JsonUtils;
 public abstract class FeedbackQuestionDetails {
     private FeedbackQuestionType questionType;
     private String questionText;
+	protected int minOptionsToBeRanked;
+	protected int maxOptionsToBeRanked;
+	protected boolean areDuplicatesAllowed;
 
     protected FeedbackQuestionDetails(FeedbackQuestionType questionType) {
         this.questionType = questionType;
@@ -32,7 +36,7 @@ public abstract class FeedbackQuestionDetails {
      */
     @SuppressWarnings("PMD.EmptyMethodInAbstractClassShouldBeAbstract")
     public String getQuestionResultStatisticsJson(
-            FeedbackQuestionsVariousAttributes question, String studentEmail, SessionResultsBundle bundle) {
+            EntityAttributes<FeedbackQuestion> question, String studentEmail, SessionResultsBundle bundle) {
         // Statistics are calculated in the front-end as it is dependent on the responses being filtered.
         // The only exception is contribution question, where there is only one statistics for the entire question.
         // It is also necessary to calculate contribution question statistics here
@@ -76,7 +80,7 @@ public abstract class FeedbackQuestionDetails {
      * <p>Override in Feedback*QuestionDetails if necessary.
      * @return error message detailing the error, or an empty string if valid.
      */
-    public abstract String validateGiverRecipientVisibility(FeedbackQuestionsVariousAttributes feedbackQuestionAttributes);
+    public abstract String validateGiverRecipientVisibility(EntityAttributes<FeedbackQuestion> feedbackQuestionAttributes);
 
     /**
      * Checks whether instructor comments are allowed for the question.
@@ -93,7 +97,7 @@ public abstract class FeedbackQuestionDetails {
     /**
      * Checks whether missing responses should be generated.
      */
-    public boolean shouldGenerateMissingResponses(FeedbackQuestionsVariousAttributes question) {
+    public boolean shouldGenerateMissingResponses(EntityAttributes<FeedbackQuestion> question) {
         // generate combinations against all students/teams are meaningless
         return question.getRecipientType() != FeedbackParticipantType.STUDENTS
                 && question.getRecipientType() != FeedbackParticipantType.TEAMS;
@@ -152,4 +156,28 @@ public abstract class FeedbackQuestionDetails {
     public void setQuestionText(String questionText) {
         this.questionText = questionText;
     }
+
+	public int getMinOptionsToBeRanked() {
+	    return minOptionsToBeRanked;
+	}
+
+	public void setMinOptionsToBeRanked(int minOptionsToBeRanked) {
+	    this.minOptionsToBeRanked = minOptionsToBeRanked;
+	}
+
+	public int getMaxOptionsToBeRanked() {
+	    return maxOptionsToBeRanked;
+	}
+
+	public void setMaxOptionsToBeRanked(int maxOptionsToBeRanked) {
+	    this.maxOptionsToBeRanked = maxOptionsToBeRanked;
+	}
+
+	public boolean isAreDuplicatesAllowed() {
+	    return areDuplicatesAllowed;
+	}
+
+	public void setAreDuplicatesAllowed(boolean areDuplicatesAllowed) {
+	    this.areDuplicatesAllowed = areDuplicatesAllowed;
+	}
 }

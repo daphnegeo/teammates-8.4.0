@@ -5,10 +5,20 @@ import java.util.List;
 
 import org.testng.annotations.Test;
 
-import teammates.common.datatransfer.attributes.AccountAttributes;
+import teammates.common.datatransfer.DataBundle;
+import teammates.common.datatransfer.attributes.CourseAttributes;
+import teammates.common.datatransfer.attributes.EntityAttributes;
+import teammates.common.datatransfer.attributes.FeedbackResponseAttributes;
+import teammates.common.datatransfer.attributes.FeedbackResponseCommentAttributes;
+import teammates.common.datatransfer.attributes.FeedbackSessionAttributes;
+import teammates.common.datatransfer.attributes.InstructorAttributes;
+import teammates.common.datatransfer.attributes.StudentAttributes;
+import teammates.common.datatransfer.attributes.StudentProfileAttributes;
 import teammates.common.util.Const;
 import teammates.common.util.FieldValidator;
 import teammates.common.util.SanitizationHelper;
+import teammates.storage.entity.Account;
+import teammates.storage.entity.FeedbackQuestion;
 import teammates.ui.request.InvalidHttpRequestBodyException;
 import teammates.ui.request.StudentProfileUpdateRequest;
 
@@ -26,7 +36,7 @@ public class UpdateStudentProfileActionTest extends BaseActionTest<UpdateStudent
         return PUT;
     }
 
-    private void testActionWithInvalidParameters(AccountAttributes student) throws Exception {
+    private void testActionWithInvalidParameters(EntityAttributes<Account> student) throws Exception {
         loginAsStudent(student.getGoogleId());
         ______TS("Failure case: invalid parameters");
 
@@ -54,7 +64,7 @@ public class UpdateStudentProfileActionTest extends BaseActionTest<UpdateStudent
         assertEquals(String.join(System.lineSeparator(), expectedErrorMessages), ihrbe.getMessage());
     }
 
-    private void testActionWithScriptInjection(AccountAttributes student) throws Exception {
+    private void testActionWithScriptInjection(EntityAttributes<Account> student) throws Exception {
         loginAsStudent(student.getGoogleId());
         ______TS("Failure case: invalid parameters with attempted script injection");
 
@@ -90,7 +100,7 @@ public class UpdateStudentProfileActionTest extends BaseActionTest<UpdateStudent
         assertEquals(String.join(System.lineSeparator(), expectedErrorMessages), ihrbe.getMessage());
     }
 
-    private void testActionSuccess(AccountAttributes student, String caseDescription) {
+    private void testActionSuccess(EntityAttributes<Account> student, String caseDescription) {
         String[] submissionParams = createValidParam(student.getGoogleId());
         StudentProfileUpdateRequest req = createValidRequestForProfile();
         loginAsStudent(student.getGoogleId());
@@ -101,7 +111,7 @@ public class UpdateStudentProfileActionTest extends BaseActionTest<UpdateStudent
         getJsonResult(action);
     }
 
-    private void testActionInMasqueradeMode(AccountAttributes student) {
+    private void testActionInMasqueradeMode(EntityAttributes<Account> student) {
 
         ______TS("Typical case: masquerade mode");
         loginAsAdmin();
@@ -175,8 +185,8 @@ public class UpdateStudentProfileActionTest extends BaseActionTest<UpdateStudent
     }
 
     private void testActionForbidden() {
-        AccountAttributes student1 = typicalBundle.accounts.get("student1InCourse1");
-        AccountAttributes student2 = typicalBundle.accounts.get("student2InCourse1");
+        EntityAttributes<Account> student1 = typicalBundle.accounts.get("student1InCourse1");
+        EntityAttributes<Account> student2 = typicalBundle.accounts.get("student2InCourse1");
 
         loginAsStudent(student2.getGoogleId());
 
@@ -185,4 +195,70 @@ public class UpdateStudentProfileActionTest extends BaseActionTest<UpdateStudent
         String[] submissionParams = createValidParam(student1.getGoogleId());
         verifyCannotAccess(submissionParams);
     }
+
+	@Override
+	protected EntityAttributes<Account> getAccount(EntityAttributes<Account> account) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected StudentProfileAttributes getStudentProfile(StudentProfileAttributes studentProfileAttributes) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected CourseAttributes getCourse(CourseAttributes course) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected EntityAttributes<FeedbackQuestion> getFeedbackQuestion(EntityAttributes<FeedbackQuestion> fq) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected FeedbackResponseCommentAttributes getFeedbackResponseComment(FeedbackResponseCommentAttributes frc) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected FeedbackResponseAttributes getFeedbackResponse(FeedbackResponseAttributes fr) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected FeedbackSessionAttributes getFeedbackSession(FeedbackSessionAttributes fs) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected InstructorAttributes getInstructor(InstructorAttributes instructor) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected StudentAttributes getStudent(StudentAttributes student) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected boolean doRemoveAndRestoreDataBundle(DataBundle testData) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	protected boolean doPutDocuments(DataBundle testData) {
+		// TODO Auto-generated method stub
+		return false;
+	}
 }

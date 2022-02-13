@@ -2,10 +2,10 @@ package teammates.client.scripts;
 
 import com.googlecode.objectify.cmd.Query;
 
+import teammates.common.datatransfer.attributes.EntityAttributes;
 import teammates.common.datatransfer.attributes.FeedbackQuestionAttributes;
-import teammates.common.datatransfer.attributes.FeedbackQuestionsVariousAttributes;
-import teammates.common.datatransfer.questions.FeedbackQuestionType;
 import teammates.common.datatransfer.questions.FeedbackTextQuestionDetails;
+import teammates.storage.entity.Account;
 import teammates.storage.entity.FeedbackQuestion;
 
 /**
@@ -21,26 +21,20 @@ public class DataMigrationForTextQuestionRecommendedLength extends
     }
 
     @Override
-    protected Query<FeedbackQuestion> getFilterQuery() {
-        return ofy().load().type(FeedbackQuestion.class)
-                .filter("questionType =", FeedbackQuestionType.TEXT.name());
-    }
-
-    @Override
     protected boolean isPreview() {
         return true;
     }
 
     @Override
     protected boolean isMigrationNeeded(FeedbackQuestion question) {
-        FeedbackQuestionsVariousAttributes fqa = FeedbackQuestionAttributes.valueOf(question);
+        EntityAttributes<FeedbackQuestion> fqa = FeedbackQuestionAttributes.valueOf(question);
         FeedbackTextQuestionDetails ftqd = (FeedbackTextQuestionDetails) fqa.getQuestionDetails();
         return ftqd.getRecommendedLength() != null && ftqd.getRecommendedLength() == 0;
     }
 
     @Override
     protected void migrateEntity(FeedbackQuestion question) {
-        FeedbackQuestionsVariousAttributes fqa = FeedbackQuestionAttributes.valueOf(question);
+        EntityAttributes<FeedbackQuestion> fqa = FeedbackQuestionAttributes.valueOf(question);
         FeedbackTextQuestionDetails ftqd = (FeedbackTextQuestionDetails) fqa.getQuestionDetails();
         ftqd.setRecommendedLength(null);
 
@@ -48,5 +42,17 @@ public class DataMigrationForTextQuestionRecommendedLength extends
 
         saveEntityDeferred(question);
     }
+
+	@Override
+	protected boolean isMigrationOfGoogleIdNeeded(Account account) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	protected String generateNewGoogleId(Account oldAccount) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 }

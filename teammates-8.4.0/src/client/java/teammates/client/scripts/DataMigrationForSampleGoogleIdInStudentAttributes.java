@@ -2,6 +2,7 @@ package teammates.client.scripts;
 
 import com.googlecode.objectify.cmd.Query;
 
+import teammates.storage.entity.Account;
 import teammates.storage.entity.CourseStudent;
 
 /**
@@ -14,22 +15,6 @@ public class DataMigrationForSampleGoogleIdInStudentAttributes
         DataMigrationForSampleGoogleIdInStudentAttributes migrator =
                 new DataMigrationForSampleGoogleIdInStudentAttributes();
         migrator.doOperationRemotely();
-    }
-
-    @Override
-    protected Query<CourseStudent> getFilterQuery() {
-        String sampleGoogleId = "alice.b.tmms.sampleData";
-        // Uncomment the google ID to be removed as necessary
-        // sampleGoogleId = "benny.c.tmms.sampleData";
-        // sampleGoogleId = "charlie.d.tmms.sampleData";
-        // sampleGoogleId = "danny.e.tmms.sampleData";
-        // sampleGoogleId = "emma.f.tmms.sampleData";
-        // sampleGoogleId = "francis.g.tmms.sampleData";
-        // sampleGoogleId = "gene.h.tmms.sampleData";
-        // sampleGoogleId = "teammates.demo.instructor";
-
-        return ofy().load().type(CourseStudent.class)
-                .filter("googleId =", sampleGoogleId);
     }
 
     @Override
@@ -48,4 +33,16 @@ public class DataMigrationForSampleGoogleIdInStudentAttributes
 
         saveEntityDeferred(student);
     }
+
+	@Override
+	protected boolean isMigrationOfGoogleIdNeeded(Account account) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	protected String generateNewGoogleId(Account oldAccount) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

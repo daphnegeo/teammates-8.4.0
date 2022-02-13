@@ -13,9 +13,8 @@ import com.googlecode.objectify.ObjectifyService;
 import com.googlecode.objectify.util.Closeable;
 
 import teammates.common.datatransfer.DataBundle;
-import teammates.common.datatransfer.attributes.AccountAttributes;
 import teammates.common.datatransfer.attributes.CourseAttributes;
-import teammates.common.datatransfer.attributes.FeedbackQuestionsVariousAttributes;
+import teammates.common.datatransfer.attributes.EntityAttributes;
 import teammates.common.datatransfer.attributes.FeedbackResponseAttributes;
 import teammates.common.datatransfer.attributes.FeedbackResponseCommentAttributes;
 import teammates.common.datatransfer.attributes.FeedbackSessionAttributes;
@@ -25,6 +24,8 @@ import teammates.common.datatransfer.attributes.StudentProfileAttributes;
 import teammates.logic.api.LogicExtension;
 import teammates.logic.core.LogicStarter;
 import teammates.storage.api.OfyHelper;
+import teammates.storage.entity.Account;
+import teammates.storage.entity.FeedbackQuestion;
 import teammates.storage.search.InstructorSearchManager;
 import teammates.storage.search.SearchManagerFactory;
 import teammates.storage.search.StudentSearchManager;
@@ -44,6 +45,7 @@ public abstract class BaseTestCaseWithLocalDatabaseAccess extends BaseTestCaseWi
             .build();
     private final LogicExtension logic = new LogicExtension();
     private Closeable closeable;
+	protected DataBundle dataBundle;
 
     @BeforeSuite
     public void setupDbLayer() throws Exception {
@@ -86,7 +88,7 @@ public abstract class BaseTestCaseWithLocalDatabaseAccess extends BaseTestCaseWi
     }
 
     @Override
-    protected AccountAttributes getAccount(AccountAttributes account) {
+    protected EntityAttributes<Account> getAccount(EntityAttributes<Account> account) {
         return logic.getAccount(account.getGoogleId());
     }
 
@@ -101,7 +103,7 @@ public abstract class BaseTestCaseWithLocalDatabaseAccess extends BaseTestCaseWi
     }
 
     @Override
-    protected FeedbackQuestionsVariousAttributes getFeedbackQuestion(FeedbackQuestionsVariousAttributes fq) {
+    protected EntityAttributes<FeedbackQuestion> getFeedbackQuestion(EntityAttributes<FeedbackQuestion> fq) {
         return logic.getFeedbackQuestion(fq.getFeedbackSessionName(), fq.getCourseId(), fq.getQuestionNumber());
     }
 
@@ -159,5 +161,16 @@ public abstract class BaseTestCaseWithLocalDatabaseAccess extends BaseTestCaseWi
             return false;
         }
     }
+
+	@BeforeMethod
+	public void baseClassSetup() {
+	    prepareTestData();
+	}
+
+	void prepareTestData() {
+	    dataBundle = getTypicalDataBundle();
+	    removeAndRestoreTypicalDataBundle();
+	    putDocuments(dataBundle);
+	}
 
 }

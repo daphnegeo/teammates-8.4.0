@@ -9,14 +9,18 @@ import org.testng.annotations.Test;
 
 import teammates.common.datatransfer.DataBundle;
 import teammates.common.datatransfer.FeedbackParticipantType;
-import teammates.common.datatransfer.attributes.FeedbackQuestionsVariousAttributes;
+import teammates.common.datatransfer.attributes.CourseAttributes;
+import teammates.common.datatransfer.attributes.EntityAttributes;
 import teammates.common.datatransfer.attributes.FeedbackResponseAttributes;
 import teammates.common.datatransfer.attributes.FeedbackResponseCommentAttributes;
 import teammates.common.datatransfer.attributes.FeedbackSessionAttributes;
 import teammates.common.datatransfer.attributes.InstructorAttributes;
 import teammates.common.datatransfer.attributes.StudentAttributes;
+import teammates.common.datatransfer.attributes.StudentProfileAttributes;
 import teammates.common.util.Const;
 import teammates.common.util.StringHelper;
+import teammates.storage.entity.Account;
+import teammates.storage.entity.FeedbackQuestion;
 import teammates.ui.output.CommentVisibilityType;
 import teammates.ui.output.FeedbackResponseCommentData;
 import teammates.ui.request.FeedbackResponseCommentCreateRequest;
@@ -51,46 +55,6 @@ public class CreateFeedbackResponseCommentActionTest extends BaseActionTest<Crea
     @Override
     protected String getRequestMethod() {
         return POST;
-    }
-
-    @Override
-    protected void prepareTestData() {
-        DataBundle dataBundle = loadDataBundle("/FeedbackResponseCommentCRUDTest.json");
-        removeAndRestoreDataBundle(dataBundle);
-
-        instructor1OfCourse1 = dataBundle.instructors.get("instructor1OfCourse1");
-        instructor2OfCourse1 = dataBundle.instructors.get("instructor2OfCourse1");
-        helperOfCourse1 = dataBundle.instructors.get("helperOfCourse1");
-        student1InCourse1 = dataBundle.students.get("student1InCourse1");
-        student2InCourse1 = dataBundle.students.get("student2InCourse1");
-        student3InCourse1 = dataBundle.students.get("student3InCourse1");
-        session1InCourse1 = dataBundle.feedbackSessions.get("session1InCourse1");
-        FeedbackQuestionsVariousAttributes qn1InSession1InCourse1 = logic.getFeedbackQuestion(
-                session1InCourse1.getFeedbackSessionName(), session1InCourse1.getCourseId(), 1);
-        FeedbackQuestionsVariousAttributes qn2InSession1InCourse1 = logic.getFeedbackQuestion(
-                session1InCourse1.getFeedbackSessionName(), session1InCourse1.getCourseId(), 2);
-        FeedbackQuestionsVariousAttributes qn3InSession1InCourse1 = logic.getFeedbackQuestion(
-                session1InCourse1.getFeedbackSessionName(), session1InCourse1.getCourseId(), 3);
-        FeedbackQuestionsVariousAttributes qn4InSession1InCourse1 = logic.getFeedbackQuestion(
-                session1InCourse1.getFeedbackSessionName(), session1InCourse1.getCourseId(), 4);
-        FeedbackQuestionsVariousAttributes qn5InSession1InCourse1 = logic.getFeedbackQuestion(
-                session1InCourse1.getFeedbackSessionName(), session1InCourse1.getCourseId(), 5);
-        FeedbackQuestionsVariousAttributes qn6InSession1InCourse1 = logic.getFeedbackQuestion(
-                session1InCourse1.getFeedbackSessionName(), session1InCourse1.getCourseId(), 6);
-        response1ForQ1 = logic.getFeedbackResponse(qn1InSession1InCourse1.getId(),
-                instructor1OfCourse1.getEmail(), instructor1OfCourse1.getEmail());
-        response1ForQ2 = logic.getFeedbackResponse(qn2InSession1InCourse1.getId(),
-                instructor1OfCourse1.getEmail(), student1InCourse1.getEmail());
-        response1ForQ3 = logic.getFeedbackResponse(qn3InSession1InCourse1.getId(),
-                student1InCourse1.getEmail(), student1InCourse1.getEmail());
-        response2ForQ3 = logic.getFeedbackResponse(qn3InSession1InCourse1.getId(),
-                student2InCourse1.getEmail(), student2InCourse1.getEmail());
-        response2ForQ4 = logic.getFeedbackResponse(qn4InSession1InCourse1.getId(),
-                student1InCourse1.getTeam(), student1InCourse1.getTeam());
-        response1ForQ5 = logic.getFeedbackResponse(qn5InSession1InCourse1.getId(),
-                instructor1OfCourse1.getEmail(), instructor1OfCourse1.getEmail());
-        response1ForQ6 = logic.getFeedbackResponse(qn6InSession1InCourse1.getId(),
-                student1InCourse1.getEmail(), student3InCourse1.getEmail());
     }
 
     @Test
@@ -360,7 +324,7 @@ public class CreateFeedbackResponseCommentActionTest extends BaseActionTest<Crea
         removeAndRestoreDataBundle(contributionDataBundle);
         InstructorAttributes instructorAttributes = contributionDataBundle.instructors.get("instructor1OfCourse1");
         FeedbackSessionAttributes contributionSession = contributionDataBundle.feedbackSessions.get("contribSession");
-        FeedbackQuestionsVariousAttributes contributionQuestion = logic.getFeedbackQuestion(
+        EntityAttributes<FeedbackQuestion> contributionQuestion = logic.getFeedbackQuestion(
                 contributionSession.getFeedbackSessionName(), contributionSession.getCourseId(), 1);
         FeedbackResponseAttributes contributionResponse =
                 contributionDataBundle.feedbackResponses.get("response1ForQ1S5C1");
@@ -585,5 +549,71 @@ public class CreateFeedbackResponseCommentActionTest extends BaseActionTest<Crea
                 .filter(comment -> comment.getCommentText().equals(commentText))
                 .collect(Collectors.toList());
     }
+
+	@Override
+	protected EntityAttributes<Account> getAccount(EntityAttributes<Account> account) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected StudentProfileAttributes getStudentProfile(StudentProfileAttributes studentProfileAttributes) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected CourseAttributes getCourse(CourseAttributes course) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected EntityAttributes<FeedbackQuestion> getFeedbackQuestion(EntityAttributes<FeedbackQuestion> fq) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected FeedbackResponseCommentAttributes getFeedbackResponseComment(FeedbackResponseCommentAttributes frc) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected FeedbackResponseAttributes getFeedbackResponse(FeedbackResponseAttributes fr) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected FeedbackSessionAttributes getFeedbackSession(FeedbackSessionAttributes fs) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected InstructorAttributes getInstructor(InstructorAttributes instructor) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected StudentAttributes getStudent(StudentAttributes student) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected boolean doRemoveAndRestoreDataBundle(DataBundle testData) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	protected boolean doPutDocuments(DataBundle testData) {
+		// TODO Auto-generated method stub
+		return false;
+	}
 
 }

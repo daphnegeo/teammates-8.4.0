@@ -47,11 +47,6 @@ public class StudentCourseDetailsPage extends AppPage {
         super(browser);
     }
 
-    @Override
-    protected boolean containsExpectedPageContents() {
-        return waitForElementPresence(By.tagName("h1")).getText().matches("Team Details for .+");
-    }
-
     public void verifyCourseDetails(CourseAttributes courseDetails) {
         assertEquals(courseDetails.getName(), courseNameField.getText());
         assertEquals(courseDetails.getId(), courseIdField.getText());

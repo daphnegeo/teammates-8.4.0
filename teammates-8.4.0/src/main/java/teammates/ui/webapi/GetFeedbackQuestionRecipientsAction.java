@@ -2,11 +2,12 @@ package teammates.ui.webapi;
 
 import java.util.Map;
 
-import teammates.common.datatransfer.attributes.FeedbackQuestionsVariousAttributes;
+import teammates.common.datatransfer.attributes.EntityAttributes;
 import teammates.common.datatransfer.attributes.FeedbackSessionAttributes;
 import teammates.common.datatransfer.attributes.InstructorAttributes;
 import teammates.common.datatransfer.attributes.StudentAttributes;
 import teammates.common.util.Const;
+import teammates.storage.entity.FeedbackQuestion;
 import teammates.ui.output.FeedbackQuestionRecipientsData;
 import teammates.ui.request.Intent;
 
@@ -25,7 +26,7 @@ class GetFeedbackQuestionRecipientsAction extends BasicFeedbackSubmissionAction 
     @Override
     void checkSpecificAccessControl() throws UnauthorizedAccessException {
         String feedbackQuestionId = getNonNullRequestParamValue(Const.ParamsNames.FEEDBACK_QUESTION_ID);
-        FeedbackQuestionsVariousAttributes feedbackQuestion = logic.getFeedbackQuestion(feedbackQuestionId);
+        EntityAttributes<FeedbackQuestion> feedbackQuestion = logic.getFeedbackQuestion(feedbackQuestionId);
         if (feedbackQuestion == null) {
             throw new EntityNotFoundException("The feedback question does not exist.");
         }
@@ -55,7 +56,7 @@ class GetFeedbackQuestionRecipientsAction extends BasicFeedbackSubmissionAction 
     public JsonResult execute() {
         String feedbackQuestionId = getNonNullRequestParamValue(Const.ParamsNames.FEEDBACK_QUESTION_ID);
         Intent intent = Intent.valueOf(getNonNullRequestParamValue(Const.ParamsNames.INTENT));
-        FeedbackQuestionsVariousAttributes question = logic.getFeedbackQuestion(feedbackQuestionId);
+        EntityAttributes<FeedbackQuestion> question = logic.getFeedbackQuestion(feedbackQuestionId);
 
         Map<String, String> recipient;
 

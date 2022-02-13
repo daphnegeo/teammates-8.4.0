@@ -26,11 +26,6 @@ public class AdminSessionsPage extends AppPage {
         super(browser);
     }
 
-    @Override
-    protected boolean containsExpectedPageContents() {
-        return getPageSource().contains("Ongoing Sessions");
-    }
-
     private List<WebElement> getOngoingSessionsRows() {
         return ongoingSessionsTable.findElement(By.tagName("tbody")).findElements(By.tagName("tr"));
     }

@@ -5,7 +5,7 @@ import java.util.List;
 
 import teammates.common.datatransfer.AttributesDeletionQuery;
 import teammates.common.datatransfer.FeedbackParticipantType;
-import teammates.common.datatransfer.attributes.FeedbackQuestionsVariousAttributes;
+import teammates.common.datatransfer.attributes.EntityAttributes;
 import teammates.common.datatransfer.attributes.FeedbackResponseAttributes;
 import teammates.common.datatransfer.attributes.InstructorAttributes;
 import teammates.common.exception.EntityAlreadyExistsException;
@@ -16,6 +16,7 @@ import teammates.common.exception.SearchServiceException;
 import teammates.common.util.Const;
 import teammates.common.util.Logger;
 import teammates.storage.api.InstructorsDb;
+import teammates.storage.entity.FeedbackQuestion;
 
 /**
  * Handles operations related to instructors.
@@ -201,7 +202,7 @@ public final class InstructorsLogic {
                     frLogic.getFeedbackResponsesFromGiverForCourse(
                             originalInstructor.getCourseId(), originalInstructor.getEmail());
             for (FeedbackResponseAttributes responseFromUser : responsesFromUser) {
-                FeedbackQuestionsVariousAttributes question = fqLogic.getFeedbackQuestion(responseFromUser.getFeedbackQuestionId());
+                EntityAttributes<FeedbackQuestion> question = fqLogic.getFeedbackQuestion(responseFromUser.getFeedbackQuestionId());
                 if (question.getGiverType() == FeedbackParticipantType.INSTRUCTORS
                         || question.getGiverType() == FeedbackParticipantType.SELF) {
                     try {
@@ -218,7 +219,7 @@ public final class InstructorsLogic {
                     frLogic.getFeedbackResponsesForReceiverForCourse(
                             originalInstructor.getCourseId(), originalInstructor.getEmail());
             for (FeedbackResponseAttributes responseToUser : responsesToUser) {
-                FeedbackQuestionsVariousAttributes question = fqLogic.getFeedbackQuestion(responseToUser.getFeedbackQuestionId());
+                EntityAttributes<FeedbackQuestion> question = fqLogic.getFeedbackQuestion(responseToUser.getFeedbackQuestionId());
                 if (question.getRecipientType() == FeedbackParticipantType.INSTRUCTORS
                         || (question.getGiverType() == FeedbackParticipantType.INSTRUCTORS
                         && question.getRecipientType() == FeedbackParticipantType.SELF)) {

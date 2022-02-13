@@ -22,7 +22,7 @@ import teammates.common.datatransfer.DataBundle;
 import teammates.common.datatransfer.InstructorPrivileges;
 import teammates.common.datatransfer.UserInfo;
 import teammates.common.datatransfer.attributes.CourseAttributes;
-import teammates.common.datatransfer.attributes.FeedbackQuestionsVariousAttributes;
+import teammates.common.datatransfer.attributes.EntityAttributes;
 import teammates.common.datatransfer.attributes.FeedbackSessionAttributes;
 import teammates.common.datatransfer.attributes.InstructorAttributes;
 import teammates.common.datatransfer.attributes.StudentAttributes;
@@ -38,6 +38,7 @@ import teammates.logic.api.MockLogsProcessor;
 import teammates.logic.api.MockRecaptchaVerifier;
 import teammates.logic.api.MockTaskQueuer;
 import teammates.logic.api.MockUserProvision;
+import teammates.storage.entity.FeedbackQuestion;
 import teammates.test.BaseTestCaseWithLocalDatabaseAccess;
 import teammates.test.FileHelper;
 import teammates.test.MockHttpServletRequest;
@@ -149,13 +150,6 @@ public abstract class BaseActionTest<T extends Action> extends BaseTestCaseWithL
     @BeforeMethod
     public void beforeTestMethodSetup() {
         prepareTestData();
-    }
-
-    /**
-     * Prepares the test data used for the current test.
-     */
-    protected void prepareTestData() {
-        removeAndRestoreTypicalDataBundle();
     }
 
     /**
@@ -869,8 +863,8 @@ public abstract class BaseActionTest<T extends Action> extends BaseTestCaseWithL
 	    assertEquals(copiedSession.isClosingEmailEnabled(), toCopySession.isClosingEmailEnabled());
 	    assertEquals(copiedSession.isPublishedEmailEnabled(), toCopySession.isPublishedEmailEnabled());
 	
-	    FeedbackQuestionsVariousAttributes feedbackQuestion = typicalBundle.feedbackQuestions.get("qn1InSession1InCourse2");
-	    FeedbackQuestionsVariousAttributes copiedQuestion =
+	    EntityAttributes<FeedbackQuestion> feedbackQuestion = typicalBundle.feedbackQuestions.get("qn1InSession1InCourse2");
+	    EntityAttributes<FeedbackQuestion> copiedQuestion =
 	            logic.getFeedbackQuestion(copiedSession.getFeedbackSessionName(), copiedSession.getCourseId(), 1);
 	    assertEquals(feedbackQuestion.getQuestionDetails(), copiedQuestion.getQuestionDetails());
 	    assertEquals(feedbackQuestion.getQuestionDescription(), copiedQuestion.getQuestionDescription());

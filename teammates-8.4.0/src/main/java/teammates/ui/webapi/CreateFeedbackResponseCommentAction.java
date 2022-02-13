@@ -1,7 +1,7 @@
 package teammates.ui.webapi;
 
 import teammates.common.datatransfer.FeedbackParticipantType;
-import teammates.common.datatransfer.attributes.FeedbackQuestionsVariousAttributes;
+import teammates.common.datatransfer.attributes.EntityAttributes;
 import teammates.common.datatransfer.attributes.FeedbackResponseAttributes;
 import teammates.common.datatransfer.attributes.FeedbackResponseCommentAttributes;
 import teammates.common.datatransfer.attributes.FeedbackSessionAttributes;
@@ -12,6 +12,7 @@ import teammates.common.exception.EntityDoesNotExistException;
 import teammates.common.exception.InvalidParametersException;
 import teammates.common.util.Const;
 import teammates.common.util.StringHelper;
+import teammates.storage.entity.FeedbackQuestion;
 import teammates.ui.output.FeedbackResponseCommentData;
 import teammates.ui.request.FeedbackResponseCommentCreateRequest;
 import teammates.ui.request.Intent;
@@ -45,7 +46,7 @@ class CreateFeedbackResponseCommentAction extends BasicCommentSubmissionAction {
         String feedbackSessionName = response.getFeedbackSessionName();
         FeedbackSessionAttributes session = getNonNullFeedbackSession(feedbackSessionName, courseId);
         String questionId = response.getFeedbackQuestionId();
-        FeedbackQuestionsVariousAttributes question = logic.getFeedbackQuestion(questionId);
+        EntityAttributes<FeedbackQuestion> question = logic.getFeedbackQuestion(questionId);
         Intent intent = Intent.valueOf(getNonNullRequestParamValue(Const.ParamsNames.INTENT));
 
         switch (intent) {
@@ -118,7 +119,7 @@ class CreateFeedbackResponseCommentAction extends BasicCommentSubmissionAction {
             throw new InvalidHttpRequestBodyException(FEEDBACK_RESPONSE_COMMENT_EMPTY);
         }
         String questionId = response.getFeedbackQuestionId();
-        FeedbackQuestionsVariousAttributes question = logic.getFeedbackQuestion(questionId);
+        EntityAttributes<FeedbackQuestion> question = logic.getFeedbackQuestion(questionId);
         String courseId = response.getCourseId();
         String email;
 

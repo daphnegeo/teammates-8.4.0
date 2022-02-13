@@ -6,9 +6,9 @@ import teammates.common.datatransfer.attributes.InstructorAttributes;
 import teammates.common.datatransfer.attributes.StudentAttributes;
 import teammates.common.util.AppUrl;
 import teammates.common.util.Const;
+import teammates.e2e.pageobjects.AppPage;
 import teammates.e2e.pageobjects.FeedbackSubmitPage;
 import teammates.e2e.pageobjects.InstructorFeedbackEditPage;
-import teammates.e2e.pageobjects.InstructorFeedbackPage;
 
 /**
  * Base class for all feedback question related browser tests.
@@ -33,7 +33,7 @@ public abstract class BaseFeedbackQuestionE2ETest extends BaseE2ETestCase {
 
     abstract void testSubmitPage();
 
-    InstructorFeedbackPage loginToFeedbackEditPage() {
+    AppPage loginToFeedbackEditPage() {
         AppUrl url = createUrl(Const.WebPageURIs.INSTRUCTOR_SESSION_EDIT_PAGE)
                 .withCourseId(course.getId())
                 .withSessionName(feedbackSession.getFeedbackSessionName());

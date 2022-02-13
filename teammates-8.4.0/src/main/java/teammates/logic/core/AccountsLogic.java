@@ -3,6 +3,7 @@ package teammates.logic.core;
 import java.util.List;
 
 import teammates.common.datatransfer.attributes.AccountAttributes;
+import teammates.common.datatransfer.attributes.EntityAttributes;
 import teammates.common.datatransfer.attributes.InstructorAttributes;
 import teammates.common.datatransfer.attributes.StudentAttributes;
 import teammates.common.exception.EntityAlreadyExistsException;
@@ -10,6 +11,7 @@ import teammates.common.exception.EntityDoesNotExistException;
 import teammates.common.exception.InstructorUpdateException;
 import teammates.common.exception.InvalidParametersException;
 import teammates.storage.api.AccountsDb;
+import teammates.storage.entity.Account;
 
 /**
  * Handles operations related to accounts.
@@ -50,7 +52,7 @@ public final class AccountsLogic {
      * @throws InvalidParametersException if the account is not valid
      * @throws EntityAlreadyExistsException if the account already exists in the database.
      */
-    AccountAttributes createAccount(AccountAttributes accountData)
+    EntityAttributes<Account> createAccount(AccountAttributes accountData)
             throws InvalidParametersException, EntityAlreadyExistsException {
         return accountsDb.createEntity(accountData);
     }
@@ -58,7 +60,7 @@ public final class AccountsLogic {
     /**
      * Gets an account.
      */
-    public AccountAttributes getAccount(String googleId) {
+    public EntityAttributes<Account> getAccount(String googleId) {
         return accountsDb.getAccount(googleId);
     }
 
@@ -66,7 +68,7 @@ public final class AccountsLogic {
      * Returns true if the given account exists and is an instructor.
      */
     public boolean isAccountAnInstructor(String googleId) {
-        AccountAttributes a = accountsDb.getAccount(googleId);
+        EntityAttributes<Account> a = accountsDb.getAccount(googleId);
         return a != null && a.isInstructor();
     }
 
@@ -116,7 +118,7 @@ public final class AccountsLogic {
             assert false;
         }
 
-        AccountAttributes account = accountsDb.getAccount(googleId);
+        EntityAttributes<Account> account = accountsDb.getAccount(googleId);
         String instituteToSave = coursesLogic.getCourseInstitute(instructor.getCourseId());
 
         if (account == null) {
@@ -157,7 +159,7 @@ public final class AccountsLogic {
 
         if (instructorForKey.isRegistered()) {
             if (instructorForKey.getGoogleId().equals(googleId)) {
-                AccountAttributes existingAccount = accountsDb.getAccount(googleId);
+                EntityAttributes<Account> existingAccount = accountsDb.getAccount(googleId);
                 if (existingAccount != null && existingAccount.isInstructor()) {
                     throw new EntityAlreadyExistsException("Instructor has already joined course");
                 }

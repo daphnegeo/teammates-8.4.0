@@ -1,6 +1,7 @@
 package teammates.ui.output;
 
-import teammates.common.datatransfer.attributes.AccountAttributes;
+import teammates.common.datatransfer.attributes.EntityAttributes;
+import teammates.storage.entity.Account;
 
 /**
  * Output format of account data.
@@ -14,7 +15,7 @@ public class AccountData extends ApiOutput {
     private final String institute;
     private final long createdAtTimeStamp;
 
-    public AccountData(AccountAttributes accountInfo) {
+    public AccountData(EntityAttributes<Account> accountInfo) {
         this.googleId = accountInfo.getGoogleId();
         this.name = accountInfo.getName();
         this.isInstructor = accountInfo.isInstructor();

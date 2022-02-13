@@ -9,10 +9,11 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import teammates.common.datatransfer.attributes.AccountAttributes;
+import teammates.common.datatransfer.attributes.EntityAttributes;
 import teammates.common.datatransfer.attributes.FeedbackSessionAttributes;
 import teammates.common.datatransfer.attributes.InstructorAttributes;
 import teammates.common.util.Const;
+import teammates.storage.entity.Account;
 import teammates.ui.output.OngoingSession;
 import teammates.ui.output.OngoingSessionsData;
 
@@ -84,7 +85,7 @@ class GetOngoingSessionsAction extends AdminOnlyAction {
         Map<String, List<OngoingSession>> instituteToFeedbackSessionsMap = new HashMap<>();
         for (String courseId : courseIds) {
             List<InstructorAttributes> instructors = logic.getInstructorsForCourse(courseId);
-            AccountAttributes account = getRegisteredInstructorAccountFromInstructors(instructors);
+            EntityAttributes<Account> account = getRegisteredInstructorAccountFromInstructors(instructors);
 
             String institute = logic.getCourseInstitute(courseId);
             List<OngoingSession> sessions = courseIdToFeedbackSessionsMap.get(courseId).stream()
@@ -109,7 +110,7 @@ class GetOngoingSessionsAction extends AdminOnlyAction {
         return new JsonResult(output);
     }
 
-    private AccountAttributes getRegisteredInstructorAccountFromInstructors(List<InstructorAttributes> instructors) {
+    private EntityAttributes<Account> getRegisteredInstructorAccountFromInstructors(List<InstructorAttributes> instructors) {
         for (InstructorAttributes instructor : instructors) {
             if (instructor.isRegistered()) {
                 return logic.getAccount(instructor.getGoogleId());

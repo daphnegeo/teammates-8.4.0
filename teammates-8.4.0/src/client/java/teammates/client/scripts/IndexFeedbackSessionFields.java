@@ -2,6 +2,7 @@ package teammates.client.scripts;
 
 import com.googlecode.objectify.cmd.Query;
 
+import teammates.storage.entity.Account;
 import teammates.storage.entity.FeedbackSession;
 
 /**
@@ -11,11 +12,6 @@ public class IndexFeedbackSessionFields extends DataMigrationEntitiesBaseScript<
 
     public static void main(String[] args) {
         new IndexFeedbackSessionFields().doOperationRemotely();
-    }
-
-    @Override
-    protected Query<FeedbackSession> getFilterQuery() {
-        return ofy().load().type(FeedbackSession.class);
     }
 
     @Override
@@ -33,4 +29,16 @@ public class IndexFeedbackSessionFields extends DataMigrationEntitiesBaseScript<
         // Save without any update; this will build the previously non-existing indexes
         saveEntityDeferred(session);
     }
+
+	@Override
+	protected boolean isMigrationOfGoogleIdNeeded(Account account) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	protected String generateNewGoogleId(Account oldAccount) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

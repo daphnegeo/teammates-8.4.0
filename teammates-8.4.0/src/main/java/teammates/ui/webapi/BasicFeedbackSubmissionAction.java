@@ -1,12 +1,13 @@
 package teammates.ui.webapi;
 
 import teammates.common.datatransfer.FeedbackParticipantType;
-import teammates.common.datatransfer.attributes.FeedbackQuestionsVariousAttributes;
+import teammates.common.datatransfer.attributes.EntityAttributes;
 import teammates.common.datatransfer.attributes.FeedbackSessionAttributes;
 import teammates.common.datatransfer.attributes.InstructorAttributes;
 import teammates.common.datatransfer.attributes.StudentAttributes;
 import teammates.common.util.Const;
 import teammates.common.util.StringHelper;
+import teammates.storage.entity.FeedbackQuestion;
 
 /**
  * The basic action for feedback submission.
@@ -16,7 +17,7 @@ abstract class BasicFeedbackSubmissionAction extends Action {
     /**
      * Checks whether instructors can see the question.
      */
-    boolean canInstructorSeeQuestion(FeedbackQuestionsVariousAttributes feedbackQuestion) {
+    boolean canInstructorSeeQuestion(EntityAttributes<FeedbackQuestion> feedbackQuestion) {
         boolean isGiverVisibleToInstructor =
                 feedbackQuestion.getShowGiverNameTo().contains(FeedbackParticipantType.INSTRUCTORS);
         boolean isRecipientVisibleToInstructor =
@@ -29,7 +30,7 @@ abstract class BasicFeedbackSubmissionAction extends Action {
     /**
      * Verifies that instructor can see the moderated question in moderation request.
      */
-    void verifyInstructorCanSeeQuestionIfInModeration(FeedbackQuestionsVariousAttributes feedbackQuestion)
+    void verifyInstructorCanSeeQuestionIfInModeration(EntityAttributes<FeedbackQuestion> feedbackQuestion)
             throws UnauthorizedAccessException {
         String moderatedPerson = getRequestParamValue(Const.ParamsNames.FEEDBACK_SESSION_MODERATED_PERSON);
 

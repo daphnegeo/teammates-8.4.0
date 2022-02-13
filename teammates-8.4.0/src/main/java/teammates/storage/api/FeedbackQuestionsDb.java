@@ -9,6 +9,7 @@ import com.googlecode.objectify.cmd.Query;
 
 import teammates.common.datatransfer.AttributesDeletionQuery;
 import teammates.common.datatransfer.FeedbackParticipantType;
+import teammates.common.datatransfer.attributes.EntityAttributes;
 import teammates.common.datatransfer.attributes.FeedbackQuestionAttributes;
 import teammates.common.datatransfer.attributes.FeedbackQuestionsVariousAttributes;
 import teammates.common.exception.EntityDoesNotExistException;
@@ -232,7 +233,7 @@ public final class FeedbackQuestionsDb extends EntitiesDb<FeedbackQuestion, Feed
     }
 
     @Override
-    boolean hasExistingEntities(FeedbackQuestionsVariousAttributes entityToCreate) {
+    boolean hasExistingEntities(EntityAttributes<FeedbackQuestion> entityToCreate) {
         return !load()
                 .filter("feedbackSessionName =", entityToCreate.getFeedbackSessionName())
                 .filter("courseId =", entityToCreate.getCourseId())

@@ -3,6 +3,7 @@ package teammates.client.scripts;
 import com.googlecode.objectify.cmd.Query;
 
 import teammates.common.util.StringHelper;
+import teammates.storage.entity.Account;
 import teammates.storage.entity.Instructor;
 
 /**
@@ -13,11 +14,6 @@ public class DataMigrationForUnencryptedKeyForInstructors
 
     public static void main(String[] args) {
         new DataMigrationForUnencryptedKeyForInstructors().doOperationRemotely();
-    }
-
-    @Override
-    protected Query<Instructor> getFilterQuery() {
-        return ofy().load().type(Instructor.class);
     }
 
     @Override
@@ -41,5 +37,17 @@ public class DataMigrationForUnencryptedKeyForInstructors
 
         saveEntityDeferred(instructor);
     }
+
+	@Override
+	protected boolean isMigrationOfGoogleIdNeeded(Account account) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	protected String generateNewGoogleId(Account oldAccount) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 }

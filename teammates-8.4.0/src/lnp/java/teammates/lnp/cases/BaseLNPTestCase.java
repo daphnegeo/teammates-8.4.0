@@ -38,12 +38,15 @@ import com.google.gson.stream.JsonReader;
 import teammates.common.datatransfer.DataBundle;
 import teammates.common.datatransfer.FeedbackParticipantType;
 import teammates.common.datatransfer.InstructorPrivileges;
+import teammates.common.datatransfer.attributes.AccountAttributes;
 import teammates.common.datatransfer.attributes.CourseAttributes;
 import teammates.common.datatransfer.attributes.FeedbackQuestionAttributes;
 import teammates.common.datatransfer.attributes.FeedbackResponseAttributes;
+import teammates.common.datatransfer.attributes.FeedbackResponseCommentAttributes;
 import teammates.common.datatransfer.attributes.FeedbackSessionAttributes;
 import teammates.common.datatransfer.attributes.InstructorAttributes;
 import teammates.common.datatransfer.attributes.StudentAttributes;
+import teammates.common.datatransfer.attributes.StudentProfileAttributes;
 import teammates.common.datatransfer.questions.FeedbackQuestionDetails;
 import teammates.common.datatransfer.questions.FeedbackTextQuestionDetails;
 import teammates.common.datatransfer.questions.FeedbackTextResponseDetails;
@@ -91,6 +94,29 @@ public abstract class BaseLNPTestCase extends BaseTestCase {
 	private static final String TEAM_NAME = "Team 1";
 	private static final String GIVER_SECTION_NAME = "Section 1";
 	private static final String RECEIVER_SECTION_NAME = "Section 1";
+	private static final String FEEDBACK_SESSION_NAME = "Test Feedback Session";
+	private static final String FEEDBACK_QUESTION_ID = "QuestionTest";
+	private static final String FEEDBACK_QUESTION_TEXT = "Test Question description";
+	private static final String FEEDBACK_RESPONSE_ID = "ResponseForQ";
+	private static final double ERROR_RATE_LIMIT = 0.01;
+	private static final double MEAN_RESP_TIME_LIMIT = 10;
+	private static final int NUM_INSTRUCTORS = 1;
+	private static final int RAMP_UP_PERIOD = NUM_INSTRUCTORS * 2;
+	private static final int NUMBER_OF_FEEDBACK_RESPONSES = 500;
+	private static final String COURSE_ID = "TestData.CS101";
+	private static final String COURSE_NAME = "LnPCourse";
+	private static final String COURSE_TIME_ZONE = "UTC";
+	private static final String INSTRUCTOR_ID = "LnPInstructor_id";
+	private static final String INSTRUCTOR_NAME = "LnPInstructor";
+	private static final String INSTRUCTOR_EMAIL = "tmms.test@gmail.tmt";
+	private static final String STUDENT_ID = "LnPStudent.tmms";
+	private static final String STUDENT_NAME = "LnPStudent";
+	private static final String STUDENT_EMAIL = "studentEmail@gmail.tmt";
+	private static final String STUDENT_COMMENTS = "This is test student comment";
+	private static final String TEAM_NAME = "Team 1";
+	private static final String GIVER_SECTION_NAME = "Section 1";
+	private static final String RECEIVER_SECTION_NAME = "Section 1";
+	private static final String UPDATE_GIVER_SECTION_NAME = "Section 2";
 	private static final String FEEDBACK_SESSION_NAME = "Test Feedback Session";
 	private static final String FEEDBACK_QUESTION_ID = "QuestionTest";
 	private static final String FEEDBACK_QUESTION_TEXT = "Test Question description";
@@ -385,7 +411,6 @@ public abstract class BaseLNPTestCase extends BaseTestCase {
 	@Override
 	protected LNPTestData getTestData() {
 	    return new LNPTestData() {
-	        @Override
 	        protected Map<String, CourseAttributes> generateCourses() {
 	            Map<String, CourseAttributes> courses = new HashMap<>();
 	
@@ -397,7 +422,6 @@ public abstract class BaseLNPTestCase extends BaseTestCase {
 	            return courses;
 	        }
 	
-	        @Override
 	        protected Map<String, InstructorAttributes> generateInstructors() {
 	            Map<String, InstructorAttributes> instructors = new HashMap<>();
 	
@@ -416,7 +440,6 @@ public abstract class BaseLNPTestCase extends BaseTestCase {
 	            return instructors;
 	        }
 	
-	        @Override
 	        protected Map<String, StudentAttributes> generateStudents() {
 	            Map<String, StudentAttributes> students = new LinkedHashMap<>();
 	            StudentAttributes studentAttribute;
@@ -434,7 +457,6 @@ public abstract class BaseLNPTestCase extends BaseTestCase {
 	            return students;
 	        }
 	
-	        @Override
 	        protected Map<String, FeedbackSessionAttributes> generateFeedbackSessions() {
 	            Map<String, FeedbackSessionAttributes> feedbackSessions = new LinkedHashMap<>();
 	
@@ -452,7 +474,6 @@ public abstract class BaseLNPTestCase extends BaseTestCase {
 	            return feedbackSessions;
 	        }
 	
-	        @Override
 	        protected Map<String, FeedbackQuestionAttributes> generateFeedbackQuestions() {
 	            List<FeedbackParticipantType> showResponses = new ArrayList<>();
 	            showResponses.add(FeedbackParticipantType.RECEIVER);
@@ -484,7 +505,6 @@ public abstract class BaseLNPTestCase extends BaseTestCase {
 	            return feedbackQuestions;
 	        }
 	
-	        @Override
 	        protected Map<String, FeedbackResponseAttributes> generateFeedbackResponses() {
 	            Map<String, FeedbackResponseAttributes> feedbackResponses = new HashMap<>();
 	
@@ -508,7 +528,6 @@ public abstract class BaseLNPTestCase extends BaseTestCase {
 	            return feedbackResponses;
 	        }
 	
-	        @Override
 	        public List<String> generateCsvHeaders() {
 	            List<String> headers = new ArrayList<>();
 	
@@ -521,7 +540,6 @@ public abstract class BaseLNPTestCase extends BaseTestCase {
 	            return headers;
 	        }
 	
-	        @Override
 	        public List<List<String>> generateCsvData() {
 	            DataBundle dataBundle = loadDataBundle(getJsonDataPath());
 	            List<List<String>> csvData = new ArrayList<>();
@@ -616,5 +634,60 @@ public abstract class BaseLNPTestCase extends BaseTestCase {
 	    deleteTestData();
 	    deleteDataFiles();
 	    cleanupResults();
+	}
+
+	protected Map<String, AccountAttributes> generateAccounts() {
+	    return new HashMap<>();
+	}
+
+	protected Map<String, CourseAttributes> generateCourses() {
+	    return new HashMap<>();
+	}
+
+	protected Map<String, InstructorAttributes> generateInstructors() {
+	    return new HashMap<>();
+	}
+
+	protected Map<String, StudentAttributes> generateStudents() {
+	    return new HashMap<>();
+	}
+
+	protected Map<String, FeedbackSessionAttributes> generateFeedbackSessions() {
+	    return new HashMap<>();
+	}
+
+	protected Map<String, FeedbackQuestionAttributes> generateFeedbackQuestions() {
+	    return new HashMap<>();
+	}
+
+	protected Map<String, FeedbackResponseAttributes> generateFeedbackResponses() {
+	    return new HashMap<>();
+	}
+
+	protected Map<String, FeedbackResponseCommentAttributes> generateFeedbackResponseComments() {
+	    return new HashMap<>();
+	}
+
+	protected Map<String, StudentProfileAttributes> generateProfiles() {
+	    return new HashMap<>();
+	}
+
+	/**
+	 * Returns a JSON data bundle containing the data relevant for the performance test.
+	 */
+	public DataBundle generateJsonData() {
+	    DataBundle dataBundle = new DataBundle();
+	
+	    dataBundle.accounts = generateAccounts();
+	    dataBundle.courses = generateCourses();
+	    dataBundle.instructors = generateInstructors();
+	    dataBundle.students = generateStudents();
+	    dataBundle.feedbackSessions = generateFeedbackSessions();
+	    dataBundle.feedbackQuestions = generateFeedbackQuestions();
+	    dataBundle.feedbackResponses = generateFeedbackResponses();
+	    dataBundle.feedbackResponseComments = generateFeedbackResponseComments();
+	    dataBundle.profiles = generateProfiles();
+	
+	    return dataBundle;
 	}
 }

@@ -3,7 +3,6 @@ package teammates.e2e.pageobjects;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
@@ -16,7 +15,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
 import teammates.common.datatransfer.FeedbackParticipantType;
-import teammates.common.datatransfer.attributes.FeedbackQuestionsVariousAttributes;
+import teammates.common.datatransfer.attributes.EntityAttributes;
 import teammates.common.datatransfer.attributes.FeedbackResponseAttributes;
 import teammates.common.datatransfer.attributes.FeedbackResponseCommentAttributes;
 import teammates.common.datatransfer.attributes.FeedbackSessionAttributes;
@@ -27,6 +26,7 @@ import teammates.common.datatransfer.questions.FeedbackMcqQuestionDetails;
 import teammates.common.datatransfer.questions.FeedbackRubricQuestionDetails;
 import teammates.common.datatransfer.questions.FeedbackRubricResponseDetails;
 import teammates.e2e.util.TestProperties;
+import teammates.storage.entity.FeedbackQuestion;
 
 /**
  * Represents the "Results" page for Instructors.
@@ -151,7 +151,7 @@ public class InstructorFeedbackResultsPage extends RankOptionSuper {
         selectSectionDropdown("All");
     }
 
-    public void verifyQnViewResponses(FeedbackQuestionsVariousAttributes question, List<FeedbackResponseAttributes> responses,
+    public void verifyQnViewResponses(EntityAttributes<FeedbackQuestion> question, List<FeedbackResponseAttributes> responses,
                                       Collection<InstructorAttributes> instructors, Collection<StudentAttributes> students) {
         selectViewType(QUESTION_VIEW);
 
@@ -167,7 +167,7 @@ public class InstructorFeedbackResultsPage extends RankOptionSuper {
         }
     }
 
-    public void verifyGrqViewResponses(FeedbackQuestionsVariousAttributes question, List<FeedbackResponseAttributes> responses,
+    public void verifyGrqViewResponses(EntityAttributes<FeedbackQuestion> question, List<FeedbackResponseAttributes> responses,
                                        boolean isGroupedByTeam, Collection<InstructorAttributes> instructors,
                                        Collection<StudentAttributes> students) {
         selectViewType(GRQ_VIEW);
@@ -188,7 +188,7 @@ public class InstructorFeedbackResultsPage extends RankOptionSuper {
         }
     }
 
-    public void verifyRgqViewResponses(FeedbackQuestionsVariousAttributes question, List<FeedbackResponseAttributes> responses,
+    public void verifyRgqViewResponses(EntityAttributes<FeedbackQuestion> question, List<FeedbackResponseAttributes> responses,
                                        boolean isGroupedByTeam, Collection<InstructorAttributes> instructors,
                                        Collection<StudentAttributes> students) {
         selectViewType(RGQ_VIEW);
@@ -209,7 +209,7 @@ public class InstructorFeedbackResultsPage extends RankOptionSuper {
         }
     }
 
-    public void verifyGqrViewResponses(FeedbackQuestionsVariousAttributes question, List<FeedbackResponseAttributes> responses,
+    public void verifyGqrViewResponses(EntityAttributes<FeedbackQuestion> question, List<FeedbackResponseAttributes> responses,
                                        boolean isGroupedByTeam, Collection<InstructorAttributes> instructors,
                                        Collection<StudentAttributes> students) {
         selectViewType(GQR_VIEW);
@@ -236,7 +236,7 @@ public class InstructorFeedbackResultsPage extends RankOptionSuper {
         }
     }
 
-    public void verifyRqgViewResponses(FeedbackQuestionsVariousAttributes question, List<FeedbackResponseAttributes> responses,
+    public void verifyRqgViewResponses(EntityAttributes<FeedbackQuestion> question, List<FeedbackResponseAttributes> responses,
                                        boolean isGroupedByTeam, Collection<InstructorAttributes> instructors,
                                        Collection<StudentAttributes> students) {
         selectViewType(RQG_VIEW);
@@ -263,11 +263,11 @@ public class InstructorFeedbackResultsPage extends RankOptionSuper {
         }
     }
 
-    private void verifyQuestionText(WebElement questionPanel, FeedbackQuestionsVariousAttributes question) {
+    private void verifyQuestionText(WebElement questionPanel, EntityAttributes<FeedbackQuestion> question) {
         assertEquals(question.getQuestionDetailsCopy().getQuestionText(), getQuestionText(questionPanel));
     }
 
-    private void verifyGroupedResponses(FeedbackQuestionsVariousAttributes question, WebElement userPanel, String userName,
+    private void verifyGroupedResponses(EntityAttributes<FeedbackQuestion> question, WebElement userPanel, String userName,
                                         String userTeam, FeedbackResponseAttributes response, boolean isGrq) {
         WebElement groupedResponses;
         try {
@@ -297,7 +297,7 @@ public class InstructorFeedbackResultsPage extends RankOptionSuper {
         }
     }
 
-    public void verifyQnViewStats(FeedbackQuestionsVariousAttributes question,
+    public void verifyQnViewStats(EntityAttributes<FeedbackQuestion> question,
                                   List<FeedbackResponseAttributes> responses,
                                   Collection<InstructorAttributes> instructors,
                                   Collection<StudentAttributes> students) {
@@ -309,7 +309,7 @@ public class InstructorFeedbackResultsPage extends RankOptionSuper {
         verifyStatistics(questionPanel, question, responses, instructors, students);
     }
 
-    public void verifyGqrViewStats(FeedbackQuestionsVariousAttributes question,
+    public void verifyGqrViewStats(EntityAttributes<FeedbackQuestion> question,
                                    List<FeedbackResponseAttributes> responses,
                                    boolean isGroupedByTeam,
                                    Collection<InstructorAttributes> instructors,
@@ -321,7 +321,7 @@ public class InstructorFeedbackResultsPage extends RankOptionSuper {
         verifyUserViewStats(giverType, giver, question, responses, instructors, students, isGroupedByTeam, true);
     }
 
-    public void verifyRqgViewStats(FeedbackQuestionsVariousAttributes question,
+    public void verifyRqgViewStats(EntityAttributes<FeedbackQuestion> question,
                                    List<FeedbackResponseAttributes> responses,
                                    boolean isGroupedByTeam,
                                    Collection<InstructorAttributes> instructors,
@@ -334,7 +334,7 @@ public class InstructorFeedbackResultsPage extends RankOptionSuper {
     }
 
     private void verifyUserViewStats(FeedbackParticipantType type, String user,
-                                     FeedbackQuestionsVariousAttributes question,
+                                     EntityAttributes<FeedbackQuestion> question,
                                      List<FeedbackResponseAttributes> responses,
                                      Collection<InstructorAttributes> instructors,
                                      Collection<StudentAttributes> students,
@@ -345,7 +345,7 @@ public class InstructorFeedbackResultsPage extends RankOptionSuper {
         verifyStatistics(panelWithStats, question, responses, instructors, students);
     }
 
-    private void verifyStatistics(WebElement questionPanel, FeedbackQuestionsVariousAttributes question,
+    private void verifyStatistics(WebElement questionPanel, EntityAttributes<FeedbackQuestion> question,
                                   List<FeedbackResponseAttributes> responses,
                                   Collection<InstructorAttributes> instructors,
                                   Collection<StudentAttributes> students) {
@@ -367,7 +367,7 @@ public class InstructorFeedbackResultsPage extends RankOptionSuper {
         }
     }
 
-    private void verifyMcqStatistics(WebElement questionPanel, FeedbackQuestionsVariousAttributes question,
+    private void verifyMcqStatistics(WebElement questionPanel, EntityAttributes<FeedbackQuestion> question,
                                      List<FeedbackResponseAttributes> responses,
                                      Collection<InstructorAttributes> instructors,
                                      Collection<StudentAttributes> students) {
@@ -380,14 +380,14 @@ public class InstructorFeedbackResultsPage extends RankOptionSuper {
                 instructors));
     }
 
-    public void verifyQnViewStatsHidden(FeedbackQuestionsVariousAttributes question) {
+    public void verifyQnViewStatsHidden(EntityAttributes<FeedbackQuestion> question) {
         selectViewType(QUESTION_VIEW);
 
         WebElement questionPanel = getQuestionPanel(question.getQuestionNumber());
         verifyStatsHidden(questionPanel);
     }
 
-    public void verifyGqrViewStatsHidden(FeedbackQuestionsVariousAttributes question,
+    public void verifyGqrViewStatsHidden(EntityAttributes<FeedbackQuestion> question,
                                          String giver,
                                          Collection<InstructorAttributes> instructors,
                                          Collection<StudentAttributes> students,
@@ -400,7 +400,7 @@ public class InstructorFeedbackResultsPage extends RankOptionSuper {
         verifyStatsHidden(panelWithStats);
     }
 
-    public void verifyRqgViewStatsHidden(FeedbackQuestionsVariousAttributes question,
+    public void verifyRqgViewStatsHidden(EntityAttributes<FeedbackQuestion> question,
                                          String recipient,
                                          Collection<InstructorAttributes> instructors,
                                          Collection<StudentAttributes> students,
@@ -414,7 +414,7 @@ public class InstructorFeedbackResultsPage extends RankOptionSuper {
     }
 
     private WebElement getPanelWithStats(FeedbackParticipantType type, String user,
-                                         FeedbackQuestionsVariousAttributes question,
+                                         EntityAttributes<FeedbackQuestion> question,
                                          Collection<InstructorAttributes> instructors,
                                          Collection<StudentAttributes> students,
                                          boolean isGroupedByTeam,
@@ -437,7 +437,7 @@ public class InstructorFeedbackResultsPage extends RankOptionSuper {
         assertTrue(panelWithStats.findElements(By.tagName("tm-single-statistics")).size() == 0);
     }
 
-    public void verifyQnViewComment(FeedbackQuestionsVariousAttributes question, FeedbackResponseCommentAttributes comment,
+    public void verifyQnViewComment(EntityAttributes<FeedbackQuestion> question, FeedbackResponseCommentAttributes comment,
                                     FeedbackResponseAttributes response, Collection<InstructorAttributes> instructors,
                                     Collection<StudentAttributes> students) {
         selectViewType(QUESTION_VIEW);
@@ -452,7 +452,7 @@ public class InstructorFeedbackResultsPage extends RankOptionSuper {
         verifyResponseRowComment(responseRow, comment, instructors, students);
     }
 
-    public void verifyGqrViewComment(FeedbackQuestionsVariousAttributes question, FeedbackResponseCommentAttributes comment,
+    public void verifyGqrViewComment(EntityAttributes<FeedbackQuestion> question, FeedbackResponseCommentAttributes comment,
                                      FeedbackResponseAttributes response,
                                      Collection<InstructorAttributes> instructors,
                                      Collection<StudentAttributes> students, boolean isGroupedByTeam) {
@@ -469,7 +469,7 @@ public class InstructorFeedbackResultsPage extends RankOptionSuper {
         verifyResponseRowComment(responseRow, comment, instructors, students);
     }
 
-    public void verifyRqgViewComment(FeedbackQuestionsVariousAttributes question, FeedbackResponseCommentAttributes comment,
+    public void verifyRqgViewComment(EntityAttributes<FeedbackQuestion> question, FeedbackResponseCommentAttributes comment,
                                      FeedbackResponseAttributes response,
                                      Collection<InstructorAttributes> instructors,
                                      Collection<StudentAttributes> students, boolean isGroupedByTeam) {
@@ -487,7 +487,7 @@ public class InstructorFeedbackResultsPage extends RankOptionSuper {
         verifyResponseRowComment(responseRow, comment, instructors, students);
     }
 
-    public void verifyGrqViewComment(FeedbackQuestionsVariousAttributes question, FeedbackResponseCommentAttributes comment,
+    public void verifyGrqViewComment(EntityAttributes<FeedbackQuestion> question, FeedbackResponseCommentAttributes comment,
                                      FeedbackResponseAttributes response,
                                      Collection<InstructorAttributes> instructors,
                                      Collection<StudentAttributes> students, boolean isGroupedByTeam) {
@@ -505,7 +505,7 @@ public class InstructorFeedbackResultsPage extends RankOptionSuper {
         verifyGroupedResponseComment(groupedResponses, question.getQuestionNumber(), comment, instructors, students);
     }
 
-    public void verifyRgqViewComment(FeedbackQuestionsVariousAttributes question, FeedbackResponseCommentAttributes comment,
+    public void verifyRgqViewComment(EntityAttributes<FeedbackQuestion> question, FeedbackResponseCommentAttributes comment,
                                      FeedbackResponseAttributes response,
                                      Collection<InstructorAttributes> instructors,
                                      Collection<StudentAttributes> students, boolean isGroupedByTeam) {
@@ -580,7 +580,7 @@ public class InstructorFeedbackResultsPage extends RankOptionSuper {
         return expectedDetails;
     }
 
-    private String[][] getExpectedQnViewDetails(FeedbackQuestionsVariousAttributes question,
+    private String[][] getExpectedQnViewDetails(EntityAttributes<FeedbackQuestion> question,
                                                 List<FeedbackResponseAttributes> responses,
                                                 Collection<InstructorAttributes> instructors,
                                                 Collection<StudentAttributes> students) {
@@ -608,7 +608,7 @@ public class InstructorFeedbackResultsPage extends RankOptionSuper {
         return expected;
     }
 
-    private String[] getExpectedGqrDetails(FeedbackQuestionsVariousAttributes question,
+    private String[] getExpectedGqrDetails(EntityAttributes<FeedbackQuestion> question,
                                            FeedbackResponseAttributes response,
                                            Collection<InstructorAttributes> instructors,
                                            Collection<StudentAttributes> students) {
@@ -629,7 +629,7 @@ public class InstructorFeedbackResultsPage extends RankOptionSuper {
         return expected;
     }
 
-    private String[] getExpectedRqgDetails(FeedbackQuestionsVariousAttributes question,
+    private String[] getExpectedRqgDetails(EntityAttributes<FeedbackQuestion> question,
                                            FeedbackResponseAttributes response,
                                            Collection<InstructorAttributes> instructors,
                                            Collection<StudentAttributes> students) {
@@ -650,7 +650,7 @@ public class InstructorFeedbackResultsPage extends RankOptionSuper {
         return expected;
     }
 
-    private String[][] getMcqResponseSummary(FeedbackQuestionsVariousAttributes question) {
+    private String[][] getMcqResponseSummary(EntityAttributes<FeedbackQuestion> question) {
         FeedbackMcqQuestionDetails questionDetails = (FeedbackMcqQuestionDetails) question.getQuestionDetailsCopy();
         List<String> choices = questionDetails.getMcqChoices();
         List<Double> weights = questionDetails.getMcqWeights();
@@ -672,7 +672,7 @@ public class InstructorFeedbackResultsPage extends RankOptionSuper {
         return expectedStatistics;
     }
 
-    private String[][] getMcqPerRecipientStatistics(FeedbackQuestionsVariousAttributes question,
+    private String[][] getMcqPerRecipientStatistics(EntityAttributes<FeedbackQuestion> question,
                                                     List<FeedbackResponseAttributes> responses,
                                                     Collection<StudentAttributes> students,
                                                     Collection<InstructorAttributes> instructors) {
@@ -719,10 +719,6 @@ public class InstructorFeedbackResultsPage extends RankOptionSuper {
     private String getSessionDurationString(FeedbackSessionAttributes feedbackSession) {
         return getDateString(feedbackSession.getStartTime(), feedbackSession.getTimeZone()) + "   to\n"
                 + getDateString(feedbackSession.getEndTime(), feedbackSession.getTimeZone());
-    }
-
-    private String getDateString(Instant date, String timeZone) {
-        return getDisplayedDateTime(date, timeZone, "EEE, dd MMM, yyyy, hh:mm a X");
     }
 
     private String getDoubleString(double value) {

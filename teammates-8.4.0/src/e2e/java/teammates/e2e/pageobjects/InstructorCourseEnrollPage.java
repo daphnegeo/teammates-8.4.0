@@ -47,11 +47,6 @@ public class InstructorCourseEnrollPage extends AppPage {
         super(browser);
     }
 
-    @Override
-    protected boolean containsExpectedPageContents() {
-        return getPageTitle().contains("Enroll Students for");
-    }
-
     public void verifyIsCorrectPage(String courseId) {
         assertEquals("Enroll Students for " + courseId, enrollHeader.getText());
     }

@@ -2,7 +2,6 @@ package teammates.e2e.pageobjects;
 
 import static org.junit.Assert.assertEquals;
 
-import java.time.Instant;
 import java.util.List;
 
 import org.openqa.selenium.By;
@@ -20,11 +19,6 @@ public class InstructorHomePage extends AppPage {
 
     public InstructorHomePage(Browser browser) {
         super(browser);
-    }
-
-    @Override
-    protected boolean containsExpectedPageContents() {
-        return getPageTitle().contains("Home");
     }
 
     public void verifyCourseTabDetails(int courseTabIndex, CourseAttributes course, FeedbackSessionAttributes[] sessions) {
@@ -144,10 +138,6 @@ public class InstructorHomePage extends AppPage {
 
     private WebElement getSessionsTable(int courseTabIndex) {
         return getCourseTab(courseTabIndex).findElement(By.id("sessions-table"));
-    }
-
-    private String getDateString(Instant instant, String timeZone) {
-        return getDisplayedDateTime(instant, timeZone, "d MMM h:mm a");
     }
 
     private String[] getExpectedSessionDetails(FeedbackSessionAttributes session) {

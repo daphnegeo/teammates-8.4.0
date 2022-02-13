@@ -31,11 +31,6 @@ public class InstructorSearchPage extends AppPage {
         super(browser);
     }
 
-    @Override
-    protected boolean containsExpectedPageContents() {
-        return getPageTitle().contains("Search");
-    }
-
     public void search(String searchTerm) {
         searchKeyword.clear();
         searchKeyword.sendKeys(searchTerm);

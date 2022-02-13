@@ -7,9 +7,17 @@ import java.util.Map;
 
 import org.testng.annotations.Test;
 
-import teammates.common.datatransfer.attributes.FeedbackQuestionsVariousAttributes;
+import teammates.common.datatransfer.attributes.CourseAttributes;
+import teammates.common.datatransfer.attributes.EntityAttributes;
 import teammates.common.datatransfer.attributes.FeedbackResponseAttributes;
+import teammates.common.datatransfer.attributes.FeedbackResponseCommentAttributes;
+import teammates.common.datatransfer.attributes.FeedbackSessionAttributes;
+import teammates.common.datatransfer.attributes.InstructorAttributes;
+import teammates.common.datatransfer.attributes.StudentAttributes;
+import teammates.common.datatransfer.attributes.StudentProfileAttributes;
 import teammates.common.util.Const;
+import teammates.storage.entity.Account;
+import teammates.storage.entity.FeedbackQuestion;
 import teammates.test.BaseTestCase;
 
 /**
@@ -34,7 +42,7 @@ public class SessionResultsBundleTest extends BaseTestCase {
                                 new ArrayList<>(responseBundle.instructors.values())));
 
         ______TS("Test question having responses");
-        FeedbackQuestionsVariousAttributes fqa = responseBundle.feedbackQuestions.get("qn1InSession1InCourse1");
+        EntityAttributes<FeedbackQuestion> fqa = responseBundle.feedbackQuestions.get("qn1InSession1InCourse1");
         List<FeedbackResponseAttributes> allResponses = bundle.getQuestionResponseMap().get(fqa.getId());
         assertEquals(2, allResponses.size());
         List<String> allResponsesString = new ArrayList<>();
@@ -66,7 +74,7 @@ public class SessionResultsBundleTest extends BaseTestCase {
                                 new ArrayList<>(responseBundle.instructors.values())));
 
         ______TS("Test question having missing responses");
-        FeedbackQuestionsVariousAttributes fqa = responseBundle.feedbackQuestions.get("qn1InSession1InCourse1");
+        EntityAttributes<FeedbackQuestion> fqa = responseBundle.feedbackQuestions.get("qn1InSession1InCourse1");
         List<FeedbackResponseAttributes> missingResponses = bundle.getQuestionMissingResponseMap().get(fqa.getId());
         assertEquals(2, missingResponses.size());
         List<String> missingResponsesString = new ArrayList<>();
@@ -146,4 +154,70 @@ public class SessionResultsBundleTest extends BaseTestCase {
         anonName = SessionResultsBundle.getAnonName(FeedbackParticipantType.STUDENTS, "test@gmail.com");
         assertTrue(anonName.startsWith(Const.DISPLAYED_NAME_FOR_ANONYMOUS_PARTICIPANT));
     }
+
+	@Override
+	protected EntityAttributes<Account> getAccount(EntityAttributes<Account> account) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected StudentProfileAttributes getStudentProfile(StudentProfileAttributes studentProfileAttributes) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected CourseAttributes getCourse(CourseAttributes course) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected EntityAttributes<FeedbackQuestion> getFeedbackQuestion(EntityAttributes<FeedbackQuestion> fq) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected FeedbackResponseCommentAttributes getFeedbackResponseComment(FeedbackResponseCommentAttributes frc) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected FeedbackResponseAttributes getFeedbackResponse(FeedbackResponseAttributes fr) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected FeedbackSessionAttributes getFeedbackSession(FeedbackSessionAttributes fs) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected InstructorAttributes getInstructor(InstructorAttributes instructor) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected StudentAttributes getStudent(StudentAttributes student) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected boolean doRemoveAndRestoreDataBundle(DataBundle testData) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	protected boolean doPutDocuments(DataBundle testData) {
+		// TODO Auto-generated method stub
+		return false;
+	}
 }

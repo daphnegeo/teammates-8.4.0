@@ -1,19 +1,15 @@
 package teammates.common.datatransfer.attributes;
 
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Objects;
 
 import teammates.common.datatransfer.InstructorPrivileges;
 import teammates.common.datatransfer.InstructorPrivilegesLegacy;
 import teammates.common.util.Config;
 import teammates.common.util.Const;
 import teammates.common.util.Const.ParamsNames;
-import teammates.common.util.FieldValidator;
 import teammates.common.util.JsonUtils;
-import teammates.common.util.SanitizationHelper;
 import teammates.storage.entity.Instructor;
 import teammates.test.BaseTestCase;
 import teammates.test.TestProperties;
@@ -98,25 +94,6 @@ public class InstructorAttributes extends EntityAttributes<Instructor> {
         return instructorAttributes;
     }
 
-    /**
-     * Gets a deep copy of this object.
-     */
-    public InstructorAttributes getCopy() {
-        InstructorAttributes instructorAttributes = new InstructorAttributes(courseId, email);
-        instructorAttributes.name = name;
-        instructorAttributes.googleId = googleId;
-        instructorAttributes.key = key;
-        instructorAttributes.role = role;
-        instructorAttributes.displayedName = displayedName;
-        instructorAttributes.isArchived = isArchived;
-        instructorAttributes.isDisplayedToStudents = isDisplayedToStudents;
-        instructorAttributes.privileges = privileges;
-        instructorAttributes.createdAt = createdAt;
-        instructorAttributes.updatedAt = updatedAt;
-
-        return instructorAttributes;
-    }
-
     public String getInstructorPrivilegesAsText() {
         return JsonUtils.toJson(privileges.toLegacyFormat(), InstructorPrivilegesLegacy.class);
     }
@@ -188,94 +165,11 @@ public class InstructorAttributes extends EntityAttributes<Instructor> {
                 .toString();
     }
 
-    @Override
-    public Instructor toEntity() {
-        return new Instructor(googleId, courseId, isArchived, name, email, role,
-                              isDisplayedToStudents, displayedName, getInstructorPrivilegesAsText());
-    }
-
-    @Override
-    public List<String> getInvalidityInfo() {
-        List<String> errors = new ArrayList<>();
-
-        if (googleId != null) {
-            addNonEmptyError(FieldValidator.getInvalidityInfoForGoogleId(googleId), errors);
-        }
-
-        addNonEmptyError(FieldValidator.getInvalidityInfoForCourseId(courseId), errors);
-
-        addNonEmptyError(FieldValidator.getInvalidityInfoForPersonName(name), errors);
-
-        addNonEmptyError(FieldValidator.getInvalidityInfoForEmail(email), errors);
-
-        addNonEmptyError(FieldValidator.getInvalidityInfoForPersonName(displayedName), errors);
-
-        addNonEmptyError(FieldValidator.getInvalidityInfoForRole(role), errors);
-
-        return errors;
-    }
-
     /**
      * Sorts the instructors list alphabetically by name.
      */
     public static void sortByName(List<InstructorAttributes> instructors) {
         instructors.sort(Comparator.comparing(instructor -> instructor.name.toLowerCase()));
-    }
-
-    @Override
-    public String toString() {
-        return JsonUtils.toJson(this, InstructorAttributes.class);
-    }
-
-    @Override
-    public int hashCode() {
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(this.email).append(this.name).append(this.courseId)
-                .append(this.googleId).append(this.displayedName).append(this.role);
-        return stringBuilder.toString().hashCode();
-    }
-
-    @Override
-    public boolean equals(Object other) {
-        if (other == null) {
-            return false;
-        } else if (this == other) {
-            return true;
-        } else if (this.getClass() == other.getClass()) {
-            InstructorAttributes otherInstructor = (InstructorAttributes) other;
-            return Objects.equals(this.email, otherInstructor.email)
-                    && Objects.equals(this.name, otherInstructor.name)
-                    && Objects.equals(this.courseId, otherInstructor.courseId)
-                    && Objects.equals(this.googleId, otherInstructor.googleId)
-                    && Objects.equals(this.displayedName, otherInstructor.displayedName)
-                    && Objects.equals(this.role, otherInstructor.role);
-        } else {
-            return false;
-        }
-    }
-
-    @Override
-    public void sanitizeForSaving() {
-        googleId = SanitizationHelper.sanitizeGoogleId(googleId);
-        name = SanitizationHelper.sanitizeName(name);
-        email = SanitizationHelper.sanitizeEmail(email);
-        courseId = SanitizationHelper.sanitizeTitle(courseId);
-
-        if (role == null) {
-            role = Const.InstructorPermissionRoleNames.INSTRUCTOR_PERMISSION_ROLE_COOWNER;
-        } else {
-            role = SanitizationHelper.sanitizeName(role);
-        }
-
-        if (displayedName == null) {
-            displayedName = Const.InstructorPermissionRoleNames.INSTRUCTOR_PERMISSION_ROLE_COOWNER;
-        } else {
-            displayedName = SanitizationHelper.sanitizeName(displayedName);
-        }
-
-        if (privileges == null) {
-            privileges = new InstructorPrivileges(Const.InstructorPermissionRoleNames.INSTRUCTOR_PERMISSION_ROLE_COOWNER);
-        }
     }
 
     /**
@@ -325,14 +219,6 @@ public class InstructorAttributes extends EntityAttributes<Instructor> {
         return privileges.hasCoownerPrivileges();
     }
 
-    public String getCourseId() {
-        return courseId;
-    }
-
-    public void setCourseId(String courseId) {
-        this.courseId = courseId;
-    }
-
     public String getGoogleId() {
         return googleId;
     }
@@ -347,14 +233,6 @@ public class InstructorAttributes extends EntityAttributes<Instructor> {
 
     public void setRole(String role) {
         this.role = role;
-    }
-
-    public Instant getCreatedAt() {
-        return createdAt;
-    }
-
-    public Instant getUpdatedAt() {
-        return updatedAt;
     }
 
     public void setCreatedAt(Instant createdAt) {

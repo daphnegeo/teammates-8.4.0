@@ -34,8 +34,8 @@ import teammates.common.datatransfer.DataBundle;
 import teammates.common.datatransfer.FeedbackParticipantType;
 import teammates.common.datatransfer.attributes.AccountAttributes;
 import teammates.common.datatransfer.attributes.CourseAttributes;
+import teammates.common.datatransfer.attributes.EntityAttributes;
 import teammates.common.datatransfer.attributes.FeedbackQuestionAttributes;
-import teammates.common.datatransfer.attributes.FeedbackQuestionsVariousAttributes;
 import teammates.common.datatransfer.attributes.FeedbackResponseAttributes;
 import teammates.common.datatransfer.attributes.FeedbackResponseCommentAttributes;
 import teammates.common.datatransfer.attributes.FeedbackSessionAttributes;
@@ -44,6 +44,8 @@ import teammates.common.datatransfer.attributes.StudentAttributes;
 import teammates.common.exception.HttpRequestFailedException;
 import teammates.common.util.Const;
 import teammates.common.util.JsonUtils;
+import teammates.storage.entity.Account;
+import teammates.storage.entity.FeedbackQuestion;
 import teammates.ui.output.AccountData;
 import teammates.ui.output.CourseData;
 import teammates.ui.output.CoursesData;
@@ -295,7 +297,7 @@ public abstract class AbstractBackDoor {
     /**
      * Gets an account from the database.
      */
-    public AccountAttributes getAccount(String googleId) {
+    public EntityAttributes<Account> getAccount(String googleId) {
         Map<String, String> params = new HashMap<>();
         params.put(Const.ParamsNames.INSTRUCTOR_ID, googleId);
         ResponseBodyAndCode response = executeGetRequest(Const.ResourceURIs.ACCOUNT, params);
@@ -589,7 +591,7 @@ public abstract class AbstractBackDoor {
     /**
      * Get feedback question from database.
      */
-    public FeedbackQuestionsVariousAttributes getFeedbackQuestion(String courseId, String feedbackSessionName,
+    public EntityAttributes<FeedbackQuestion> getFeedbackQuestion(String courseId, String feedbackSessionName,
                                                                  int qnNumber) {
         Map<String, String> params = new HashMap<>();
         params.put(Const.ParamsNames.COURSE_ID, courseId);
@@ -611,7 +613,7 @@ public abstract class AbstractBackDoor {
             return null;
         }
 
-        FeedbackQuestionsVariousAttributes questionAttr = FeedbackQuestionAttributes.builder()
+        EntityAttributes<FeedbackQuestion> questionAttr = FeedbackQuestionAttributes.builder()
                 .withCourseId(courseId)
                 .withFeedbackSessionName(feedbackSessionName)
                 .withQuestionDetails(question.getQuestionDetails())

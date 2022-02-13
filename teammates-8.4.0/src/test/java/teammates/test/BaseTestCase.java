@@ -10,15 +10,32 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 
 import teammates.common.datatransfer.DataBundle;
+import teammates.common.datatransfer.attributes.AccountAttributes;
+import teammates.common.datatransfer.attributes.CourseAttributes;
+import teammates.common.datatransfer.attributes.EntityAttributes;
+import teammates.common.datatransfer.attributes.FeedbackQuestionAttributes;
+import teammates.common.datatransfer.attributes.FeedbackResponseAttributes;
+import teammates.common.datatransfer.attributes.FeedbackResponseCommentAttributes;
+import teammates.common.datatransfer.attributes.FeedbackSessionAttributes;
+import teammates.common.datatransfer.attributes.InstructorAttributes;
+import teammates.common.datatransfer.attributes.StudentAttributes;
+import teammates.common.datatransfer.attributes.StudentProfileAttributes;
 import teammates.common.util.FieldValidator;
 import teammates.common.util.JsonUtils;
+import teammates.storage.entity.Account;
+import teammates.storage.entity.FeedbackQuestion;
 
 /**
  * Base class for all test cases.
  */
-public class BaseTestCase {
+public abstract class BaseTestCase {
 
-    /**
+    private static final int VERIFICATION_RETRY_COUNT = 5;
+	private static final int VERIFICATION_RETRY_DELAY_IN_MS = 1000;
+	private static final int OPERATION_RETRY_COUNT = 5;
+	private static final int OPERATION_RETRY_DELAY_IN_MS = 1000;
+
+	/**
      * Test Segment divider. Used to divide a test case into logical sections.
      * The weird name is for easy spotting.
      *
@@ -96,7 +113,235 @@ public class BaseTestCase {
         });
     }
 
-    /**
+    protected void verifyPresentInDatabase(DataBundle data) {
+	    data.accounts.values().forEach(this::verifyPresentInDatabase);
+	
+	    data.instructors.values().forEach(this::verifyPresentInDatabase);
+	
+	    data.courses.values().stream()
+	            .filter(course -> !course.isCourseDeleted())
+	            .forEach(this::verifyPresentInDatabase);
+	
+	    data.students.values().forEach(this::verifyPresentInDatabase);
+	}
+
+	public void verifyPresentInDatabase(EntityAttributes<?> expected) {
+	    int retryLimit = VERIFICATION_RETRY_COUNT;
+	    EntityAttributes<?> actual = getEntity(expected);
+	    while (actual == null && retryLimit > 0) {
+	        retryLimit--;
+	        ThreadHelper.waitFor(VERIFICATION_RETRY_DELAY_IN_MS);
+	        actual = getEntity(expected);
+	    }
+	    verifyEquals(expected, actual);
+	}
+
+	private EntityAttributes<?> getEntity(EntityAttributes<?> expected) {
+	    if (expected instanceof AccountAttributes) {
+	        return getAccount((EntityAttributes<Account>) expected);
+	
+	    } else if (expected instanceof StudentProfileAttributes) {
+	        return getStudentProfile((StudentProfileAttributes) expected);
+	
+	    } else if (expected instanceof CourseAttributes) {
+	        return getCourse((CourseAttributes) expected);
+	
+	    } else if (expected instanceof FeedbackQuestionAttributes) {
+	        return getFeedbackQuestion((EntityAttributes<FeedbackQuestion>) expected);
+	
+	    } else if (expected instanceof FeedbackResponseCommentAttributes) {
+	        return getFeedbackResponseComment((FeedbackResponseCommentAttributes) expected);
+	
+	    } else if (expected instanceof FeedbackResponseAttributes) {
+	        return getFeedbackResponse((FeedbackResponseAttributes) expected);
+	
+	    } else if (expected instanceof FeedbackSessionAttributes) {
+	        return getFeedbackSession((FeedbackSessionAttributes) expected);
+	
+	    } else if (expected instanceof InstructorAttributes) {
+	        return getInstructor((InstructorAttributes) expected);
+	
+	    } else if (expected instanceof StudentAttributes) {
+	        return getStudent((StudentAttributes) expected);
+	
+	    } else {
+	        throw new RuntimeException("Unknown entity type!");
+	    }
+	}
+
+	public void verifyAbsentInDatabase(EntityAttributes<?> entity) {
+	    int retryLimit = VERIFICATION_RETRY_COUNT;
+	    EntityAttributes<?> actual = getEntity(entity);
+	    while (actual != null && retryLimit > 0) {
+	        retryLimit--;
+	        ThreadHelper.waitFor(VERIFICATION_RETRY_DELAY_IN_MS);
+	        actual = getEntity(entity);
+	    }
+	    assertNull(actual);
+	}
+
+	private void verifyEquals(EntityAttributes<?> expected, EntityAttributes<?> actual) {
+	    if (expected instanceof AccountAttributes) {
+	        EntityAttributes<Account> expectedAccount = ((EntityAttributes<Account>) expected).getCopy();
+	        EntityAttributes<Account> actualAccount = (EntityAttributes<Account>) actual;
+	        equalizeIrrelevantData(expectedAccount, actualAccount);
+	        assertEquals(JsonUtils.toJson(expectedAccount), JsonUtils.toJson(actualAccount));
+	
+	    } else if (expected instanceof StudentProfileAttributes) {
+	        StudentProfileAttributes expectedProfile = ((StudentProfileAttributes) expected).getCopy();
+	        StudentProfileAttributes actualProfile = (StudentProfileAttributes) actual;
+	        equalizeIrrelevantData(expectedProfile, actualProfile);
+	        assertEquals(JsonUtils.toJson(expectedProfile), JsonUtils.toJson(actualProfile));
+	
+	    } else if (expected instanceof CourseAttributes) {
+	        CourseAttributes expectedCourse = (CourseAttributes) expected;
+	        CourseAttributes actualCourse = (CourseAttributes) actual;
+	        equalizeIrrelevantData(expectedCourse, actualCourse);
+	        assertEquals(JsonUtils.toJson(expectedCourse), JsonUtils.toJson(actualCourse));
+	
+	    } else if (expected instanceof FeedbackQuestionAttributes) {
+	        EntityAttributes<FeedbackQuestion> expectedFq = (EntityAttributes<FeedbackQuestion>) expected;
+	        EntityAttributes<FeedbackQuestion> actualFq = (EntityAttributes<FeedbackQuestion>) actual;
+	        equalizeIrrelevantData(expectedFq, actualFq);
+	        assertEquals(JsonUtils.toJson(expectedFq), JsonUtils.toJson(actualFq));
+	
+	    } else if (expected instanceof FeedbackResponseCommentAttributes) {
+	        FeedbackResponseCommentAttributes expectedFrc = (FeedbackResponseCommentAttributes) expected;
+	        FeedbackResponseCommentAttributes actualFrc = (FeedbackResponseCommentAttributes) actual;
+	        assertEquals(expectedFrc.getCourseId(), actualFrc.getCourseId());
+	        assertEquals(expectedFrc.getCommentGiver(), actualFrc.getCommentGiver());
+	        assertEquals(expectedFrc.getFeedbackSessionName(), actualFrc.getFeedbackSessionName());
+	        assertEquals(expectedFrc.getCommentText(), actualFrc.getCommentText());
+	
+	    } else if (expected instanceof FeedbackResponseAttributes) {
+	        FeedbackResponseAttributes expectedFr = (FeedbackResponseAttributes) expected;
+	        FeedbackResponseAttributes actualFr = (FeedbackResponseAttributes) actual;
+	        equalizeIrrelevantData(expectedFr, actualFr);
+	        assertEquals(JsonUtils.toJson(expectedFr), JsonUtils.toJson(actualFr));
+	
+	    } else if (expected instanceof FeedbackSessionAttributes) {
+	        FeedbackSessionAttributes expectedFs = ((FeedbackSessionAttributes) expected).getCopy();
+	        FeedbackSessionAttributes actualFs = (FeedbackSessionAttributes) actual;
+	        equalizeIrrelevantData(expectedFs, actualFs);
+	        assertEquals(JsonUtils.toJson(expectedFs), JsonUtils.toJson(actualFs));
+	
+	    } else if (expected instanceof InstructorAttributes) {
+	        InstructorAttributes expectedInstructor = ((InstructorAttributes) expected).getCopy();
+	        InstructorAttributes actualInstructor = (InstructorAttributes) actual;
+	        equalizeIrrelevantData(expectedInstructor, actualInstructor);
+	        assertEquals(JsonUtils.toJson(expectedInstructor), JsonUtils.toJson(actualInstructor));
+	
+	    } else if (expected instanceof StudentAttributes) {
+	        StudentAttributes expectedStudent = ((StudentAttributes) expected).getCopy();
+	        StudentAttributes actualStudent = (StudentAttributes) actual;
+	        equalizeIrrelevantData(expectedStudent, actualStudent);
+	        assertEquals(JsonUtils.toJson(expectedStudent), JsonUtils.toJson(actualStudent));
+	
+	    } else {
+	        throw new RuntimeException("Unknown entity type!");
+	    }
+	}
+
+	protected abstract EntityAttributes<Account> getAccount(EntityAttributes<Account> account);
+
+	private void equalizeIrrelevantData(EntityAttributes<Account> expected, EntityAttributes<Account> actual) {
+	    // Ignore time field as it is stamped at the time of creation in testing
+	    expected.setCreatedAt(actual.getCreatedAt());
+	}
+
+	private void equalizeIrrelevantData(StudentProfileAttributes expected, StudentProfileAttributes actual) {
+	    expected.setModifiedDate(actual.getModifiedDate());
+	}
+
+	private void equalizeIrrelevantData(CourseAttributes expected, CourseAttributes actual) {
+	    // Ignore time field as it is stamped at the time of creation in testing
+	    expected.setCreatedAt(actual.getCreatedAt());
+	}
+
+	private void equalizeIrrelevantData(EntityAttributes<FeedbackQuestion> expected, EntityAttributes<FeedbackQuestion> actual) {
+	    expected.setId(actual.getId());
+	}
+
+	private void equalizeIrrelevantData(FeedbackResponseAttributes expected, FeedbackResponseAttributes actual) {
+	    expected.setId(actual.getId());
+	}
+
+	private void equalizeIrrelevantData(FeedbackSessionAttributes expected, FeedbackSessionAttributes actual) {
+	    expected.setCreatedTime(actual.getCreatedTime());
+	    // Not available in FeedbackSessionData and thus ignored
+	    expected.setCreatorEmail(actual.getCreatorEmail());
+	}
+
+	private void equalizeIrrelevantData(InstructorAttributes expected, InstructorAttributes actual) {
+	    // pretend keys match because the key is generated only before storing into database
+	    if (actual.getKey() != null) {
+	        expected.setKey(actual.getKey());
+	    }
+	}
+
+	private void equalizeIrrelevantData(StudentAttributes expected, StudentAttributes actual) {
+	    // For these fields, we consider null and "" equivalent.
+	    if (expected.getGoogleId() == null && actual.getGoogleId().isEmpty()) {
+	        expected.setGoogleId("");
+	    }
+	    if (expected.getTeam() == null && actual.getTeam().isEmpty()) {
+	        expected.setTeam("");
+	    }
+	    if (expected.getComments() == null && actual.getComments().isEmpty()) {
+	        expected.setComments("");
+	    }
+	
+	    // pretend keys match because the key is generated only before storing into database
+	    if (actual.getKey() != null) {
+	        expected.setKey(actual.getKey());
+	    }
+	}
+
+	protected abstract StudentProfileAttributes getStudentProfile(StudentProfileAttributes studentProfileAttributes);
+
+	protected abstract CourseAttributes getCourse(CourseAttributes course);
+
+	protected abstract EntityAttributes<FeedbackQuestion> getFeedbackQuestion(EntityAttributes<FeedbackQuestion> fq);
+
+	protected abstract FeedbackResponseCommentAttributes getFeedbackResponseComment(FeedbackResponseCommentAttributes frc);
+
+	protected abstract FeedbackResponseAttributes getFeedbackResponse(FeedbackResponseAttributes fr);
+
+	protected abstract FeedbackSessionAttributes getFeedbackSession(FeedbackSessionAttributes fs);
+
+	protected abstract InstructorAttributes getInstructor(InstructorAttributes instructor);
+
+	protected abstract StudentAttributes getStudent(StudentAttributes student);
+
+	public void removeAndRestoreDataBundle(DataBundle testData) {
+	    int retryLimit = OPERATION_RETRY_COUNT;
+	    boolean isOperationSuccess = doRemoveAndRestoreDataBundle(testData);
+	    while (!isOperationSuccess && retryLimit > 0) {
+	        retryLimit--;
+	        print("Re-trying removeAndRestoreDataBundle");
+	        ThreadHelper.waitFor(OPERATION_RETRY_DELAY_IN_MS);
+	        isOperationSuccess = doRemoveAndRestoreDataBundle(testData);
+	    }
+	    assertTrue(isOperationSuccess);
+	}
+
+	protected abstract boolean doRemoveAndRestoreDataBundle(DataBundle testData);
+
+	protected void putDocuments(DataBundle testData) {
+	    int retryLimit = OPERATION_RETRY_COUNT;
+	    boolean isOperationSuccess = doPutDocuments(testData);
+	    while (!isOperationSuccess && retryLimit > 0) {
+	        retryLimit--;
+	        print("Re-trying putDocuments");
+	        ThreadHelper.waitFor(OPERATION_RETRY_DELAY_IN_MS);
+	        isOperationSuccess = doPutDocuments(testData);
+	    }
+	    assertTrue(isOperationSuccess);
+	}
+
+	protected abstract boolean doPutDocuments(DataBundle testData);
+
+	/**
      * Invokes the method named {@code methodName} as defined in the {@code definingClass}.
      * @param definingClass     the class which defines the method
      * @param parameterTypes    the parameter types of the method,

@@ -1,10 +1,8 @@
 package teammates.common.datatransfer.attributes;
 
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -13,7 +11,6 @@ import teammates.common.datatransfer.questions.FeedbackQuestionType;
 import teammates.common.datatransfer.questions.FeedbackResponseDetails;
 import teammates.common.datatransfer.questions.FeedbackTextResponseDetails;
 import teammates.common.util.Const;
-import teammates.common.util.FieldValidator;
 import teammates.common.util.JsonUtils;
 import teammates.e2e.cases.InstructorFeedbackReportPageE2ETest;
 import teammates.storage.entity.FeedbackResponse;
@@ -95,38 +92,6 @@ public class FeedbackResponseAttributes extends EntityAttributes<FeedbackRespons
         return responseDetails.getQuestionType();
     }
 
-    public String getId() {
-        return feedbackResponseId;
-    }
-
-    public void setId(String feedbackResponseId) {
-        this.feedbackResponseId = feedbackResponseId;
-    }
-
-    public Instant getCreatedAt() {
-        return createdAt;
-    }
-
-    public Instant getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public String getFeedbackSessionName() {
-        return feedbackSessionName;
-    }
-
-    public String getCourseId() {
-        return courseId;
-    }
-
-    public void setCourseId(String courseId) {
-        this.courseId = courseId;
-    }
-
-    public String getFeedbackQuestionId() {
-        return feedbackQuestionId;
-    }
-
     public void setFeedbackQuestionId(String feedbackQuestionId) {
         this.feedbackQuestionId = feedbackQuestionId;
     }
@@ -153,71 +118,6 @@ public class FeedbackResponseAttributes extends EntityAttributes<FeedbackRespons
 
     public String getRecipientSection() {
         return recipientSection;
-    }
-
-    @Override
-    public List<String> getInvalidityInfo() {
-
-        List<String> errors = new ArrayList<>();
-
-        addNonEmptyError(FieldValidator.getInvalidityInfoForFeedbackSessionName(feedbackSessionName), errors);
-
-        addNonEmptyError(FieldValidator.getInvalidityInfoForCourseId(courseId), errors);
-
-        return errors;
-    }
-
-    @Override
-    public boolean isValid() {
-        return getInvalidityInfo().isEmpty();
-    }
-
-    @Override
-    public FeedbackResponse toEntity() {
-        return new FeedbackResponse(feedbackSessionName, courseId,
-                feedbackQuestionId, getFeedbackQuestionType(),
-                giver, giverSection, recipient, recipientSection, getSerializedFeedbackResponseDetail());
-    }
-
-    @Override
-    public String toString() {
-        return "FeedbackResponseAttributes [feedbackSessionName="
-                + feedbackSessionName + ", courseId=" + courseId
-                + ", feedbackQuestionId=" + feedbackQuestionId
-                + ", feedbackQuestionType=" + getFeedbackQuestionType()
-                + ", giver=" + giver + ", recipient=" + recipient
-                + ", answer=" + getSerializedFeedbackResponseDetail() + "]";
-    }
-
-    @Override
-    public int hashCode() {
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(this.feedbackSessionName).append(this.courseId)
-                .append(this.feedbackQuestionId).append(this.giver).append(this.recipient);
-        return stringBuilder.toString().hashCode();
-    }
-
-    @Override
-    public boolean equals(Object other) {
-        if (other == null) {
-            return false;
-        } else if (this == other) {
-            return true;
-        } else if (this.getClass() == other.getClass()) {
-            FeedbackResponseAttributes otherFeedbackResponse = (FeedbackResponseAttributes) other;
-            return Objects.equals(this.feedbackSessionName, otherFeedbackResponse.feedbackSessionName)
-                    && Objects.equals(this.courseId, otherFeedbackResponse.courseId)
-                    && Objects.equals(this.feedbackQuestionId, otherFeedbackResponse.feedbackQuestionId)
-                    && Objects.equals(this.giver, otherFeedbackResponse.giver)
-                    && Objects.equals(this.recipient, otherFeedbackResponse.recipient);
-        } else {
-            return false;
-        }
-    }
-
-    @Override
-    public void sanitizeForSaving() {
-        // nothing to sanitize before saving
     }
 
     public FeedbackResponseDetails getResponseDetails() {
@@ -250,17 +150,6 @@ public class FeedbackResponseAttributes extends EntityAttributes<FeedbackRespons
      */
     public static Builder builder(String feedbackQuestionId, String giver, String recipient) {
         return new Builder(feedbackQuestionId, giver, recipient);
-    }
-
-    /**
-     * Updates with {@link UpdateOptions}.
-     */
-    public void update(UpdateOptions updateOptions) {
-        updateOptions.giverOption.ifPresent(s -> giver = s);
-        updateOptions.giverSectionOption.ifPresent(s -> giverSection = s);
-        updateOptions.recipientOption.ifPresent(s -> recipient = s);
-        updateOptions.recipientSectionOption.ifPresent(s -> recipientSection = s);
-        updateOptions.responseDetailsUpdateOption.ifPresent(this::setResponseDetails);
     }
 
     public List<FeedbackQuestionAttributes> getQuestionsByCourse(InstructorFeedbackReportPageE2ETest instructorFeedbackReportPageE2ETest, String courseId) {
@@ -302,13 +191,6 @@ public class FeedbackResponseAttributes extends EntityAttributes<FeedbackRespons
 	}
 
 	/**
-     * Returns a {@link UpdateOptions.Builder} to build {@link UpdateOptions} for a response.
-     */
-    public static UpdateOptions.Builder updateOptionsBuilder(String feedbackResponseId) {
-        return new UpdateOptions.Builder(feedbackResponseId);
-    }
-
-    /**
      * A builder for {@link FeedbackResponseCommentAttributes}.
      */
     public static class Builder extends BasicBuilder<FeedbackResponseAttributes, Builder> {

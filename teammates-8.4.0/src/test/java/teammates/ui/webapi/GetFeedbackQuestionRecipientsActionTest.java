@@ -3,11 +3,17 @@ package teammates.ui.webapi;
 import org.testng.annotations.Test;
 
 import teammates.common.datatransfer.DataBundle;
-import teammates.common.datatransfer.attributes.FeedbackQuestionsVariousAttributes;
+import teammates.common.datatransfer.attributes.CourseAttributes;
+import teammates.common.datatransfer.attributes.EntityAttributes;
+import teammates.common.datatransfer.attributes.FeedbackResponseAttributes;
+import teammates.common.datatransfer.attributes.FeedbackResponseCommentAttributes;
 import teammates.common.datatransfer.attributes.FeedbackSessionAttributes;
 import teammates.common.datatransfer.attributes.InstructorAttributes;
 import teammates.common.datatransfer.attributes.StudentAttributes;
+import teammates.common.datatransfer.attributes.StudentProfileAttributes;
 import teammates.common.util.Const;
+import teammates.storage.entity.Account;
+import teammates.storage.entity.FeedbackQuestion;
 import teammates.ui.output.FeedbackQuestionRecipientsData;
 import teammates.ui.request.Intent;
 
@@ -23,19 +29,6 @@ public class GetFeedbackQuestionRecipientsActionTest extends BaseActionTest<GetF
     private StudentAttributes student3InCourse1;
     private InstructorAttributes instructor1OfCourse1;
     private InstructorAttributes instructor1OfCourse2;
-
-    @Override
-    public void prepareTestData() {
-        DataBundle testData = loadDataBundle("/GetFeedbackQuestionRecipientsActionTest.json");
-        removeAndRestoreDataBundle(testData);
-        firstSessionInCourse1 = testData.feedbackSessions.get("session1InCourse1");
-        secondSessionInCourse1 = testData.feedbackSessions.get("session2InCourse1");
-        firstSessionInCourse2 = testData.feedbackSessions.get("session1InCourse2");
-        student1InCourse1 = testData.students.get("student1InCourse1");
-        student3InCourse1 = testData.students.get("student3InCourse1");
-        instructor1OfCourse1 = testData.instructors.get("instructor1OfCourse1");
-        instructor1OfCourse2 = testData.instructors.get("instructor1OfCourse2");
-    }
 
     @Override
     protected String getActionUri() {
@@ -310,7 +303,7 @@ public class GetFeedbackQuestionRecipientsActionTest extends BaseActionTest<GetF
 
     private String[] generateParameters(FeedbackSessionAttributes session, int questionNumber, Intent intent,
                                         String regKey, String moderatedPerson, String previewPerson) {
-        FeedbackQuestionsVariousAttributes question = logic.getFeedbackQuestion(session.getFeedbackSessionName(),
+        EntityAttributes<FeedbackQuestion> question = logic.getFeedbackQuestion(session.getFeedbackSessionName(),
                 session.getCourseId(), questionNumber);
         return new String[] {
                 Const.ParamsNames.FEEDBACK_QUESTION_ID, question.getFeedbackQuestionId(),
@@ -336,4 +329,70 @@ public class GetFeedbackQuestionRecipientsActionTest extends BaseActionTest<GetF
             assertEquals(expected.getRecipients().get(i).getName(), actual.getRecipients().get(i).getName());
         }
     }
+
+	@Override
+	protected EntityAttributes<Account> getAccount(EntityAttributes<Account> account) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected StudentProfileAttributes getStudentProfile(StudentProfileAttributes studentProfileAttributes) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected CourseAttributes getCourse(CourseAttributes course) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected EntityAttributes<FeedbackQuestion> getFeedbackQuestion(EntityAttributes<FeedbackQuestion> fq) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected FeedbackResponseCommentAttributes getFeedbackResponseComment(FeedbackResponseCommentAttributes frc) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected FeedbackResponseAttributes getFeedbackResponse(FeedbackResponseAttributes fr) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected FeedbackSessionAttributes getFeedbackSession(FeedbackSessionAttributes fs) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected InstructorAttributes getInstructor(InstructorAttributes instructor) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected StudentAttributes getStudent(StudentAttributes student) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected boolean doRemoveAndRestoreDataBundle(DataBundle testData) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	protected boolean doPutDocuments(DataBundle testData) {
+		// TODO Auto-generated method stub
+		return false;
+	}
 }

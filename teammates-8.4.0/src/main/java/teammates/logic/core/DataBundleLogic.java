@@ -14,7 +14,6 @@ import teammates.common.datatransfer.attributes.AccountAttributes;
 import teammates.common.datatransfer.attributes.CourseAttributes;
 import teammates.common.datatransfer.attributes.EntityAttributes;
 import teammates.common.datatransfer.attributes.FeedbackQuestionAttributes;
-import teammates.common.datatransfer.attributes.FeedbackQuestionsVariousAttributes;
 import teammates.common.datatransfer.attributes.FeedbackResponseAttributes;
 import teammates.common.datatransfer.attributes.FeedbackResponseCommentAttributes;
 import teammates.common.datatransfer.attributes.FeedbackSessionAttributes;
@@ -34,6 +33,7 @@ import teammates.storage.api.FeedbackSessionsDb;
 import teammates.storage.api.InstructorsDb;
 import teammates.storage.api.ProfilesDb;
 import teammates.storage.api.StudentsDb;
+import teammates.storage.entity.FeedbackQuestion;
 
 /**
  * Handles operations related to data bundles.
@@ -193,7 +193,7 @@ public final class DataBundleLogic {
     }
 
     private void processQuestions(Collection<FeedbackQuestionAttributes> questions) {
-        for (FeedbackQuestionsVariousAttributes question : questions) {
+        for (EntityAttributes<FeedbackQuestion> question : questions) {
             question.removeIrrelevantVisibilityOptions();
         }
     }
@@ -209,7 +209,7 @@ public final class DataBundleLogic {
 
     private Map<String, String> makeQuestionIdMap(List<FeedbackQuestionAttributes> createdQuestions) {
         Map<String, String> questionIdMap = new HashMap<>();
-        for (FeedbackQuestionsVariousAttributes createdQuestion : createdQuestions) {
+        for (EntityAttributes<FeedbackQuestion> createdQuestion : createdQuestions) {
             String sessionKey = makeSessionKey(createdQuestion.getFeedbackSessionName(), createdQuestion.getCourseId());
             String questionKey = makeQuestionKey(sessionKey, createdQuestion.getQuestionNumber());
             questionIdMap.put(questionKey, createdQuestion.getId());

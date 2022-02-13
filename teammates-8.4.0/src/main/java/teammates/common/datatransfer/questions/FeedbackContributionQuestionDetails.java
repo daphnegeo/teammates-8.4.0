@@ -14,12 +14,13 @@ import java.util.stream.Collectors;
 import teammates.common.datatransfer.FeedbackParticipantType;
 import teammates.common.datatransfer.SessionResultsBundle;
 import teammates.common.datatransfer.TeamEvalResult;
-import teammates.common.datatransfer.attributes.FeedbackQuestionsVariousAttributes;
+import teammates.common.datatransfer.attributes.EntityAttributes;
 import teammates.common.datatransfer.attributes.FeedbackResponseAttributes;
 import teammates.common.datatransfer.attributes.StudentAttributes;
 import teammates.common.util.Const;
 import teammates.common.util.JsonUtils;
 import teammates.common.util.Logger;
+import teammates.storage.entity.FeedbackQuestion;
 
 /**
  * Contains specific structure and processing logic for contribution feedback questions.
@@ -68,7 +69,7 @@ public class FeedbackContributionQuestionDetails extends FeedbackQuestionDetails
 
     @Override
     public String getQuestionResultStatisticsJson(
-            FeedbackQuestionsVariousAttributes question, String studentEmail, SessionResultsBundle bundle) {
+            EntityAttributes<FeedbackQuestion> question, String studentEmail, SessionResultsBundle bundle) {
         List<FeedbackResponseAttributes> responses = bundle.getQuestionResponseMap().get(question.getId());
 
         boolean isStudent = studentEmail != null;
@@ -285,7 +286,7 @@ public class FeedbackContributionQuestionDetails extends FeedbackQuestionDetails
     }
 
     @Override
-    public String validateGiverRecipientVisibility(FeedbackQuestionsVariousAttributes feedbackQuestionAttributes) {
+    public String validateGiverRecipientVisibility(EntityAttributes<FeedbackQuestion> feedbackQuestionAttributes) {
         String errorMsg = "";
 
         // giver type can only be STUDENTS

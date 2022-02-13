@@ -5,8 +5,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import teammates.common.datatransfer.FeedbackParticipantType;
+import teammates.common.datatransfer.attributes.EntityAttributes;
 import teammates.common.datatransfer.attributes.FeedbackQuestionAttributes;
-import teammates.common.datatransfer.attributes.FeedbackQuestionsVariousAttributes;
 import teammates.common.datatransfer.questions.FeedbackConstantSumQuestionDetails;
 import teammates.common.datatransfer.questions.FeedbackMcqQuestionDetails;
 import teammates.common.datatransfer.questions.FeedbackMsqQuestionDetails;
@@ -14,6 +14,7 @@ import teammates.common.datatransfer.questions.FeedbackQuestionDetails;
 import teammates.common.datatransfer.questions.FeedbackQuestionType;
 import teammates.common.datatransfer.questions.FeedbackRubricQuestionDetails;
 import teammates.common.util.Const;
+import teammates.storage.entity.FeedbackQuestion;
 
 /**
  * The API output format of {@link FeedbackQuestionAttributes}.
@@ -37,7 +38,7 @@ public class FeedbackQuestionData extends ApiOutput {
     private List<FeedbackVisibilityType> showGiverNameTo;
     private List<FeedbackVisibilityType> showRecipientNameTo;
 
-    public FeedbackQuestionData(FeedbackQuestionsVariousAttributes feedbackQuestionAttributes) {
+    public FeedbackQuestionData(EntityAttributes<FeedbackQuestion> feedbackQuestionAttributes) {
         FeedbackQuestionDetails feedbackQuestionDetails = feedbackQuestionAttributes.getQuestionDetailsCopy();
 
         this.feedbackQuestionId = feedbackQuestionAttributes.getFeedbackQuestionId();

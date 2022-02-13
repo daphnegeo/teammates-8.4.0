@@ -18,11 +18,6 @@ public class IanaTimezonePage extends AppPage {
         super(browser);
     }
 
-    @Override
-    protected boolean containsExpectedPageContents() {
-        return true;
-    }
-
     public String getVersion() {
         return timezoneVersion.getText();
     }

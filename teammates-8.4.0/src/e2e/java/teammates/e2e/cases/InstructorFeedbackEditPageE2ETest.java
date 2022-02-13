@@ -5,19 +5,26 @@ import java.util.Arrays;
 
 import org.testng.annotations.Test;
 
+import teammates.common.datatransfer.DataBundle;
 import teammates.common.datatransfer.FeedbackParticipantType;
 import teammates.common.datatransfer.attributes.CourseAttributes;
+import teammates.common.datatransfer.attributes.EntityAttributes;
 import teammates.common.datatransfer.attributes.FeedbackQuestionAttributes;
-import teammates.common.datatransfer.attributes.FeedbackQuestionsVariousAttributes;
+import teammates.common.datatransfer.attributes.FeedbackResponseAttributes;
+import teammates.common.datatransfer.attributes.FeedbackResponseCommentAttributes;
 import teammates.common.datatransfer.attributes.FeedbackSessionAttributes;
 import teammates.common.datatransfer.attributes.InstructorAttributes;
+import teammates.common.datatransfer.attributes.StudentAttributes;
+import teammates.common.datatransfer.attributes.StudentProfileAttributes;
 import teammates.common.datatransfer.questions.FeedbackContributionQuestionDetails;
 import teammates.common.datatransfer.questions.FeedbackTextQuestionDetails;
 import teammates.common.util.AppUrl;
 import teammates.common.util.Const;
+import teammates.e2e.pageobjects.AppPage;
 import teammates.e2e.pageobjects.FeedbackSubmitPage;
 import teammates.e2e.pageobjects.InstructorFeedbackEditPage;
-import teammates.e2e.pageobjects.InstructorFeedbackPage;
+import teammates.storage.entity.Account;
+import teammates.storage.entity.FeedbackQuestion;
 import teammates.test.ThreadHelper;
 
 /**
@@ -46,7 +53,7 @@ public class InstructorFeedbackEditPageE2ETest extends BaseE2ETestCase {
         AppUrl url = createUrl(Const.WebPageURIs.INSTRUCTOR_SESSION_EDIT_PAGE)
                 .withCourseId(course.getId())
                 .withSessionName(feedbackSession.getFeedbackSessionName());
-        InstructorFeedbackPage feedbackEditPage =
+        AppPage feedbackEditPage =
                 loginToPage(url, InstructorFeedbackEditPage.class, instructor.getGoogleId());
 
         ______TS("verify loaded data");
@@ -67,7 +74,7 @@ public class InstructorFeedbackEditPageE2ETest extends BaseE2ETestCase {
         verifyPresentInDatabase(feedbackSession);
 
         ______TS("add template question");
-        FeedbackQuestionsVariousAttributes templateQuestion = getTemplateQuestion();
+        EntityAttributes<FeedbackQuestion> templateQuestion = getTemplateQuestion();
         feedbackEditPage.addTemplateQuestion(1);
 
         feedbackEditPage.verifyStatusMessage("The question has been added to this feedback session.");
@@ -76,7 +83,7 @@ public class InstructorFeedbackEditPageE2ETest extends BaseE2ETestCase {
         verifyPresentInDatabase(templateQuestion);
 
         ______TS("copy question from other session");
-        FeedbackQuestionsVariousAttributes questionToCopy = testData.feedbackQuestions.get("qn1");
+        EntityAttributes<FeedbackQuestion> questionToCopy = testData.feedbackQuestions.get("qn1");
         questionToCopy.setCourseId(course.getId());
         questionToCopy.setFeedbackSessionName(feedbackSession.getFeedbackSessionName());
         questionToCopy.setQuestionNumber(2);
@@ -99,7 +106,7 @@ public class InstructorFeedbackEditPageE2ETest extends BaseE2ETestCase {
         feedbackEditPage.verifyQuestionDetails(2, templateQuestion);
 
         ______TS("edit question");
-        FeedbackQuestionsVariousAttributes editedQuestion = getTemplateQuestion();
+        EntityAttributes<FeedbackQuestion> editedQuestion = getTemplateQuestion();
         editedQuestion.setQuestionNumber(1);
         String questionBrief = editedQuestion.getQuestionDetailsCopy().getQuestionText();
         editedQuestion.setQuestionDetails(new FeedbackTextQuestionDetails(questionBrief));
@@ -157,9 +164,9 @@ public class InstructorFeedbackEditPageE2ETest extends BaseE2ETestCase {
                 instructor.getGoogleId()));
     }
 
-    private void verifyReorder(FeedbackQuestionsVariousAttributes question) {
+    private void verifyReorder(EntityAttributes<FeedbackQuestion> question) {
         int retryLimit = 5;
-        FeedbackQuestionsVariousAttributes actual = getFeedbackQuestion(question);
+        EntityAttributes<FeedbackQuestion> actual = getFeedbackQuestion(question);
         while (!actual.equals(question) && retryLimit > 0) {
             retryLimit--;
             ThreadHelper.waitFor(1000);
@@ -168,7 +175,7 @@ public class InstructorFeedbackEditPageE2ETest extends BaseE2ETestCase {
         assertEquals(question, actual);
     }
 
-    private FeedbackQuestionsVariousAttributes getTemplateQuestion() {
+    private EntityAttributes<FeedbackQuestion> getTemplateQuestion() {
         FeedbackContributionQuestionDetails detail = new FeedbackContributionQuestionDetails();
         detail.setQuestionText("How much work did each team member contribute?"
                 + " (response will be shown anonymously to each team member).");
@@ -190,4 +197,70 @@ public class InstructorFeedbackEditPageE2ETest extends BaseE2ETestCase {
                         FeedbackParticipantType.RECEIVER))
                 .build();
     }
+
+	@Override
+	protected EntityAttributes<Account> getAccount(EntityAttributes<Account> account) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected StudentProfileAttributes getStudentProfile(StudentProfileAttributes studentProfileAttributes) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected CourseAttributes getCourse(CourseAttributes course) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected EntityAttributes<FeedbackQuestion> getFeedbackQuestion(EntityAttributes<FeedbackQuestion> fq) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected FeedbackResponseCommentAttributes getFeedbackResponseComment(FeedbackResponseCommentAttributes frc) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected FeedbackResponseAttributes getFeedbackResponse(FeedbackResponseAttributes fr) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected FeedbackSessionAttributes getFeedbackSession(FeedbackSessionAttributes fs) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected InstructorAttributes getInstructor(InstructorAttributes instructor) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected StudentAttributes getStudent(StudentAttributes student) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected boolean doRemoveAndRestoreDataBundle(DataBundle testData) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	protected boolean doPutDocuments(DataBundle testData) {
+		// TODO Auto-generated method stub
+		return false;
+	}
 }

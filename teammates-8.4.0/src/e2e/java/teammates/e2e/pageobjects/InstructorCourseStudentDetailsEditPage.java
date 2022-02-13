@@ -38,11 +38,6 @@ public class InstructorCourseStudentDetailsEditPage extends AppPage {
         super(browser);
     }
 
-    @Override
-    protected boolean containsExpectedPageContents() {
-        return getPageTitle().contains("Edit Student Details");
-    }
-
     public void verifyIsCorrectPage(String expectedCourseId, String expectedStudentEmail) {
         assertEquals(expectedCourseId, courseId.getText());
         assertEquals(expectedStudentEmail, studentEmailTextbox.getAttribute("value"));

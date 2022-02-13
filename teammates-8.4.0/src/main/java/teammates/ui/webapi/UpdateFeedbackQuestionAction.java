@@ -2,12 +2,13 @@ package teammates.ui.webapi;
 
 import java.util.List;
 
+import teammates.common.datatransfer.attributes.EntityAttributes;
 import teammates.common.datatransfer.attributes.FeedbackQuestionAttributes;
-import teammates.common.datatransfer.attributes.FeedbackQuestionsVariousAttributes;
 import teammates.common.datatransfer.questions.FeedbackQuestionDetails;
 import teammates.common.exception.EntityDoesNotExistException;
 import teammates.common.exception.InvalidParametersException;
 import teammates.common.util.Const;
+import teammates.storage.entity.FeedbackQuestion;
 import teammates.ui.output.FeedbackQuestionData;
 import teammates.ui.request.FeedbackQuestionUpdateRequest;
 import teammates.ui.request.InvalidHttpRequestBodyException;
@@ -25,7 +26,7 @@ public class UpdateFeedbackQuestionAction extends Action {
     @Override
     void checkSpecificAccessControl() throws UnauthorizedAccessException {
         String feedbackQuestionId = getNonNullRequestParamValue(Const.ParamsNames.FEEDBACK_QUESTION_ID);
-        FeedbackQuestionsVariousAttributes questionAttributes = logic.getFeedbackQuestion(feedbackQuestionId);
+        EntityAttributes<FeedbackQuestion> questionAttributes = logic.getFeedbackQuestion(feedbackQuestionId);
 
         if (questionAttributes == null) {
             throw new EntityNotFoundException("Unknown question id");
@@ -39,7 +40,7 @@ public class UpdateFeedbackQuestionAction extends Action {
     @Override
     public JsonResult execute() throws InvalidHttpRequestBodyException {
         String feedbackQuestionId = getNonNullRequestParamValue(Const.ParamsNames.FEEDBACK_QUESTION_ID);
-        FeedbackQuestionsVariousAttributes oldQuestion = logic.getFeedbackQuestion(feedbackQuestionId);
+        EntityAttributes<FeedbackQuestion> oldQuestion = logic.getFeedbackQuestion(feedbackQuestionId);
 
         FeedbackQuestionUpdateRequest updateRequest = getAndValidateRequestBody(FeedbackQuestionUpdateRequest.class);
 

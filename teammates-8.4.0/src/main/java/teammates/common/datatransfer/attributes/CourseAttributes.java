@@ -3,18 +3,14 @@ package teammates.common.datatransfer.attributes;
 import java.time.DateTimeException;
 import java.time.Instant;
 import java.time.ZoneId;
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Objects;
 
 import teammates.common.util.AppUrl;
 import teammates.common.util.Const;
 import teammates.common.util.Const.InstructorPermissions;
 import teammates.common.util.Const.WebPageURIs;
-import teammates.common.util.FieldValidator;
 import teammates.common.util.Logger;
-import teammates.common.util.SanitizationHelper;
 import teammates.e2e.cases.BaseE2ETestCase;
 import teammates.e2e.cases.InstructorCourseEditPageE2ETest;
 import teammates.e2e.pageobjects.InstructorCourseEditPage;
@@ -78,10 +74,6 @@ public class CourseAttributes extends EntityAttributes<Course> implements Compar
         return new Builder(courseId);
     }
 
-    public String getId() {
-        return id;
-    }
-
     public String getName() {
         return name;
     }
@@ -102,10 +94,6 @@ public class CourseAttributes extends EntityAttributes<Course> implements Compar
         return institute;
     }
 
-    public Instant getCreatedAt() {
-        return createdAt;
-    }
-
     public void setCreatedAt(Instant createdAt) {
         this.createdAt = createdAt;
     }
@@ -123,57 +111,6 @@ public class CourseAttributes extends EntityAttributes<Course> implements Compar
     }
 
     @Override
-    public List<String> getInvalidityInfo() {
-
-        List<String> errors = new ArrayList<>();
-
-        addNonEmptyError(FieldValidator.getInvalidityInfoForCourseId(getId()), errors);
-
-        addNonEmptyError(FieldValidator.getInvalidityInfoForCourseName(getName()), errors);
-
-        addNonEmptyError(FieldValidator.getInvalidityInfoForInstituteName(getInstitute()), errors);
-
-        return errors;
-    }
-
-    @Override
-    public Course toEntity() {
-        return new Course(getId(), getName(), getTimeZone(), getInstitute(), createdAt, deletedAt);
-    }
-
-    @Override
-    public String toString() {
-        return "[" + CourseAttributes.class.getSimpleName() + "] id: " + getId() + " name: " + getName()
-               + " institute: " + getInstitute() + " timeZone: " + getTimeZone();
-    }
-
-    @Override
-    public int hashCode() {
-        return (this.id + this.name + this.institute).hashCode();
-    }
-
-    @Override
-    public boolean equals(Object other) {
-        if (other == null) {
-            return false;
-        } else if (this == other) {
-            return true;
-        } else if (this.getClass() == other.getClass()) {
-            CourseAttributes otherCourse = (CourseAttributes) other;
-            return Objects.equals(this.id, otherCourse.id)
-                    && Objects.equals(this.institute, otherCourse.institute)
-                    && Objects.equals(this.name, otherCourse.name);
-        } else {
-            return false;
-        }
-    }
-
-    @Override
-    public void sanitizeForSaving() {
-        this.institute = SanitizationHelper.sanitizeTitle(institute);
-    }
-
-    @Override
     public int compareTo(CourseAttributes o) {
         if (o == null) {
             return 0;
@@ -186,15 +123,6 @@ public class CourseAttributes extends EntityAttributes<Course> implements Compar
      */
     public static void sortById(List<CourseAttributes> courses) {
         courses.sort(Comparator.comparing(CourseAttributes::getId));
-    }
-
-    /**
-     * Updates with {@link UpdateOptions}.
-     */
-    public void update(UpdateOptions updateOptions) {
-        updateOptions.nameOption.ifPresent(s -> name = s);
-        updateOptions.timeZoneOption.ifPresent(s -> timeZone = s);
-        updateOptions.instituteOption.ifPresent(s -> institute = s);
     }
 
     @Test
@@ -292,13 +220,6 @@ public class CourseAttributes extends EntityAttributes<Course> implements Compar
 	}
 
 	/**
-     * Returns a {@link UpdateOptions.Builder} to build {@link UpdateOptions} for a course.
-     */
-    public static UpdateOptions.Builder updateOptionsBuilder(String courseId) {
-        return new UpdateOptions.Builder(courseId);
-    }
-
-    /**
      * A builder for {@link CourseAttributes}.
      */
     public static class Builder extends BasicBuilder<CourseAttributes, Builder> {
@@ -379,10 +300,6 @@ public class CourseAttributes extends EntityAttributes<Course> implements Compar
 
         UpdateOptions updateOptions;
         B thisBuilder;
-
-        BasicBuilder(UpdateOptions updateOptions) {
-            this.updateOptions = updateOptions;
-        }
 
         public B withName(String name) {
             assert name != null;

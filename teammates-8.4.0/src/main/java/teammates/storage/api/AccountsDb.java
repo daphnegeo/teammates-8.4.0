@@ -6,6 +6,7 @@ import com.googlecode.objectify.Key;
 import com.googlecode.objectify.cmd.LoadType;
 
 import teammates.common.datatransfer.attributes.AccountAttributes;
+import teammates.common.datatransfer.attributes.EntityAttributes;
 import teammates.common.exception.EntityDoesNotExistException;
 import teammates.common.exception.InvalidParametersException;
 import teammates.storage.entity.Account;
@@ -31,7 +32,7 @@ public final class AccountsDb extends EntitiesDb<Account, AccountAttributes> {
     /**
      * Gets an account.
      */
-    public AccountAttributes getAccount(String googleId) {
+    public EntityAttributes<Account> getAccount(String googleId) {
         assert googleId != null;
 
         return googleId.isEmpty() ? null : makeAttributesOrNull(getAccountEntity(googleId));
@@ -44,7 +45,7 @@ public final class AccountsDb extends EntitiesDb<Account, AccountAttributes> {
      * @throws InvalidParametersException if attributes to update are not valid
      * @throws EntityDoesNotExistException if account cannot be found
      */
-    public AccountAttributes updateAccount(AccountAttributes.UpdateOptions updateOptions)
+    public EntityAttributes<Account> updateAccount(AccountAttributes.UpdateOptions updateOptions)
             throws InvalidParametersException, EntityDoesNotExistException {
         assert updateOptions != null;
 
@@ -53,7 +54,7 @@ public final class AccountsDb extends EntitiesDb<Account, AccountAttributes> {
             throw new EntityDoesNotExistException(ERROR_UPDATE_NON_EXISTENT + updateOptions);
         }
 
-        AccountAttributes newAttributes = makeAttributes(account);
+        EntityAttributes<Account> newAttributes = makeAttributes(account);
         newAttributes.update(updateOptions);
 
         newAttributes.sanitizeForSaving();
@@ -101,13 +102,13 @@ public final class AccountsDb extends EntitiesDb<Account, AccountAttributes> {
     }
 
     @Override
-    boolean hasExistingEntities(AccountAttributes entityToCreate) {
+    boolean hasExistingEntities(EntityAttributes<Account> entityToCreate) {
         Key<Account> keyToFind = Key.create(Account.class, entityToCreate.getGoogleId());
         return !load().filterKey(keyToFind).keys().list().isEmpty();
     }
 
     @Override
-    AccountAttributes makeAttributes(Account entity) {
+    EntityAttributes<Account> makeAttributes(Account entity) {
         assert entity != null;
 
         return AccountAttributes.valueOf(entity);

@@ -15,16 +15,20 @@ import teammates.common.datatransfer.CourseRoster;
 import teammates.common.datatransfer.DataBundle;
 import teammates.common.datatransfer.FeedbackParticipantType;
 import teammates.common.datatransfer.SessionResultsBundle;
-import teammates.common.datatransfer.attributes.FeedbackQuestionsVariousAttributes;
+import teammates.common.datatransfer.attributes.CourseAttributes;
+import teammates.common.datatransfer.attributes.EntityAttributes;
 import teammates.common.datatransfer.attributes.FeedbackResponseAttributes;
 import teammates.common.datatransfer.attributes.FeedbackResponseCommentAttributes;
 import teammates.common.datatransfer.attributes.FeedbackSessionAttributes;
 import teammates.common.datatransfer.attributes.InstructorAttributes;
 import teammates.common.datatransfer.attributes.StudentAttributes;
+import teammates.common.datatransfer.attributes.StudentProfileAttributes;
 import teammates.common.datatransfer.questions.FeedbackResponseDetails;
 import teammates.common.datatransfer.questions.FeedbackTextResponseDetails;
 import teammates.common.exception.EntityAlreadyExistsException;
 import teammates.common.exception.EntityDoesNotExistException;
+import teammates.storage.entity.Account;
+import teammates.storage.entity.FeedbackQuestion;
 import teammates.test.AssertHelper;
 
 /**
@@ -59,8 +63,8 @@ public class FeedbackResponsesLogicTest extends BaseLogicTest {
 
     @Test
     public void testAreThereResponsesForQuestion() {
-        FeedbackQuestionsVariousAttributes questionWithResponse;
-        FeedbackQuestionsVariousAttributes questionWithoutResponse;
+        EntityAttributes<FeedbackQuestion> questionWithResponse;
+        EntityAttributes<FeedbackQuestion> questionWithoutResponse;
 
         ______TS("Check that a question has some responses");
 
@@ -178,7 +182,7 @@ public class FeedbackResponsesLogicTest extends BaseLogicTest {
         // Student 4 has 1 responses to him from team members,
         // 1 response from him a team member, and
         // 1 team response from him to another team.
-        FeedbackQuestionsVariousAttributes teamQuestion = getQuestionFromDatabase("team.members.feedback");
+        EntityAttributes<FeedbackQuestion> teamQuestion = getQuestionFromDatabase("team.members.feedback");
         assertEquals(1, getFeedbackResponsesForReceiverForQuestion(
                 teamQuestion.getId(), studentToUpdate.getEmail()).size());
         assertEquals(1,
@@ -378,7 +382,7 @@ public class FeedbackResponsesLogicTest extends BaseLogicTest {
         StudentAttributes student3 = dataBundle.students.get("student3InCourse1");
         StudentAttributes student5 = dataBundle.students.get("student5InCourse1");
 
-        FeedbackQuestionsVariousAttributes fq = getQuestionFromDatabase("qn3InSession1InCourse1");
+        EntityAttributes<FeedbackQuestion> fq = getQuestionFromDatabase("qn3InSession1InCourse1");
         FeedbackResponseAttributes fr = getResponseFromDatabase("response1ForQ3S1C1");
 
         CourseRoster roster = new CourseRoster(
@@ -765,7 +769,7 @@ public class FeedbackResponsesLogicTest extends BaseLogicTest {
         // extra test data used on top of typical data bundle
         removeAndRestoreDataBundle(loadDataBundle("/SpecialCharacterTest.json"));
 
-        FeedbackQuestionsVariousAttributes question = fqLogic.getFeedbackQuestion(
+        EntityAttributes<FeedbackQuestion> question = fqLogic.getFeedbackQuestion(
                 "First Session", "FQLogicPCT.CS2104", 1);
 
         // Alice will see 3 responses
@@ -930,7 +934,7 @@ public class FeedbackResponsesLogicTest extends BaseLogicTest {
 
     @Test
     public void testGetSessionResultsForCourse_specificQuestion_shouldHaveCorrectResponsesFiltered() {
-        FeedbackQuestionsVariousAttributes fq = getQuestionFromDatabase("qn3InSession1InCourse1");
+        EntityAttributes<FeedbackQuestion> fq = getQuestionFromDatabase("qn3InSession1InCourse1");
         InstructorAttributes instructor = dataBundle.instructors.get("instructor1OfCourse1");
 
         // no section specified
@@ -1074,7 +1078,7 @@ public class FeedbackResponsesLogicTest extends BaseLogicTest {
         dataBundle = getTypicalDataBundle();
         removeAndRestoreDataBundle(dataBundle);
 
-        FeedbackQuestionsVariousAttributes fq = getQuestionFromDatabase("qn2InSession1InCourse1");
+        EntityAttributes<FeedbackQuestion> fq = getQuestionFromDatabase("qn2InSession1InCourse1");
         FeedbackResponseAttributes existingResponse = getResponseFromDatabase(dataBundle, "response1ForQ2S1C1");
         // create a "null" response to simulate trying to get a null student's response
         FeedbackResponseAttributes newResponse =
@@ -1098,8 +1102,8 @@ public class FeedbackResponsesLogicTest extends BaseLogicTest {
         assertEquals(4, responseForQuestion.size());
     }
 
-    private FeedbackQuestionsVariousAttributes getQuestionFromDatabase(DataBundle dataBundle, String jsonId) {
-        FeedbackQuestionsVariousAttributes questionToGet = dataBundle.feedbackQuestions.get(jsonId);
+    private EntityAttributes<FeedbackQuestion> getQuestionFromDatabase(DataBundle dataBundle, String jsonId) {
+        EntityAttributes<FeedbackQuestion> questionToGet = dataBundle.feedbackQuestions.get(jsonId);
         questionToGet = fqLogic.getFeedbackQuestion(questionToGet.getFeedbackSessionName(),
                 questionToGet.getCourseId(),
                 questionToGet.getQuestionNumber());
@@ -1107,7 +1111,7 @@ public class FeedbackResponsesLogicTest extends BaseLogicTest {
         return questionToGet;
     }
 
-    private FeedbackQuestionsVariousAttributes getQuestionFromDatabase(String jsonId) {
+    private EntityAttributes<FeedbackQuestion> getQuestionFromDatabase(String jsonId) {
         return getQuestionFromDatabase(dataBundle, jsonId);
     }
 
@@ -1144,4 +1148,70 @@ public class FeedbackResponsesLogicTest extends BaseLogicTest {
         }
         return responseComments;
     }
+
+	@Override
+	protected EntityAttributes<Account> getAccount(EntityAttributes<Account> account) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected StudentProfileAttributes getStudentProfile(StudentProfileAttributes studentProfileAttributes) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected CourseAttributes getCourse(CourseAttributes course) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected EntityAttributes<FeedbackQuestion> getFeedbackQuestion(EntityAttributes<FeedbackQuestion> fq) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected FeedbackResponseCommentAttributes getFeedbackResponseComment(FeedbackResponseCommentAttributes frc) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected FeedbackResponseAttributes getFeedbackResponse(FeedbackResponseAttributes fr) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected FeedbackSessionAttributes getFeedbackSession(FeedbackSessionAttributes fs) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected InstructorAttributes getInstructor(InstructorAttributes instructor) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected StudentAttributes getStudent(StudentAttributes student) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected boolean doRemoveAndRestoreDataBundle(DataBundle testData) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	protected boolean doPutDocuments(DataBundle testData) {
+		// TODO Auto-generated method stub
+		return false;
+	}
 }

@@ -9,8 +9,8 @@ import javax.annotation.Nullable;
 
 import teammates.common.datatransfer.DataBundle;
 import teammates.common.datatransfer.SessionResultsBundle;
-import teammates.common.datatransfer.attributes.AccountAttributes;
 import teammates.common.datatransfer.attributes.CourseAttributes;
+import teammates.common.datatransfer.attributes.EntityAttributes;
 import teammates.common.datatransfer.attributes.FeedbackQuestionAttributes;
 import teammates.common.datatransfer.attributes.FeedbackQuestionsVariousAttributes;
 import teammates.common.datatransfer.attributes.FeedbackResponseAttributes;
@@ -35,6 +35,8 @@ import teammates.logic.core.FeedbackSessionsLogic;
 import teammates.logic.core.InstructorsLogic;
 import teammates.logic.core.ProfilesLogic;
 import teammates.logic.core.StudentsLogic;
+import teammates.storage.entity.Account;
+import teammates.storage.entity.FeedbackQuestion;
 
 /**
  * Provides the business logic for production usage of the system.
@@ -68,7 +70,7 @@ public class Logic {
      * Preconditions: <br>
      * * All parameters are non-null.
      */
-    public AccountAttributes getAccount(String googleId) {
+    public EntityAttributes<Account> getAccount(String googleId) {
         assert googleId != null;
 
         return accountsLogic.getAccount(googleId);
@@ -593,7 +595,7 @@ public class Logic {
      * @param teamOfEntityDoingQuestion the team of the entity doing the question. If the entity is an instructor,
      *                                  it can be {@code null}.
      */
-    public void populateFieldsToGenerateInQuestion(FeedbackQuestionsVariousAttributes feedbackQuestionAttributes,
+    public void populateFieldsToGenerateInQuestion(EntityAttributes<FeedbackQuestion> feedbackQuestionAttributes,
             String emailOfEntityDoingQuestion, String teamOfEntityDoingQuestion) {
         assert feedbackQuestionAttributes != null;
         assert emailOfEntityDoingQuestion != null;
@@ -912,7 +914,7 @@ public class Logic {
      * @see FeedbackQuestionsLogic#getRecipientsOfQuestion
      */
     public Map<String, String> getRecipientsOfQuestion(
-            FeedbackQuestionsVariousAttributes question,
+            EntityAttributes<FeedbackQuestion> question,
             @Nullable InstructorAttributes instructorGiver, @Nullable StudentAttributes studentGiver) {
         assert question != null;
 
@@ -925,7 +927,7 @@ public class Logic {
      * * All parameters are non-null. <br>
      *
      */
-    public FeedbackQuestionsVariousAttributes getFeedbackQuestion(String feedbackQuestionId) {
+    public EntityAttributes<FeedbackQuestion> getFeedbackQuestion(String feedbackQuestionId) {
         assert feedbackQuestionId != null;
         return feedbackQuestionsLogic.getFeedbackQuestion(feedbackQuestionId);
     }
@@ -1092,7 +1094,7 @@ public class Logic {
      * @throws InvalidParametersException if attributes to update are not valid
      * @throws EntityDoesNotExistException if the feedback question cannot be found
      */
-    public FeedbackQuestionsVariousAttributes updateFeedbackQuestionCascade(FeedbackQuestionAttributes.UpdateOptions updateOptions)
+    public EntityAttributes<FeedbackQuestion> updateFeedbackQuestionCascade(FeedbackQuestionAttributes.UpdateOptions updateOptions)
             throws InvalidParametersException, EntityDoesNotExistException {
         assert updateOptions != null;
 
@@ -1182,7 +1184,7 @@ public class Logic {
      * Get existing feedback responses from student or his team for the given question.
      */
     public List<FeedbackResponseAttributes> getFeedbackResponsesFromStudentOrTeamForQuestion(
-            FeedbackQuestionsVariousAttributes question, StudentAttributes student) {
+            EntityAttributes<FeedbackQuestion> question, StudentAttributes student) {
         assert question != null;
         assert student != null;
 
@@ -1193,7 +1195,7 @@ public class Logic {
      * Get existing feedback responses from instructor for the given question.
      */
     public List<FeedbackResponseAttributes> getFeedbackResponsesFromInstructorForQuestion(
-            FeedbackQuestionsVariousAttributes question, InstructorAttributes instructorAttributes) {
+            EntityAttributes<FeedbackQuestion> question, InstructorAttributes instructorAttributes) {
         assert question != null;
         assert instructorAttributes != null;
 

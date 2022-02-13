@@ -5,7 +5,6 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import java.time.Instant;
 import java.util.Collections;
 import java.util.List;
 
@@ -14,9 +13,8 @@ import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 
 import teammates.common.datatransfer.FeedbackParticipantType;
-import teammates.common.datatransfer.attributes.FeedbackQuestionsVariousAttributes;
+import teammates.common.datatransfer.attributes.EntityAttributes;
 import teammates.common.datatransfer.attributes.FeedbackResponseAttributes;
-import teammates.common.datatransfer.attributes.FeedbackSessionAttributes;
 import teammates.common.datatransfer.questions.FeedbackConstantSumQuestionDetails;
 import teammates.common.datatransfer.questions.FeedbackConstantSumResponseDetails;
 import teammates.common.datatransfer.questions.FeedbackContributionQuestionDetails;
@@ -27,15 +25,16 @@ import teammates.common.datatransfer.questions.FeedbackMsqQuestionDetails;
 import teammates.common.datatransfer.questions.FeedbackMsqResponseDetails;
 import teammates.common.datatransfer.questions.FeedbackNumericalScaleQuestionDetails;
 import teammates.common.datatransfer.questions.FeedbackNumericalScaleResponseDetails;
+import teammates.common.datatransfer.questions.FeedbackQuestionDetails;
 import teammates.common.datatransfer.questions.FeedbackRankOptionsQuestionDetails;
 import teammates.common.datatransfer.questions.FeedbackRankOptionsResponseDetails;
-import teammates.common.datatransfer.questions.FeedbackRankQuestionDetails;
 import teammates.common.datatransfer.questions.FeedbackRankRecipientsResponseDetails;
 import teammates.common.datatransfer.questions.FeedbackRubricQuestionDetails;
 import teammates.common.datatransfer.questions.FeedbackRubricResponseDetails;
 import teammates.common.datatransfer.questions.FeedbackTextQuestionDetails;
 import teammates.common.datatransfer.questions.FeedbackTextResponseDetails;
 import teammates.common.util.Const;
+import teammates.storage.entity.FeedbackQuestion;
 
 /**
  * Represents the feedback submission page of the website.
@@ -44,34 +43,6 @@ public class FeedbackSubmitPage extends AppPage {
 
     public FeedbackSubmitPage(Browser browser) {
         super(browser);
-    }
-
-    @Override
-    protected boolean containsExpectedPageContents() {
-        if (isElementPresent(By.className("modal-content"))) {
-            waitForConfirmationModalAndClickOk();
-        }
-        return getPageTitle().contains("Submit Feedback");
-    }
-
-    public void verifyFeedbackSessionDetails(FeedbackSessionAttributes feedbackSession) {
-        assertEquals(getCourseId(), feedbackSession.getCourseId());
-        assertEquals(getFeedbackSessionName(), feedbackSession.getFeedbackSessionName());
-        assertDateEquals(getOpeningTime(), feedbackSession.getStartTime(), feedbackSession.getTimeZone());
-        assertDateEquals(getClosingTime(), feedbackSession.getEndTime(), feedbackSession.getTimeZone());
-        assertEquals(getInstructions(), feedbackSession.getInstructions());
-    }
-
-    public void verifyNumQuestions(int expected) {
-        assertEquals(browser.driver.findElements(By.id("question-submission-form")).size(), expected);
-    }
-
-    public void verifyQuestionDetails(int qnNumber, FeedbackQuestionsVariousAttributes questionAttributes) {
-        assertEquals(getQuestionBrief(qnNumber), questionAttributes.getQuestionDetailsCopy().getQuestionText());
-        verifyVisibilityList(qnNumber, questionAttributes);
-        if (questionAttributes.getQuestionDescription() != null) {
-            assertEquals(getQuestionDescription(qnNumber), questionAttributes.getQuestionDescription());
-        }
     }
 
     public void verifyLimitedRecipients(int qnNumber, int numRecipients, List<String> recipientNames) {
@@ -470,7 +441,7 @@ public class FeedbackSubmitPage extends AppPage {
         }
     }
 
-    public void verifyRankQuestion(int qnNumber, String recipient, FeedbackRankQuestionDetails questionDetails) {
+    public void verifyRankQuestion(int qnNumber, String recipient, FeedbackQuestionDetails questionDetails) {
         if (questionDetails.getMaxOptionsToBeRanked() != Const.POINTS_NO_VALUE) {
             assertEquals(getQuestionForm(qnNumber).findElement(By.id("max-options-message")).getText(),
                     "Rank no more than " + questionDetails.getMaxOptionsToBeRanked() + " options.");
@@ -547,54 +518,7 @@ public class FeedbackSubmitPage extends AppPage {
         }
     }
 
-    private String getCourseId() {
-        return browser.driver.findElement(By.id("course-id")).getText();
-    }
-
-    private String getFeedbackSessionName() {
-        return browser.driver.findElement(By.id("fs-name")).getText();
-    }
-
-    private String getOpeningTime() {
-        return browser.driver.findElement(By.id("opening-time")).getText();
-    }
-
-    private String getClosingTime() {
-        return browser.driver.findElement(By.id("closing-time")).getText();
-    }
-
-    private String getInstructions() {
-        return browser.driver.findElement(By.id("instructions")).getAttribute("innerHTML");
-    }
-
-    private void assertDateEquals(String actual, Instant instant, String timeZone) {
-        String dateStrWithAbbr = getDateStringWithAbbr(instant, timeZone);
-        String dateStrWithOffset = getDateStringWithOffset(instant, timeZone);
-
-        boolean isExpected = actual.equals(dateStrWithAbbr) || actual.equals(dateStrWithOffset);
-        assertTrue(isExpected);
-    }
-
-    private String getDateStringWithAbbr(Instant instant, String timeZone) {
-        return getDisplayedDateTime(instant, timeZone, "EE, dd MMM, yyyy, hh:mm a z");
-    }
-
-    private String getDateStringWithOffset(Instant instant, String timeZone) {
-        return getDisplayedDateTime(instant, timeZone, "EE, dd MMM, yyyy, hh:mm a X");
-    }
-
-    private WebElement getQuestionForm(int qnNumber) {
-        By questionFormId = By.id("question-submission-form");
-        waitForElementPresence(questionFormId);
-        return browser.driver.findElements(questionFormId).get(qnNumber - 1);
-    }
-
-    private String getQuestionBrief(int qnNumber) {
-        String questionDetails = getQuestionForm(qnNumber).findElement(By.id("question-details")).getText();
-        return questionDetails.split(": ")[1];
-    }
-
-    private void verifyVisibilityList(int qnNumber, FeedbackQuestionsVariousAttributes questionAttributes) {
+    private void verifyVisibilityList(int qnNumber, EntityAttributes<FeedbackQuestion> questionAttributes) {
         if (questionAttributes.getShowResponsesTo().isEmpty()) {
             verifyVisibilityStringPresent(qnNumber, "No-one can see your responses");
         }
@@ -617,7 +541,7 @@ public class FeedbackSubmitPage extends AppPage {
         fail("Expected visibility string not found: " + qnNumber + ": " + expectedString);
     }
 
-    private String getVisibilityString(FeedbackQuestionsVariousAttributes questionAttributes,
+    private String getVisibilityString(EntityAttributes<FeedbackQuestion> questionAttributes,
                                        FeedbackParticipantType viewerType) {
         if (!questionAttributes.getShowResponsesTo().contains(viewerType)) {
             return "";
@@ -680,10 +604,6 @@ public class FeedbackSubmitPage extends AppPage {
         return waitForElementPresence(By.id("btn-submit"));
     }
 
-    private String getQuestionDescription(int qnNumber) {
-        return getQuestionForm(qnNumber).findElement(By.id("question-description")).getAttribute("innerHTML");
-    }
-
     private WebElement getCommentSection(int qnNumber, String recipient) {
         int recipientIndex = getRecipientIndex(qnNumber, recipient);
         return getQuestionForm(qnNumber).findElements(By.id("comment-section")).get(recipientIndex);
@@ -693,36 +613,6 @@ public class FeedbackSubmitPage extends AppPage {
         scrollElementToCenter(commentSection);
         waitForElementPresence(By.tagName("editor"));
         writeToRichTextEditor(commentSection.findElement(By.tagName("editor")), comment);
-    }
-
-    private int getRecipientIndex(int qnNumber, String recipient) {
-        // For questions with recipient none or self.
-        if (recipient.isEmpty()) {
-            return 0;
-        }
-        WebElement questionForm = getQuestionForm(qnNumber);
-        // For questions with flexible recipient.
-        try {
-            List<WebElement> recipientDropdowns = questionForm.findElements(By.id("recipient-dropdown"));
-            for (int i = 0; i < recipientDropdowns.size(); i++) {
-                String dropdownText = getSelectedDropdownOptionText(recipientDropdowns.get(i));
-                if (dropdownText.isEmpty()) {
-                    selectDropdownOptionByText(recipientDropdowns.get(i), recipient);
-                    return i;
-                } else if (dropdownText.equals(recipient)) {
-                    return i;
-                }
-            }
-        } catch (NoSuchElementException e) {
-            // continue
-        }
-        int limit = 20; // we are not likely to set test data exceeding this number
-        for (int i = 0; i < limit; i++) {
-            if (questionForm.findElement(By.id("recipient-name-" + i)).getText().contains(recipient)) {
-                return i;
-            }
-        }
-        return -1;
     }
 
     private WebElement getTextResponseEditor(int qnNumber, String recipient) {
@@ -736,10 +626,6 @@ public class FeedbackSubmitPage extends AppPage {
     private String getResponseLengthText(int qnNumber, String recipient) {
         int recipientIndex = getRecipientIndex(qnNumber, recipient);
         return getQuestionForm(qnNumber).findElements(By.id("response-length")).get(recipientIndex).getText();
-    }
-
-    private String getDoubleString(Double value) {
-        return value % 1 == 0 ? Integer.toString(value.intValue()) : Double.toString(value);
     }
 
     private WebElement getMcqSection(int qnNumber, String recipient) {

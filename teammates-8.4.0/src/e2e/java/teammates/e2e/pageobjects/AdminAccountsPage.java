@@ -9,7 +9,8 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
-import teammates.common.datatransfer.attributes.AccountAttributes;
+import teammates.common.datatransfer.attributes.EntityAttributes;
+import teammates.storage.entity.Account;
 
 /**
  * Page Object Model for the admin accounts page.
@@ -47,12 +48,7 @@ public class AdminAccountsPage extends AppPage {
         super(browser);
     }
 
-    @Override
-    protected boolean containsExpectedPageContents() {
-        return getPageSource().contains("Account Details");
-    }
-
-    public void verifyAccountDetails(AccountAttributes account) {
+    public void verifyAccountDetails(EntityAttributes<Account> account) {
         assertEquals(account.getGoogleId(), accountId.getText());
         assertEquals(account.getName(), accountName.getText());
         assertEquals(account.getEmail(), accountEmail.getText());

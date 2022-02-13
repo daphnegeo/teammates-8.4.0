@@ -17,12 +17,6 @@ public class CourseJoinConfirmationPage extends AppPage {
         super(browser);
     }
 
-    @Override
-    public boolean containsExpectedPageContents() {
-        // This page has no unique indicator as the content depends on whether it follows the happy path or not
-        return true;
-    }
-
     public void verifyJoiningUser(String googleId) {
         assertEquals(browser.driver.findElement(By.id("user-id")).getText(), googleId);
     }

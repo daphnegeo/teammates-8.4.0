@@ -14,6 +14,7 @@ import javax.annotation.Nullable;
 import teammates.common.datatransfer.AttributesDeletionQuery;
 import teammates.common.datatransfer.CourseRoster;
 import teammates.common.datatransfer.FeedbackParticipantType;
+import teammates.common.datatransfer.attributes.EntityAttributes;
 import teammates.common.datatransfer.attributes.FeedbackQuestionAttributes;
 import teammates.common.datatransfer.attributes.FeedbackQuestionsVariousAttributes;
 import teammates.common.datatransfer.attributes.FeedbackSessionAttributes;
@@ -27,6 +28,7 @@ import teammates.common.exception.InvalidParametersException;
 import teammates.common.util.Const;
 import teammates.common.util.Logger;
 import teammates.storage.api.FeedbackQuestionsDb;
+import teammates.storage.entity.FeedbackQuestion;
 
 /**
  * Handles operations related to feedback questions.
@@ -126,7 +128,7 @@ public final class FeedbackQuestionsLogic {
     // TODO can be removed once we are sure that question numbers will be consistent
     private boolean areQuestionNumbersConsistent(List<FeedbackQuestionAttributes> questions) {
         Set<Integer> questionNumbersInSession = new HashSet<>();
-        for (FeedbackQuestionsVariousAttributes question : questions) {
+        for (EntityAttributes<FeedbackQuestion> question : questions) {
             if (!questionNumbersInSession.add(question.getQuestionNumber())) {
                 return false;
             }
@@ -279,7 +281,7 @@ public final class FeedbackQuestionsLogic {
     /**
      * Gets the email-name mapping of recipients for the given question for the given giver.
      */
-    Map<String, String> getRecipientsForQuestion(FeedbackQuestionsVariousAttributes question, String giver)
+    Map<String, String> getRecipientsForQuestion(EntityAttributes<FeedbackQuestion> question, String giver)
             throws EntityDoesNotExistException {
 
         InstructorAttributes instructorGiver = instructorsLogic.getInstructorForEmail(question.getCourseId(), giver);
@@ -365,7 +367,7 @@ public final class FeedbackQuestionsLogic {
      * @return a map which keys are the identifiers of the recipients and values are the names of the recipients
      */
     public Map<String, String> getRecipientsOfQuestion(
-            FeedbackQuestionsVariousAttributes question,
+            EntityAttributes<FeedbackQuestion> question,
             @Nullable InstructorAttributes instructorGiver, @Nullable StudentAttributes studentGiver,
             @Nullable CourseRoster courseRoster) {
         assert instructorGiver != null || studentGiver != null;
@@ -501,7 +503,7 @@ public final class FeedbackQuestionsLogic {
      * @return a map from giver to recipient for the question.
      */
     public Map<String, Set<String>> buildCompleteGiverRecipientMap(
-            FeedbackQuestionsVariousAttributes relatedQuestion, CourseRoster courseRoster) {
+            EntityAttributes<FeedbackQuestion> relatedQuestion, CourseRoster courseRoster) {
         Map<String, Set<String>> completeGiverRecipientMap = new HashMap<>();
 
         List<String> possibleGivers = getPossibleGivers(relatedQuestion, courseRoster);
@@ -547,7 +549,7 @@ public final class FeedbackQuestionsLogic {
      * @return a list of giver identifier
      */
     private List<String> getPossibleGivers(
-            FeedbackQuestionsVariousAttributes fqa, CourseRoster courseRoster) {
+            EntityAttributes<FeedbackQuestion> fqa, CourseRoster courseRoster) {
         FeedbackParticipantType giverType = fqa.getGiverType();
         List<String> possibleGivers = new ArrayList<>();
 
@@ -590,7 +592,7 @@ public final class FeedbackQuestionsLogic {
      * @param teamOfEntityDoingQuestion the team of the entity doing the question. If the entity is an instructor,
      *                                  it can be {@code null}.
      */
-    public void populateFieldsToGenerateInQuestion(FeedbackQuestionsVariousAttributes feedbackQuestionAttributes,
+    public void populateFieldsToGenerateInQuestion(EntityAttributes<FeedbackQuestion> feedbackQuestionAttributes,
             String emailOfEntityDoingQuestion, String teamOfEntityDoingQuestion) {
         List<String> optionList;
 
@@ -706,7 +708,7 @@ public final class FeedbackQuestionsLogic {
     /**
      * Returns true if the feedback question has been fully answered by the given user.
      */
-    public boolean isQuestionFullyAnsweredByUser(FeedbackQuestionsVariousAttributes question, String email)
+    public boolean isQuestionFullyAnsweredByUser(EntityAttributes<FeedbackQuestion> question, String email)
             throws EntityDoesNotExistException {
 
         int numberOfResponsesGiven =
@@ -732,14 +734,14 @@ public final class FeedbackQuestionsLogic {
      * @throws InvalidParametersException if attributes to update are not valid
      * @throws EntityDoesNotExistException if the feedback question cannot be found
      */
-    public FeedbackQuestionsVariousAttributes updateFeedbackQuestionCascade(FeedbackQuestionAttributes.UpdateOptions updateOptions)
+    public EntityAttributes<FeedbackQuestion> updateFeedbackQuestionCascade(FeedbackQuestionAttributes.UpdateOptions updateOptions)
             throws InvalidParametersException, EntityDoesNotExistException {
-        FeedbackQuestionsVariousAttributes oldQuestion = fqDb.getFeedbackQuestion(updateOptions.getFeedbackQuestionId());
+        EntityAttributes<FeedbackQuestion> oldQuestion = fqDb.getFeedbackQuestion(updateOptions.getFeedbackQuestionId());
         if (oldQuestion == null) {
             throw new EntityDoesNotExistException("Trying to update a feedback question that does not exist.");
         }
 
-        FeedbackQuestionsVariousAttributes newQuestion = oldQuestion.getCopy();
+        EntityAttributes<FeedbackQuestion> newQuestion = oldQuestion.getCopy();
         newQuestion.update(updateOptions);
         int oldQuestionNumber = oldQuestion.getQuestionNumber();
         int newQuestionNumber = newQuestion.getQuestionNumber();
@@ -778,7 +780,7 @@ public final class FeedbackQuestionsLogic {
         try {
             if (oldQuestionNumber > newQuestionNumber && oldQuestionNumber >= 1) {
                 for (int i = oldQuestionNumber - 1; i >= newQuestionNumber; i--) {
-                    FeedbackQuestionsVariousAttributes question = questions.get(i - 1);
+                    EntityAttributes<FeedbackQuestion> question = questions.get(i - 1);
                     fqDb.updateFeedbackQuestion(
                             FeedbackQuestionAttributes.updateOptionsBuilder(question.getId())
                                     .withQuestionNumber(question.getQuestionNumber() + 1)
@@ -786,7 +788,7 @@ public final class FeedbackQuestionsLogic {
                 }
             } else if (oldQuestionNumber < newQuestionNumber && oldQuestionNumber < questions.size()) {
                 for (int i = oldQuestionNumber + 1; i <= newQuestionNumber; i++) {
-                    FeedbackQuestionsVariousAttributes question = questions.get(i - 1);
+                    EntityAttributes<FeedbackQuestion> question = questions.get(i - 1);
                     fqDb.updateFeedbackQuestion(
                             FeedbackQuestionAttributes.updateOptionsBuilder(question.getId())
                                     .withQuestionNumber(question.getQuestionNumber() - 1)
@@ -804,7 +806,7 @@ public final class FeedbackQuestionsLogic {
      * <p>Silently fail if question does not exist.
      */
     public void deleteFeedbackQuestionCascade(String feedbackQuestionId) {
-        FeedbackQuestionsVariousAttributes questionToDelete =
+        EntityAttributes<FeedbackQuestion> questionToDelete =
                         getFeedbackQuestion(feedbackQuestionId);
 
         if (questionToDelete == null) {
@@ -836,7 +838,7 @@ public final class FeedbackQuestionsLogic {
     // Shifts all question numbers after questionNumberToShiftFrom down by one.
     private void shiftQuestionNumbersDown(int questionNumberToShiftFrom,
             List<FeedbackQuestionAttributes> questionsToShift) {
-        for (FeedbackQuestionsVariousAttributes question : questionsToShift) {
+        for (EntityAttributes<FeedbackQuestion> question : questionsToShift) {
             if (question.getQuestionNumber() > questionNumberToShiftFrom) {
                 try {
                     fqDb.updateFeedbackQuestion(

@@ -12,13 +12,13 @@ import teammates.common.datatransfer.attributes.StudentAttributes;
 class StudentSearchDocument extends SearchDocument<StudentAttributes> {
 
     private final CourseAttributes course;
+	final StudentAttributes attribute;
 
     StudentSearchDocument(StudentAttributes student, CourseAttributes course) {
         super(student);
         this.course = course;
     }
 
-    @Override
     Map<String, Object> getSearchableFields() {
         Map<String, Object> fields = new HashMap<>();
         StudentAttributes student = attribute;

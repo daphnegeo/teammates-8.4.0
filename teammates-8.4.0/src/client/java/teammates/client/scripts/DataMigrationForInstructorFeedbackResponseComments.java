@@ -5,6 +5,7 @@ import java.lang.reflect.Field;
 import com.googlecode.objectify.cmd.Query;
 
 import teammates.common.datatransfer.FeedbackParticipantType;
+import teammates.storage.entity.Account;
 import teammates.storage.entity.FeedbackResponseComment;
 
 /**
@@ -18,11 +19,6 @@ public class DataMigrationForInstructorFeedbackResponseComments extends
 
     public static void main(String[] args) {
         new DataMigrationForInstructorFeedbackResponseComments().doOperationRemotely();
-    }
-
-    @Override
-    protected Query<FeedbackResponseComment> getFilterQuery() {
-        return ofy().load().type(FeedbackResponseComment.class);
     }
 
     @Override
@@ -48,4 +44,16 @@ public class DataMigrationForInstructorFeedbackResponseComments extends
 
         saveEntityDeferred(comment);
     }
+
+	@Override
+	protected boolean isMigrationOfGoogleIdNeeded(Account account) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	protected String generateNewGoogleId(Account oldAccount) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

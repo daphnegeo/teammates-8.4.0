@@ -10,11 +10,12 @@ import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
-import teammates.common.datatransfer.attributes.AccountAttributes;
+import teammates.common.datatransfer.attributes.EntityAttributes;
 import teammates.common.datatransfer.attributes.InstructorAttributes;
 import teammates.common.datatransfer.attributes.StudentAttributes;
 import teammates.common.util.Const;
 import teammates.common.util.StringHelper;
+import teammates.storage.entity.Account;
 
 /**
  * Represents the admin home page of the website.
@@ -57,11 +58,6 @@ public class AdminSearchPage extends AppPage {
 
     public AdminSearchPage(Browser browser) {
         super(browser);
-    }
-
-    @Override
-    protected boolean containsExpectedPageContents() {
-        return getPageSource().contains("Admin Search</h1>");
     }
 
     public void inputSearchContent(String content) {
@@ -258,7 +254,7 @@ public class AdminSearchPage extends AppPage {
         }
     }
 
-    public void verifyStudentRowContent(StudentAttributes student, AccountAttributes account,
+    public void verifyStudentRowContent(StudentAttributes student, EntityAttributes<Account> account,
                                         String expectedDetails, String expectedManageAccountLink,
                                         String expectedHomePageLink) {
         WebElement studentRow = getStudentRow(student);
@@ -298,7 +294,7 @@ public class AdminSearchPage extends AppPage {
         assertEquals(expectedNumExpandedRows, actualNumExpandedRows);
     }
 
-    public void verifyInstructorRowContent(InstructorAttributes instructor, AccountAttributes account,
+    public void verifyInstructorRowContent(InstructorAttributes instructor, EntityAttributes<Account> account,
                                            String expectedManageAccountLink, String expectedHomePageLink) {
         WebElement instructorRow = getInstructorRow(instructor);
         String actualCourseId = getInstructorCourseId(instructorRow);

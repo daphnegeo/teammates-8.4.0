@@ -9,9 +9,17 @@ import org.testng.annotations.Test;
 import org.testng.collections.Lists;
 
 import teammates.common.datatransfer.AttributesDeletionQuery;
+import teammates.common.datatransfer.DataBundle;
 import teammates.common.datatransfer.FeedbackParticipantType;
+import teammates.common.datatransfer.attributes.CourseAttributes;
+import teammates.common.datatransfer.attributes.EntityAttributes;
 import teammates.common.datatransfer.attributes.FeedbackQuestionAttributes;
-import teammates.common.datatransfer.attributes.FeedbackQuestionsVariousAttributes;
+import teammates.common.datatransfer.attributes.FeedbackResponseAttributes;
+import teammates.common.datatransfer.attributes.FeedbackResponseCommentAttributes;
+import teammates.common.datatransfer.attributes.FeedbackSessionAttributes;
+import teammates.common.datatransfer.attributes.InstructorAttributes;
+import teammates.common.datatransfer.attributes.StudentAttributes;
+import teammates.common.datatransfer.attributes.StudentProfileAttributes;
 import teammates.common.datatransfer.questions.FeedbackQuestionDetails;
 import teammates.common.datatransfer.questions.FeedbackTextQuestionDetails;
 import teammates.common.exception.EntityAlreadyExistsException;
@@ -19,6 +27,8 @@ import teammates.common.exception.EntityDoesNotExistException;
 import teammates.common.exception.InvalidParametersException;
 import teammates.common.util.FieldValidator;
 import teammates.common.util.JsonUtils;
+import teammates.storage.entity.Account;
+import teammates.storage.entity.FeedbackQuestion;
 import teammates.test.AssertHelper;
 import teammates.test.BaseTestCaseWithLocalDatabaseAccess;
 import teammates.test.ThreadHelper;
@@ -46,7 +56,7 @@ public class FeedbackQuestionsDbTest extends BaseTestCaseWithLocalDatabaseAccess
         String courseId = fq.getCourseId();
         int questionNumber = fq.getQuestionNumber();
 
-        FeedbackQuestionsVariousAttributes feedbackQuestion =
+        EntityAttributes<FeedbackQuestion> feedbackQuestion =
                 fqDb.getFeedbackQuestion(feedbackSessionName, courseId, questionNumber);
 
         // Assert dates are now.
@@ -64,7 +74,7 @@ public class FeedbackQuestionsDbTest extends BaseTestCaseWithLocalDatabaseAccess
                         .withQuestionNumber(feedbackQuestion.getQuestionNumber())
                         .build());
 
-        FeedbackQuestionsVariousAttributes updatedFq =
+        EntityAttributes<FeedbackQuestion> updatedFq =
                 fqDb.getFeedbackQuestion(feedbackSessionName, courseId, feedbackQuestion.getQuestionNumber());
 
         // Assert lastUpdate has changed, and is now.
@@ -76,7 +86,7 @@ public class FeedbackQuestionsDbTest extends BaseTestCaseWithLocalDatabaseAccess
     public void testDeleteFeedbackQuestion() throws Exception {
 
         FeedbackQuestionAttributes fqa = getNewFeedbackQuestionAttributes();
-        FeedbackQuestionsVariousAttributes oldFqa =
+        EntityAttributes<FeedbackQuestion> oldFqa =
                 fqDb.getFeedbackQuestion(fqa.getFeedbackSessionName(), fqa.getCourseId(), fqa.getQuestionNumber());
         if (oldFqa != null) {
             fqDb.deleteFeedbackQuestion(oldFqa.getId());
@@ -110,7 +120,7 @@ public class FeedbackQuestionsDbTest extends BaseTestCaseWithLocalDatabaseAccess
         ______TS("standard success case");
 
         // create a new question in current session
-        FeedbackQuestionsVariousAttributes fqa = createNewQuestioninsession();
+        EntityAttributes<FeedbackQuestion> fqa = createNewQuestioninsession();
 
         // create another question under another session
         FeedbackQuestionAttributes anotherFqa = getNewFeedbackQuestionAttributes();
@@ -166,10 +176,10 @@ public class FeedbackQuestionsDbTest extends BaseTestCaseWithLocalDatabaseAccess
 	 * @throws InvalidParametersException
 	 * @throws EntityAlreadyExistsException
 	 */
-	private FeedbackQuestionsVariousAttributes createNewQuestioninsession()
+	private EntityAttributes<FeedbackQuestion> createNewQuestioninsession()
 			throws InvalidParametersException, EntityAlreadyExistsException {
 		FeedbackQuestionAttributes fqa = getNewFeedbackQuestionAttributes();
-        FeedbackQuestionsVariousAttributes oldFqa =
+        EntityAttributes<FeedbackQuestion> oldFqa =
                 fqDb.getFeedbackQuestion(fqa.getFeedbackSessionName(), fqa.getCourseId(), fqa.getQuestionNumber());
         if (oldFqa != null) {
             fqDb.deleteFeedbackQuestion(oldFqa.getId());
@@ -184,7 +194,7 @@ public class FeedbackQuestionsDbTest extends BaseTestCaseWithLocalDatabaseAccess
     public void testDeleteFeedbackQuestions_deleteByCourseId() throws Exception {
         ______TS("standard success case");
 
-        FeedbackQuestionsVariousAttributes fqa = createNewQuestioninsession();
+        EntityAttributes<FeedbackQuestion> fqa = createNewQuestioninsession();
 
         // create another question under another course
         FeedbackQuestionAttributes anotherFqa = getNewFeedbackQuestionAttributes();
@@ -259,7 +269,7 @@ public class FeedbackQuestionsDbTest extends BaseTestCaseWithLocalDatabaseAccess
 
         ______TS("standard success case");
 
-        FeedbackQuestionsVariousAttributes actual = fqDb.getFeedbackQuestion(expected.getFeedbackSessionName(),
+        EntityAttributes<FeedbackQuestion> actual = fqDb.getFeedbackQuestion(expected.getFeedbackSessionName(),
                 expected.getCourseId(),
                 expected.getQuestionNumber());
 
@@ -329,7 +339,7 @@ public class FeedbackQuestionsDbTest extends BaseTestCaseWithLocalDatabaseAccess
 
     @Test
     public void testGetFeedbackQuestionsForGiverType() throws Exception {
-        FeedbackQuestionsVariousAttributes fqa = getNewFeedbackQuestionAttributes();
+        EntityAttributes<FeedbackQuestion> fqa = getNewFeedbackQuestionAttributes();
 
         // remove possibly conflicting entity from the database
         deleteFeedbackQuestion(fqa);
@@ -386,7 +396,7 @@ public class FeedbackQuestionsDbTest extends BaseTestCaseWithLocalDatabaseAccess
         deleteFeedbackQuestion(typicalQuestion);
         typicalQuestion = fqDb.createEntity(typicalQuestion);
 
-        FeedbackQuestionsVariousAttributes updatedQuestion = fqDb.updateFeedbackQuestion(
+        EntityAttributes<FeedbackQuestion> updatedQuestion = fqDb.updateFeedbackQuestion(
                 FeedbackQuestionAttributes.updateOptionsBuilder(typicalQuestion.getId())
                         .build());
 
@@ -460,7 +470,7 @@ public class FeedbackQuestionsDbTest extends BaseTestCaseWithLocalDatabaseAccess
         fqd.setQuestionText("New question text!");
         modifiedQuestion.setQuestionDetails(fqd);
 
-        FeedbackQuestionsVariousAttributes updatedQuestion = fqDb.updateFeedbackQuestion(
+        EntityAttributes<FeedbackQuestion> updatedQuestion = fqDb.updateFeedbackQuestion(
                 FeedbackQuestionAttributes.updateOptionsBuilder(modifiedQuestion.getId())
                         .withQuestionDetails(fqd)
                         .build());
@@ -484,11 +494,11 @@ public class FeedbackQuestionsDbTest extends BaseTestCaseWithLocalDatabaseAccess
         verifyPresentInDatabase(typicalQuestion);
 
         assertNotEquals("New question text!", typicalQuestion.getQuestionDetailsCopy().getQuestionText());
-        FeedbackQuestionsVariousAttributes updatedQuestion = fqDb.updateFeedbackQuestion(
+        EntityAttributes<FeedbackQuestion> updatedQuestion = fqDb.updateFeedbackQuestion(
                 FeedbackQuestionAttributes.updateOptionsBuilder(typicalQuestion.getId())
                         .withQuestionDetails(new FeedbackTextQuestionDetails("New question text!"))
                         .build());
-        FeedbackQuestionsVariousAttributes actualQuestion = fqDb.getFeedbackQuestion(typicalQuestion.getId());
+        EntityAttributes<FeedbackQuestion> actualQuestion = fqDb.getFeedbackQuestion(typicalQuestion.getId());
         assertEquals("New question text!", actualQuestion.getQuestionDetailsCopy().getQuestionText());
         assertEquals("New question text!", updatedQuestion.getQuestionDetailsCopy().getQuestionText());
 
@@ -646,19 +656,85 @@ public class FeedbackQuestionsDbTest extends BaseTestCaseWithLocalDatabaseAccess
     }
 
     private void deleteFeedbackQuestions(int numToDelete) {
-        FeedbackQuestionsVariousAttributes fqa = getNewFeedbackQuestionAttributes();
+        EntityAttributes<FeedbackQuestion> fqa = getNewFeedbackQuestionAttributes();
         for (int i = 1; i <= numToDelete; i++) {
             fqa.setQuestionNumber(i);
             deleteFeedbackQuestion(fqa);
         }
     }
 
-    private void deleteFeedbackQuestion(FeedbackQuestionsVariousAttributes attributes) {
-        FeedbackQuestionsVariousAttributes fq = fqDb.getFeedbackQuestion(
+    private void deleteFeedbackQuestion(EntityAttributes<FeedbackQuestion> attributes) {
+        EntityAttributes<FeedbackQuestion> fq = fqDb.getFeedbackQuestion(
                 attributes.getFeedbackSessionName(), attributes.getCourseId(), attributes.getQuestionNumber());
         if (fq != null) {
             fqDb.deleteFeedbackQuestion(fq.getId());
         }
     }
+
+	@Override
+	protected EntityAttributes<Account> getAccount(EntityAttributes<Account> account) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected StudentProfileAttributes getStudentProfile(StudentProfileAttributes studentProfileAttributes) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected CourseAttributes getCourse(CourseAttributes course) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected EntityAttributes<FeedbackQuestion> getFeedbackQuestion(EntityAttributes<FeedbackQuestion> fq) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected FeedbackResponseCommentAttributes getFeedbackResponseComment(FeedbackResponseCommentAttributes frc) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected FeedbackResponseAttributes getFeedbackResponse(FeedbackResponseAttributes fr) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected FeedbackSessionAttributes getFeedbackSession(FeedbackSessionAttributes fs) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected InstructorAttributes getInstructor(InstructorAttributes instructor) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected StudentAttributes getStudent(StudentAttributes student) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected boolean doRemoveAndRestoreDataBundle(DataBundle testData) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	protected boolean doPutDocuments(DataBundle testData) {
+		// TODO Auto-generated method stub
+		return false;
+	}
 
 }

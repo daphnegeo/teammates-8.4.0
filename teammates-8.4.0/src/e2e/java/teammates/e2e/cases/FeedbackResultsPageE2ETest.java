@@ -8,23 +8,28 @@ import java.util.stream.Collectors;
 
 import org.testng.annotations.Test;
 
+import teammates.common.datatransfer.DataBundle;
 import teammates.common.datatransfer.FeedbackParticipantType;
+import teammates.common.datatransfer.attributes.CourseAttributes;
+import teammates.common.datatransfer.attributes.EntityAttributes;
 import teammates.common.datatransfer.attributes.FeedbackQuestionAttributes;
-import teammates.common.datatransfer.attributes.FeedbackQuestionsVariousAttributes;
 import teammates.common.datatransfer.attributes.FeedbackResponseAttributes;
 import teammates.common.datatransfer.attributes.FeedbackResponseCommentAttributes;
 import teammates.common.datatransfer.attributes.FeedbackSessionAttributes;
 import teammates.common.datatransfer.attributes.InstructorAttributes;
 import teammates.common.datatransfer.attributes.StudentAttributes;
+import teammates.common.datatransfer.attributes.StudentProfileAttributes;
 import teammates.common.datatransfer.questions.FeedbackRubricQuestionDetails;
 import teammates.common.util.Const;
-import teammates.e2e.pageobjects.RankOptionSuper;
+import teammates.e2e.pageobjects.AppPage;
+import teammates.storage.entity.Account;
+import teammates.storage.entity.FeedbackQuestion;
 
 /**
  * SUT: {@link Const.WebPageURIs#SESSION_RESULTS_PAGE}.
  */
 public class FeedbackResultsPageE2ETest extends BaseE2ETestCase {
-    public RankOptionSuper resultsPage;
+    public AppPage resultsPage;
     private FeedbackSessionAttributes openSession;
     public List<FeedbackQuestionAttributes> questions = new ArrayList<>();
 
@@ -77,7 +82,7 @@ public class FeedbackResultsPageE2ETest extends BaseE2ETestCase {
         });
     }
 
-    public void verifyResponseDetails(StudentAttributes currentStudent, FeedbackQuestionsVariousAttributes question) {
+    public void verifyResponseDetails(StudentAttributes currentStudent, EntityAttributes<FeedbackQuestion> question) {
         List<FeedbackResponseAttributes> givenResponses = getGivenResponses(currentStudent, question);
         List<FeedbackResponseAttributes> otherResponses = getOtherResponses(currentStudent, question);
         Set<String> visibleGivers = getVisibleGivers(currentStudent, question);
@@ -85,7 +90,7 @@ public class FeedbackResultsPageE2ETest extends BaseE2ETestCase {
         resultsPage.verifyResponseDetails(question, givenResponses, otherResponses, visibleGivers, visibleRecipients);
     }
 
-    public void verifyResponseDetails(InstructorAttributes currentInstructor, FeedbackQuestionsVariousAttributes question) {
+    public void verifyResponseDetails(InstructorAttributes currentInstructor, EntityAttributes<FeedbackQuestion> question) {
         List<FeedbackResponseAttributes> givenResponses = getGivenResponses(currentInstructor, question);
         List<FeedbackResponseAttributes> otherResponses = getOtherResponses(currentInstructor, question);
         Set<String> visibleGivers = getVisibleGivers(currentInstructor, question);
@@ -121,7 +126,7 @@ public class FeedbackResultsPageE2ETest extends BaseE2ETestCase {
     }
 
     private List<FeedbackResponseAttributes> getGivenResponses(StudentAttributes currentStudent,
-                                                               FeedbackQuestionsVariousAttributes question) {
+                                                               EntityAttributes<FeedbackQuestion> question) {
         List<FeedbackResponseAttributes> givenResponses = testData.feedbackResponses.values().stream()
                 .filter(f -> f.getFeedbackQuestionId().equals(Integer.toString(question.getQuestionNumber()))
                         && f.getGiver().equals(currentStudent.getEmail()))
@@ -130,7 +135,7 @@ public class FeedbackResultsPageE2ETest extends BaseE2ETestCase {
     }
 
     private List<FeedbackResponseAttributes> getGivenResponses(InstructorAttributes currentInstructor,
-                                                               FeedbackQuestionsVariousAttributes question) {
+                                                               EntityAttributes<FeedbackQuestion> question) {
         List<FeedbackResponseAttributes> givenResponses = testData.feedbackResponses.values().stream()
                 .filter(f -> f.getFeedbackQuestionId().equals(Integer.toString(question.getQuestionNumber()))
                         && f.getGiver().equals(currentInstructor.getEmail()))
@@ -139,7 +144,7 @@ public class FeedbackResultsPageE2ETest extends BaseE2ETestCase {
     }
 
     private List<FeedbackResponseAttributes> getOtherResponses(StudentAttributes currentStudent,
-                                                               FeedbackQuestionsVariousAttributes question) {
+                                                               EntityAttributes<FeedbackQuestion> question) {
         Set<String> visibleResponseGivers = getRelevantUsers(currentStudent, question.getShowResponsesTo());
         visibleResponseGivers.add(currentStudent.getEmail());
 
@@ -174,7 +179,7 @@ public class FeedbackResultsPageE2ETest extends BaseE2ETestCase {
     }
 
     private List<FeedbackResponseAttributes> getOtherResponses(InstructorAttributes currentInstructor,
-                                                               FeedbackQuestionsVariousAttributes question) {
+                                                               EntityAttributes<FeedbackQuestion> question) {
         Set<String> visibleResponseGivers = getRelevantUsersForInstructors(question.getShowResponsesTo());
         visibleResponseGivers.add(currentInstructor.getEmail());
 
@@ -216,25 +221,25 @@ public class FeedbackResultsPageE2ETest extends BaseE2ETestCase {
 		return openSession.otherResponsesMethod();
 	}
 
-    private Set<String> getVisibleGivers(StudentAttributes currentStudent, FeedbackQuestionsVariousAttributes question) {
+    private Set<String> getVisibleGivers(StudentAttributes currentStudent, EntityAttributes<FeedbackQuestion> question) {
         return getRelevantUsers(currentStudent, question.getShowGiverNameTo()).stream()
                 .map(user -> getIdentifier(currentStudent, user))
                 .collect(Collectors.toSet());
     }
 
-    private Set<String> getVisibleGivers(InstructorAttributes currentInstructor, FeedbackQuestionsVariousAttributes question) {
+    private Set<String> getVisibleGivers(InstructorAttributes currentInstructor, EntityAttributes<FeedbackQuestion> question) {
         return getRelevantUsersForInstructors(question.getShowGiverNameTo()).stream()
                 .map(user -> getIdentifier(currentInstructor, user))
                 .collect(Collectors.toSet());
     }
 
-    private Set<String> getVisibleRecipients(StudentAttributes currentStudent, FeedbackQuestionsVariousAttributes question) {
+    private Set<String> getVisibleRecipients(StudentAttributes currentStudent, EntityAttributes<FeedbackQuestion> question) {
         return getRelevantUsers(currentStudent, question.getShowRecipientNameTo()).stream()
                 .map(user -> getIdentifier(currentStudent, user))
                 .collect(Collectors.toSet());
     }
 
-    private Set<String> getVisibleRecipients(InstructorAttributes currentInstructor, FeedbackQuestionsVariousAttributes question) {
+    private Set<String> getVisibleRecipients(InstructorAttributes currentInstructor, EntityAttributes<FeedbackQuestion> question) {
         return getRelevantUsersForInstructors(question.getShowRecipientNameTo()).stream()
                 .map(user -> getIdentifier(currentInstructor, user))
                 .collect(Collectors.toSet());
@@ -375,5 +380,71 @@ public class FeedbackResultsPageE2ETest extends BaseE2ETestCase {
 	 */
 	private void statsList(List<String> subQns) {
 		openSession.statsList(this, subQns);
+	}
+
+	@Override
+	protected EntityAttributes<Account> getAccount(EntityAttributes<Account> account) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected StudentProfileAttributes getStudentProfile(StudentProfileAttributes studentProfileAttributes) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected CourseAttributes getCourse(CourseAttributes course) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected EntityAttributes<FeedbackQuestion> getFeedbackQuestion(EntityAttributes<FeedbackQuestion> fq) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected FeedbackResponseCommentAttributes getFeedbackResponseComment(FeedbackResponseCommentAttributes frc) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected FeedbackResponseAttributes getFeedbackResponse(FeedbackResponseAttributes fr) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected FeedbackSessionAttributes getFeedbackSession(FeedbackSessionAttributes fs) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected InstructorAttributes getInstructor(InstructorAttributes instructor) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected StudentAttributes getStudent(StudentAttributes student) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected boolean doRemoveAndRestoreDataBundle(DataBundle testData) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	protected boolean doPutDocuments(DataBundle testData) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 }

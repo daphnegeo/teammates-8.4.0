@@ -1,10 +1,11 @@
 package teammates.ui.webapi;
 
-import teammates.common.datatransfer.attributes.AccountAttributes;
 import teammates.common.datatransfer.attributes.CourseAttributes;
+import teammates.common.datatransfer.attributes.EntityAttributes;
 import teammates.common.datatransfer.attributes.InstructorAttributes;
 import teammates.common.util.Const.ParamsNames;
 import teammates.common.util.EmailWrapper;
+import teammates.storage.entity.Account;
 
 /**
  * Task queue worker action: sends registration email for an instructor of a course.
@@ -38,7 +39,7 @@ class InstructorCourseJoinEmailWorkerAction extends AdminOnlyAction {
             email = emailGenerator.generateInstructorCourseRejoinEmailAfterGoogleIdReset(instructor, course);
         } else {
             String inviterId = getNonNullRequestParamValue(ParamsNames.INVITER_ID);
-            AccountAttributes inviter = logic.getAccount(inviterId);
+            EntityAttributes<Account> inviter = logic.getAccount(inviterId);
             if (inviter == null) {
                 throw new EntityNotFoundException("Inviter account does not exist.");
             }

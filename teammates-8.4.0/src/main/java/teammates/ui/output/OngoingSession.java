@@ -3,11 +3,12 @@ package teammates.ui.output;
 import java.util.ArrayList;
 import java.util.List;
 
-import teammates.common.datatransfer.attributes.AccountAttributes;
+import teammates.common.datatransfer.attributes.EntityAttributes;
 import teammates.common.datatransfer.attributes.FeedbackSessionAttributes;
 import teammates.common.util.Config;
 import teammates.common.util.Const;
 import teammates.common.util.TimeHelper;
+import teammates.storage.entity.Account;
 
 /**
  * A single ongoing session.
@@ -22,7 +23,7 @@ public class OngoingSession {
     private final String courseId;
     private final String feedbackSessionName;
 
-    public OngoingSession(FeedbackSessionAttributes fs, AccountAttributes account) {
+    public OngoingSession(FeedbackSessionAttributes fs, EntityAttributes<Account> account) {
         this.sessionStatus = getSessionStatusForShow(fs);
 
         String instructorHomePageLink = "";

@@ -8,6 +8,7 @@ import com.googlecode.objectify.cmd.Query;
 import teammates.common.datatransfer.questions.FeedbackQuestionType;
 import teammates.common.datatransfer.questions.FeedbackTextQuestionDetails;
 import teammates.common.util.JsonUtils;
+import teammates.storage.entity.Account;
 import teammates.storage.entity.FeedbackQuestion;
 
 /**
@@ -20,12 +21,6 @@ public class DataMigrationForTextQuestionDetailsFormat extends
 
     public static void main(String[] args) throws IOException {
         new DataMigrationForTextQuestionDetailsFormat().doOperationRemotely();
-    }
-
-    @Override
-    protected Query<FeedbackQuestion> getFilterQuery() {
-        return ofy().load().type(FeedbackQuestion.class)
-                .filter("questionType =", FeedbackQuestionType.TEXT);
     }
 
     @Override
@@ -52,5 +47,17 @@ public class DataMigrationForTextQuestionDetailsFormat extends
 
         saveEntityDeferred(question);
     }
+
+	@Override
+	protected boolean isMigrationOfGoogleIdNeeded(Account account) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	protected String generateNewGoogleId(Account oldAccount) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 }

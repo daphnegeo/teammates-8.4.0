@@ -1,10 +1,8 @@
 package teammates.common.datatransfer.attributes;
 
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Objects;
 
 import teammates.common.datatransfer.questions.FeedbackRubricResponseDetails;
 import teammates.common.util.AppUrl;
@@ -12,8 +10,6 @@ import teammates.common.util.Config;
 import teammates.common.util.Const;
 import teammates.common.util.Const.EntityType;
 import teammates.common.util.Const.WebPageURIs;
-import teammates.common.util.FieldValidator;
-import teammates.common.util.SanitizationHelper;
 import teammates.e2e.cases.BaseE2ETestCase;
 import teammates.e2e.cases.FeedbackRubricQuestionE2ETest;
 import teammates.e2e.cases.StudentCourseJoinConfirmationPageE2ETest;
@@ -80,24 +76,6 @@ public class StudentAttributes extends EntityAttributes<CourseStudent> {
         return new Builder(courseId, email);
     }
 
-    /**
-     * Gets a deep copy of this object.
-     */
-    public StudentAttributes getCopy() {
-        StudentAttributes studentAttributes = new StudentAttributes(course, email);
-
-        studentAttributes.name = name;
-        studentAttributes.googleId = googleId;
-        studentAttributes.team = team;
-        studentAttributes.section = section;
-        studentAttributes.comments = comments;
-        studentAttributes.key = key;
-        studentAttributes.createdAt = createdAt;
-        studentAttributes.updatedAt = updatedAt;
-
-        return studentAttributes;
-    }
-
     public boolean isRegistered() {
         return googleId != null && !googleId.trim().isEmpty();
     }
@@ -149,13 +127,6 @@ public class StudentAttributes extends EntityAttributes<CourseStudent> {
         this.key = key;
     }
 
-    /**
-     * Format: email%courseId e.g., adam@gmail.com%cs1101.
-     */
-    public String getId() {
-        return email + "%" + course;
-    }
-
     public String getSection() {
         return section;
     }
@@ -180,53 +151,6 @@ public class StudentAttributes extends EntityAttributes<CourseStudent> {
         this.comments = comments;
     }
 
-    @Override
-    public boolean equals(Object other) {
-        if (other == null) {
-            return false;
-        } else if (this == other) {
-            return true;
-        } else if (this.getClass() == other.getClass()) {
-            StudentAttributes otherStudent = (StudentAttributes) other;
-            return Objects.equals(this.course, otherStudent.course)
-                    && Objects.equals(this.name, otherStudent.name)
-                    && Objects.equals(this.email, otherStudent.email)
-                    && Objects.equals(this.googleId, otherStudent.googleId)
-                    && Objects.equals(this.comments, otherStudent.comments)
-                    && Objects.equals(this.team, otherStudent.team)
-                    && Objects.equals(this.section, otherStudent.section);
-        } else {
-            return false;
-        }
-    }
-
-    @Override
-    public List<String> getInvalidityInfo() {
-        // id is allowed to be null when the student is not registered
-        assert team != null;
-        assert comments != null;
-
-        List<String> errors = new ArrayList<>();
-
-        if (isRegistered()) {
-            addNonEmptyError(FieldValidator.getInvalidityInfoForGoogleId(googleId), errors);
-        }
-
-        addNonEmptyError(FieldValidator.getInvalidityInfoForCourseId(course), errors);
-
-        addNonEmptyError(FieldValidator.getInvalidityInfoForEmail(email), errors);
-
-        addNonEmptyError(FieldValidator.getInvalidityInfoForTeamName(team), errors);
-
-        addNonEmptyError(FieldValidator.getInvalidityInfoForSectionName(section), errors);
-
-        addNonEmptyError(FieldValidator.getInvalidityInfoForStudentRoleComments(comments), errors);
-
-        addNonEmptyError(FieldValidator.getInvalidityInfoForPersonName(name), errors);
-
-        return errors;
-    }
-
     /**
      * Sorts the list of students by the section name, then team name, then name.
      */
@@ -244,57 +168,12 @@ public class StudentAttributes extends EntityAttributes<CourseStudent> {
                 .thenComparing(student -> student.name));
     }
 
-    @Override
-    public CourseStudent toEntity() {
-        return new CourseStudent(email, name, googleId, comments, course, team, section);
-    }
-
-    @Override
-    public int hashCode() {
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(this.email).append(this.name).append(this.course)
-            .append(this.googleId).append(this.team).append(this.section).append(this.comments);
-        return stringBuilder.toString().hashCode();
-    }
-
-    @Override
-    public String toString() {
-        return "Student:" + name + "[" + email + "]";
-    }
-
-    @Override
-    public void sanitizeForSaving() {
-        googleId = SanitizationHelper.sanitizeGoogleId(googleId);
-        name = SanitizationHelper.sanitizeName(name);
-        comments = SanitizationHelper.sanitizeTextField(comments);
-    }
-
-    public Instant getCreatedAt() {
-        return createdAt;
-    }
-
-    public Instant getUpdatedAt() {
-        return updatedAt;
-    }
-
     public void setCreatedAt(Instant createdAt) {
         this.createdAt = createdAt;
     }
 
     public void setUpdatedAt(Instant updatedAt) {
         this.updatedAt = updatedAt;
-    }
-
-    /**
-     * Updates with {@link UpdateOptions}.
-     */
-    public void update(UpdateOptions updateOptions) {
-        updateOptions.newEmailOption.ifPresent(s -> email = s);
-        updateOptions.nameOption.ifPresent(s -> name = s);
-        updateOptions.commentOption.ifPresent(s -> comments = s);
-        updateOptions.googleIdOption.ifPresent(s -> googleId = s);
-        updateOptions.teamNameOption.ifPresent(s -> team = s);
-        updateOptions.sectionNameOption.ifPresent(s -> section = s);
     }
 
     public FeedbackResponseAttributes getResponse(String questionId, FeedbackRubricQuestionE2ETest feedbackRubricQuestionE2ETest, List<Integer> answers) {

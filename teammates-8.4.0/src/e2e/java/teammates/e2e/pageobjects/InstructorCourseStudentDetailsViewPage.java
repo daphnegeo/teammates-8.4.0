@@ -51,11 +51,6 @@ public class InstructorCourseStudentDetailsViewPage extends AppPage {
         super(browser);
     }
 
-    @Override
-    protected boolean containsExpectedPageContents() {
-        return getPageSource().contains("Enrollment Details");
-    }
-
     public void verifyIsCorrectPage(String expectedCourseId, String expectedStudentEmail) {
         verifyDetail(expectedCourseId, courseId);
         verifyDetail(expectedStudentEmail, studentOfficialEmail);

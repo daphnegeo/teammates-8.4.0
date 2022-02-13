@@ -6,8 +6,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import teammates.common.datatransfer.AttributesDeletionQuery;
+import teammates.common.datatransfer.attributes.EntityAttributes;
 import teammates.common.datatransfer.attributes.FeedbackQuestionAttributes;
-import teammates.common.datatransfer.attributes.FeedbackQuestionsVariousAttributes;
 import teammates.common.datatransfer.attributes.FeedbackSessionAttributes;
 import teammates.common.datatransfer.attributes.InstructorAttributes;
 import teammates.common.datatransfer.attributes.StudentAttributes;
@@ -18,6 +18,7 @@ import teammates.common.util.Const;
 import teammates.common.util.Logger;
 import teammates.common.util.TimeHelper;
 import teammates.storage.api.FeedbackSessionsDb;
+import teammates.storage.entity.FeedbackQuestion;
 
 /**
  * Handles operations related to feedback sessions.
@@ -559,7 +560,7 @@ public final class FeedbackSessionsLogic {
                 fqLogic.getFeedbackQuestionsForStudents(feedbackSessionName,
                         courseId);
 
-        for (FeedbackQuestionsVariousAttributes question : allQuestions) {
+        for (EntityAttributes<FeedbackQuestion> question : allQuestions) {
             //as long as one question is fully answered, student has attempted
             if (fqLogic.isQuestionFullyAnsweredByUser(question, userEmail)) {
                 return true;

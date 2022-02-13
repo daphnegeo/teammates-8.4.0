@@ -52,11 +52,6 @@ public class InstructorCoursesPage extends AppPage {
         super(browser);
     }
 
-    @Override
-    protected boolean containsExpectedPageContents() {
-        return getPageTitle().contains("Courses");
-    }
-
     private WebElement getActiveCoursesTable() {
         return browser.driver.findElement(By.id("active-courses-table"));
     }

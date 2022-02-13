@@ -2,6 +2,7 @@ package teammates.client.scripts;
 
 import com.googlecode.objectify.cmd.Query;
 
+import teammates.storage.entity.Account;
 import teammates.storage.entity.CourseStudent;
 
 /**
@@ -20,11 +21,6 @@ public class DataMigrationForSanitizedDataInStudentAttributes
         DataMigrationForSanitizedDataInStudentAttributes migrator =
                 new DataMigrationForSanitizedDataInStudentAttributes();
         migrator.doOperationRemotely();
-    }
-
-    @Override
-    protected Query<CourseStudent> getFilterQuery() {
-        return ofy().load().type(CourseStudent.class);
     }
 
     @Override
@@ -66,4 +62,16 @@ public class DataMigrationForSanitizedDataInStudentAttributes
 
         saveEntityDeferred(student);
     }
+
+	@Override
+	protected boolean isMigrationOfGoogleIdNeeded(Account account) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	protected String generateNewGoogleId(Account oldAccount) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

@@ -13,11 +13,6 @@ public class ErrorReportingModal extends AppPage {
         super(browser);
     }
 
-    @Override
-    public boolean containsExpectedPageContents() {
-        return waitForElementPresence(By.tagName("h2")).getText().contains("Uh oh! Something went wrong.");
-    }
-
     public void verifyErrorMessage(String message) {
         assertEquals(browser.driver.findElement(By.id("error-message")).getText(),
                 "The server returns the following error message: \"" + message + "\".");

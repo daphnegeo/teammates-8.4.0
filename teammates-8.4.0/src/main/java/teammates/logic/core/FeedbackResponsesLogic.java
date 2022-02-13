@@ -15,8 +15,8 @@ import teammates.common.datatransfer.AttributesDeletionQuery;
 import teammates.common.datatransfer.CourseRoster;
 import teammates.common.datatransfer.FeedbackParticipantType;
 import teammates.common.datatransfer.SessionResultsBundle;
+import teammates.common.datatransfer.attributes.EntityAttributes;
 import teammates.common.datatransfer.attributes.FeedbackQuestionAttributes;
-import teammates.common.datatransfer.attributes.FeedbackQuestionsVariousAttributes;
 import teammates.common.datatransfer.attributes.FeedbackResponseAttributes;
 import teammates.common.datatransfer.attributes.FeedbackResponseCommentAttributes;
 import teammates.common.datatransfer.attributes.InstructorAttributes;
@@ -28,6 +28,7 @@ import teammates.common.exception.InvalidParametersException;
 import teammates.common.util.Const;
 import teammates.common.util.RequestTracer;
 import teammates.storage.api.FeedbackResponsesDb;
+import teammates.storage.entity.FeedbackQuestion;
 
 /**
  * Handles operations related to feedback responses.
@@ -194,7 +195,7 @@ public final class FeedbackResponsesLogic {
      * question.
      */
     public List<FeedbackResponseAttributes> getFeedbackResponsesFromStudentOrTeamForQuestion(
-            FeedbackQuestionsVariousAttributes question, StudentAttributes student) {
+            EntityAttributes<FeedbackQuestion> question, StudentAttributes student) {
         if (question.getGiverType() == FeedbackParticipantType.TEAMS) {
             return getFeedbackResponsesFromTeamForQuestion(
                     question.getId(), question.getCourseId(), student.getTeam(), null);
@@ -206,7 +207,7 @@ public final class FeedbackResponsesLogic {
      * Checks whether the giver name of a response is visible to an user.
      */
     public boolean isNameVisibleToUser(
-            FeedbackQuestionsVariousAttributes question,
+            EntityAttributes<FeedbackQuestion> question,
             FeedbackResponseAttributes response,
             String userEmail,
             boolean isInstructor, boolean isGiverName, CourseRoster roster) {
@@ -232,7 +233,7 @@ public final class FeedbackResponsesLogic {
     }
 
     private boolean isFeedbackParticipantNameVisibleToUser(
-            FeedbackQuestionsVariousAttributes question, FeedbackResponseAttributes response,
+            EntityAttributes<FeedbackQuestion> question, FeedbackResponseAttributes response,
             String userEmail, boolean isInstructor, boolean isGiverName, CourseRoster roster) {
         List<FeedbackParticipantType> showNameTo = isGiverName
                                                  ? question.getShowGiverNameTo()
@@ -295,7 +296,7 @@ public final class FeedbackResponsesLogic {
     /**
      * Returns true if the responses of the question are visible to students.
      */
-    public boolean isResponseOfFeedbackQuestionVisibleToStudent(FeedbackQuestionsVariousAttributes question) {
+    public boolean isResponseOfFeedbackQuestionVisibleToStudent(EntityAttributes<FeedbackQuestion> question) {
         if (question.isResponseVisibleTo(FeedbackParticipantType.STUDENTS)) {
             return true;
         }
@@ -397,7 +398,7 @@ public final class FeedbackResponsesLogic {
         // build comment
         for (FeedbackResponseCommentAttributes frc : allComments) {
             FeedbackResponseAttributes relatedResponse = relatedResponsesMap.get(frc.getFeedbackResponseId());
-            FeedbackQuestionsVariousAttributes relatedQuestion = relatedQuestionsMap.get(frc.getFeedbackQuestionId());
+            EntityAttributes<FeedbackQuestion> relatedQuestion = relatedQuestionsMap.get(frc.getFeedbackQuestionId());
             // the comment needs to be relevant to the question and response
             if (relatedQuestion == null || relatedResponse == null) {
                 continue;
@@ -492,7 +493,7 @@ public final class FeedbackResponsesLogic {
         StudentAttributes student = isInstructor ? null : studentsLogic.getStudentForEmail(courseId, userEmail);
         InstructorAttributes instructor = isInstructor ? instructorsLogic.getInstructorForEmail(courseId, userEmail) : null;
         List<FeedbackResponseAttributes> allResponses = new ArrayList<>();
-        for (FeedbackQuestionsVariousAttributes question : allQuestions) {
+        for (EntityAttributes<FeedbackQuestion> question : allQuestions) {
             // load viewable responses for students/instructors proactively
             // this is cost-effective as in most of time responses for the whole session will not be viewable to individuals
             List<FeedbackResponseAttributes> viewableResponses = isInstructor
@@ -528,7 +529,7 @@ public final class FeedbackResponsesLogic {
 
         // first get all possible giver recipient pairs
         Map<String, Map<String, Set<String>>> questionCompleteGiverRecipientMap = new HashMap<>();
-        for (FeedbackQuestionsVariousAttributes feedbackQuestion : relatedQuestionsMap.values()) {
+        for (EntityAttributes<FeedbackQuestion> feedbackQuestion : relatedQuestionsMap.values()) {
             if (feedbackQuestion.getQuestionDetailsCopy().shouldGenerateMissingResponses(feedbackQuestion)) {
                 questionCompleteGiverRecipientMap.put(feedbackQuestion.getId(),
                         fqLogic.buildCompleteGiverRecipientMap(feedbackQuestion, courseRoster));
@@ -551,7 +552,7 @@ public final class FeedbackResponsesLogic {
         // build dummy responses
         for (Map.Entry<String, Map<String, Set<String>>> currGiverRecipientMapEntry
                 : questionCompleteGiverRecipientMap.entrySet()) {
-            FeedbackQuestionsVariousAttributes correspondingQuestion =
+            EntityAttributes<FeedbackQuestion> correspondingQuestion =
                     relatedQuestionsMap.get(currGiverRecipientMapEntry.getKey());
             String questionId = correspondingQuestion.getId();
 
@@ -607,7 +608,7 @@ public final class FeedbackResponsesLogic {
     private boolean isResponseVisibleForUser(
             String userEmail, boolean isInstructor, StudentAttributes student,
             Set<String> studentsEmailInTeam, FeedbackResponseAttributes response,
-            FeedbackQuestionsVariousAttributes relatedQuestion, InstructorAttributes instructor) {
+            EntityAttributes<FeedbackQuestion> relatedQuestion, InstructorAttributes instructor) {
 
         boolean isVisibleResponse = false;
         if (isInstructor && relatedQuestion.isResponseVisibleTo(FeedbackParticipantType.INSTRUCTORS)
@@ -718,7 +719,7 @@ public final class FeedbackResponsesLogic {
      */
     public void updateFeedbackResponsesForChangingTeam(
             String courseId, String userEmail, String oldTeam, String newTeam) {
-        FeedbackQuestionsVariousAttributes question;
+        EntityAttributes<FeedbackQuestion> question;
         // deletes all responses given by the user to team members or given by the user as a representative of a team.
         List<FeedbackResponseAttributes> responsesFromUser =
                 getFeedbackResponsesFromGiverForCourse(courseId, userEmail);
@@ -792,7 +793,7 @@ public final class FeedbackResponsesLogic {
         }
     }
 
-    private boolean isRecipientTypeTeamMembers(FeedbackQuestionsVariousAttributes question) {
+    private boolean isRecipientTypeTeamMembers(EntityAttributes<FeedbackQuestion> question) {
         return question.getRecipientType() == FeedbackParticipantType.OWN_TEAM_MEMBERS
                || question.getRecipientType() == FeedbackParticipantType.OWN_TEAM_MEMBERS_INCLUDING_SELF;
     }
@@ -908,7 +909,7 @@ public final class FeedbackResponsesLogic {
      * Returns feedback responses given/received by an instructor.
      */
     private List<FeedbackResponseAttributes> getFeedbackResponsesToOrFromInstructorForQuestion(
-            FeedbackQuestionsVariousAttributes question, InstructorAttributes instructor) {
+            EntityAttributes<FeedbackQuestion> question, InstructorAttributes instructor) {
         UniqueResponsesSet viewableResponses = new UniqueResponsesSet();
 
         // Add responses that the instructor submitted him/herself
@@ -934,7 +935,7 @@ public final class FeedbackResponsesLogic {
      * Returns viewable feedback responses for a student.
      */
     private List<FeedbackResponseAttributes> getViewableFeedbackResponsesForStudentForQuestion(
-            FeedbackQuestionsVariousAttributes question, StudentAttributes student, CourseRoster courseRoster) {
+            EntityAttributes<FeedbackQuestion> question, StudentAttributes student, CourseRoster courseRoster) {
         UniqueResponsesSet viewableResponses = new UniqueResponsesSet();
 
         // Add responses that the student submitted him/herself

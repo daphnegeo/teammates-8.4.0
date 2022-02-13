@@ -10,11 +10,6 @@ public class HomePage extends AppPage {
     }
 
     @Override
-    protected boolean containsExpectedPageContents() {
-        return getTitle().contains("TEAMMATES");
-    }
-
-    @Override
     public void waitForPageToLoad() {
         // The load state of this page cannot be determined using Angular testability
         // as there is a setInterval operation in the page (for the testimonial container),

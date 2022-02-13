@@ -12,13 +12,18 @@ import org.testng.annotations.Test;
 
 import teammates.common.datatransfer.AttributesDeletionQuery;
 import teammates.common.datatransfer.CourseRoster;
+import teammates.common.datatransfer.DataBundle;
 import teammates.common.datatransfer.FeedbackParticipantType;
+import teammates.common.datatransfer.attributes.CourseAttributes;
+import teammates.common.datatransfer.attributes.EntityAttributes;
 import teammates.common.datatransfer.attributes.FeedbackQuestionAttributes;
 import teammates.common.datatransfer.attributes.FeedbackQuestionsVariousAttributes;
 import teammates.common.datatransfer.attributes.FeedbackResponseAttributes;
+import teammates.common.datatransfer.attributes.FeedbackResponseCommentAttributes;
 import teammates.common.datatransfer.attributes.FeedbackSessionAttributes;
 import teammates.common.datatransfer.attributes.InstructorAttributes;
 import teammates.common.datatransfer.attributes.StudentAttributes;
+import teammates.common.datatransfer.attributes.StudentProfileAttributes;
 import teammates.common.datatransfer.questions.FeedbackMcqQuestionDetails;
 import teammates.common.datatransfer.questions.FeedbackMsqQuestionDetails;
 import teammates.common.datatransfer.questions.FeedbackQuestionDetails;
@@ -27,6 +32,8 @@ import teammates.common.exception.EntityDoesNotExistException;
 import teammates.common.exception.InvalidParametersException;
 import teammates.common.util.Const;
 import teammates.common.util.FieldValidator;
+import teammates.storage.entity.Account;
+import teammates.storage.entity.FeedbackQuestion;
 
 /**
  * SUT: {@link FeedbackQuestionsLogic}.
@@ -86,7 +93,7 @@ public class FeedbackQuestionsLogicTest extends BaseLogicTest {
     }
 
     private void testGetRecipientsForQuestion() throws Exception {
-        FeedbackQuestionsVariousAttributes question;
+        EntityAttributes<FeedbackQuestion> question;
         String email;
         Map<String, String> recipients;
 
@@ -156,7 +163,7 @@ public class FeedbackQuestionsLogicTest extends BaseLogicTest {
 
     @Test
     public void testGetRecipientsOfQuestion() throws Exception {
-        FeedbackQuestionsVariousAttributes question;
+        EntityAttributes<FeedbackQuestion> question;
         StudentAttributes studentGiver;
         InstructorAttributes instructorGiver;
         CourseRoster courseRoster;
@@ -305,7 +312,7 @@ public class FeedbackQuestionsLogicTest extends BaseLogicTest {
         expectedList.add(q4);
         expectedList.add(q5);
 
-        FeedbackQuestionsVariousAttributes questionToUpdate = getQuestionFromDatabase("qn3InSession1InCourse1");
+        EntityAttributes<FeedbackQuestion> questionToUpdate = getQuestionFromDatabase("qn3InSession1InCourse1");
         questionToUpdate.setQuestionNumber(1);
         fqLogic.updateFeedbackQuestionCascade(
                 FeedbackQuestionAttributes.updateOptionsBuilder(questionToUpdate.getId())
@@ -470,7 +477,7 @@ public class FeedbackQuestionsLogicTest extends BaseLogicTest {
     @Test
     public void testUpdateQuestionCascade() throws Exception {
         ______TS("standard update, no existing responses");
-        FeedbackQuestionsVariousAttributes questionToUpdate = getQuestionFromDatabase("qn2InSession1InCourse2");
+        EntityAttributes<FeedbackQuestion> questionToUpdate = getQuestionFromDatabase("qn2InSession1InCourse2");
 
         FeedbackQuestionDetails fqd = new FeedbackTextQuestionDetails("new question text");
         questionToUpdate.setQuestionDetails(fqd);
@@ -479,14 +486,14 @@ public class FeedbackQuestionsLogicTest extends BaseLogicTest {
         newVisibility.add(FeedbackParticipantType.INSTRUCTORS);
         questionToUpdate.setShowResponsesTo(newVisibility);
 
-        FeedbackQuestionsVariousAttributes updatedQuestion = fqLogic.updateFeedbackQuestionCascade(
+        EntityAttributes<FeedbackQuestion> updatedQuestion = fqLogic.updateFeedbackQuestionCascade(
                 FeedbackQuestionAttributes.updateOptionsBuilder(questionToUpdate.getId())
                         .withQuestionDetails(fqd)
                         .withQuestionNumber(questionToUpdate.getQuestionNumber())
                         .withShowResponsesTo(questionToUpdate.getShowResponsesTo())
                         .build());
 
-        FeedbackQuestionsVariousAttributes actualQuestion =
+        EntityAttributes<FeedbackQuestion> actualQuestion =
                 fqLogic.getFeedbackQuestion(questionToUpdate.getId());
         assertEquals(questionToUpdate.toString(), actualQuestion.toString());
         assertEquals(questionToUpdate.toString(), updatedQuestion.toString());
@@ -535,7 +542,7 @@ public class FeedbackQuestionsLogicTest extends BaseLogicTest {
         ______TS("failure: question does not exist");
 
         questionToUpdate = getQuestionFromDatabase("qn3InSession1InCourse1");
-        FeedbackQuestionsVariousAttributes[] finalFq = new FeedbackQuestionsVariousAttributes[] { questionToUpdate };
+        EntityAttributes<FeedbackQuestion>[] finalFq = new EntityAttributes<FeedbackQuestion>[] { questionToUpdate };
         fqLogic.deleteFeedbackQuestionCascade(questionToUpdate.getId());
 
         EntityDoesNotExistException ednee = assertThrows(EntityDoesNotExistException.class,
@@ -566,7 +573,7 @@ public class FeedbackQuestionsLogicTest extends BaseLogicTest {
 
     @Test
     public void testDeleteFeedbackQuestionCascade_existentQuestion_shouldDoCascadeDeletion() {
-        FeedbackQuestionsVariousAttributes typicalQuestion = getQuestionFromDatabase("qn3InSession1InCourse1");
+        EntityAttributes<FeedbackQuestion> typicalQuestion = getQuestionFromDatabase("qn3InSession1InCourse1");
         assertEquals(3, typicalQuestion.getQuestionNumber());
         assertEquals(4, getQuestionFromDatabase("qn4InSession1InCourse1").getQuestionNumber());
 
@@ -607,7 +614,7 @@ public class FeedbackQuestionsLogicTest extends BaseLogicTest {
     @Test
     public void testDeleteFeedbackQuestionCascade_cascadeDeleteResponseOfStudent_shouldUpdateRespondents() {
         FeedbackResponseAttributes fra = dataBundle.feedbackResponses.get("response1ForQ1S1C1");
-        FeedbackQuestionsVariousAttributes fqa = fqLogic.getFeedbackQuestion(
+        EntityAttributes<FeedbackQuestion> fqa = fqLogic.getFeedbackQuestion(
                 fra.getFeedbackSessionName(), fra.getCourseId(), Integer.parseInt(fra.getFeedbackQuestionId()));
         FeedbackResponseAttributes responseInDb = frLogic.getFeedbackResponse(
                 fqa.getId(), fra.getGiver(), fra.getRecipient());
@@ -633,7 +640,7 @@ public class FeedbackQuestionsLogicTest extends BaseLogicTest {
     @Test
     public void testDeleteFeedbackQuestions_byCourseId_shouldDeleteQuestions() {
         String courseId = "idOfTypicalCourse2";
-        FeedbackQuestionsVariousAttributes deletedQuestion = getQuestionFromDatabase("qn1InSession1InCourse2");
+        EntityAttributes<FeedbackQuestion> deletedQuestion = getQuestionFromDatabase("qn1InSession1InCourse2");
         assertNotNull(deletedQuestion);
 
         List<FeedbackQuestionAttributes> questions =
@@ -659,7 +666,7 @@ public class FeedbackQuestionsLogicTest extends BaseLogicTest {
         StudentAttributes typicalStudent = dataBundle.students.get("student1InCourse1");
         InstructorAttributes typicalInstructor = dataBundle.instructors.get("instructor1OfCourse1");
 
-        FeedbackQuestionsVariousAttributes fqa = dataBundle.feedbackQuestions.get("qn1InSession1InCourse1");
+        EntityAttributes<FeedbackQuestion> fqa = dataBundle.feedbackQuestions.get("qn1InSession1InCourse1");
         // construct a typical question
         fqa = FeedbackQuestionAttributes.builder()
                         .withCourseId(fqa.getCourseId())
@@ -837,7 +844,7 @@ public class FeedbackQuestionsLogicTest extends BaseLogicTest {
         StudentAttributes typicalStudent = dataBundle.students.get("student1InCourse1");
         InstructorAttributes typicalInstructor = dataBundle.instructors.get("instructor1OfCourse1");
 
-        FeedbackQuestionsVariousAttributes fqa = dataBundle.feedbackQuestions.get("qn1InSession1InCourse1");
+        EntityAttributes<FeedbackQuestion> fqa = dataBundle.feedbackQuestions.get("qn1InSession1InCourse1");
         // construct a typical question
         fqa = FeedbackQuestionAttributes.builder()
                 .withCourseId(fqa.getCourseId())
@@ -878,7 +885,7 @@ public class FeedbackQuestionsLogicTest extends BaseLogicTest {
         CourseRoster courseRoster = new CourseRoster(
                 studentsLogic.getStudentsForCourse("idOfTypicalCourse1"),
                 instructorsLogic.getInstructorsForCourse("idOfTypicalCourse1"));
-        FeedbackQuestionsVariousAttributes qn1InSession1InCourse1 = getQuestionFromDatabase("qn1InSession1InCourse1");
+        EntityAttributes<FeedbackQuestion> qn1InSession1InCourse1 = getQuestionFromDatabase("qn1InSession1InCourse1");
 
         Map<String, Set<String>> completeGiverRecipientMap =
                 fqLogic.buildCompleteGiverRecipientMap(qn1InSession1InCourse1, courseRoster);
@@ -901,7 +908,7 @@ public class FeedbackQuestionsLogicTest extends BaseLogicTest {
         CourseRoster courseRoster = new CourseRoster(
                 studentsLogic.getStudentsForCourse("idOfTypicalCourse1"),
                 instructorsLogic.getInstructorsForCourse("idOfTypicalCourse1"));
-        FeedbackQuestionsVariousAttributes qn4InSession1InCourse1 = getQuestionFromDatabase("qn4InSession1InCourse1");
+        EntityAttributes<FeedbackQuestion> qn4InSession1InCourse1 = getQuestionFromDatabase("qn4InSession1InCourse1");
 
         Map<String, Set<String>> completeGiverRecipientMap =
                 fqLogic.buildCompleteGiverRecipientMap(qn4InSession1InCourse1, courseRoster);
@@ -925,7 +932,7 @@ public class FeedbackQuestionsLogicTest extends BaseLogicTest {
         CourseRoster courseRoster = new CourseRoster(
                 studentsLogic.getStudentsForCourse("idOfTypicalCourse1"),
                 instructorsLogic.getInstructorsForCourse("idOfTypicalCourse1"));
-        FeedbackQuestionsVariousAttributes qn3InSession1InCourse1 = getQuestionFromDatabase("qn3InSession1InCourse1");
+        EntityAttributes<FeedbackQuestion> qn3InSession1InCourse1 = getQuestionFromDatabase("qn3InSession1InCourse1");
         FeedbackSessionAttributes session1 = fsLogic.getFeedbackSession(
                 qn3InSession1InCourse1.getFeedbackSessionName(), qn3InSession1InCourse1.getCourseId());
 
@@ -942,7 +949,7 @@ public class FeedbackQuestionsLogicTest extends BaseLogicTest {
         CourseRoster courseRoster = new CourseRoster(
                 studentsLogic.getStudentsForCourse("idOfTypicalCourse1"),
                 instructorsLogic.getInstructorsForCourse("idOfTypicalCourse1"));
-        FeedbackQuestionsVariousAttributes teamFeedbackQuestion = getQuestionFromDatabase("team.feedback");
+        EntityAttributes<FeedbackQuestion> teamFeedbackQuestion = getQuestionFromDatabase("team.feedback");
 
         Map<String, Set<String>> completeGiverRecipientMap =
                 fqLogic.buildCompleteGiverRecipientMap(teamFeedbackQuestion, courseRoster);
@@ -1095,7 +1102,7 @@ public class FeedbackQuestionsLogicTest extends BaseLogicTest {
     }
 
     private void testIsQuestionAnswered() throws Exception {
-        FeedbackQuestionsVariousAttributes question;
+        EntityAttributes<FeedbackQuestion> question;
 
         ______TS("test question is fully answered by user");
 
@@ -1111,5 +1118,71 @@ public class FeedbackQuestionsLogicTest extends BaseLogicTest {
                 question.getFeedbackSessionName(), question.getCourseId(), question.getQuestionNumber());
         return question;
     }
+
+	@Override
+	protected EntityAttributes<Account> getAccount(EntityAttributes<Account> account) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected StudentProfileAttributes getStudentProfile(StudentProfileAttributes studentProfileAttributes) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected CourseAttributes getCourse(CourseAttributes course) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected EntityAttributes<FeedbackQuestion> getFeedbackQuestion(EntityAttributes<FeedbackQuestion> fq) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected FeedbackResponseCommentAttributes getFeedbackResponseComment(FeedbackResponseCommentAttributes frc) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected FeedbackResponseAttributes getFeedbackResponse(FeedbackResponseAttributes fr) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected FeedbackSessionAttributes getFeedbackSession(FeedbackSessionAttributes fs) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected InstructorAttributes getInstructor(InstructorAttributes instructor) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected StudentAttributes getStudent(StudentAttributes student) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected boolean doRemoveAndRestoreDataBundle(DataBundle testData) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	protected boolean doPutDocuments(DataBundle testData) {
+		// TODO Auto-generated method stub
+		return false;
+	}
 
 }

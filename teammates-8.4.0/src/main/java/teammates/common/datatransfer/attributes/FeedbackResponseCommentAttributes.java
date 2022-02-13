@@ -3,15 +3,12 @@ package teammates.common.datatransfer.attributes;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 import teammates.common.datatransfer.FeedbackParticipantType;
 import teammates.common.datatransfer.InstructorPrivileges;
 import teammates.common.util.Const;
 import teammates.common.util.Const.InstructorPermissions;
-import teammates.common.util.FieldValidator;
-import teammates.common.util.SanitizationHelper;
 import teammates.e2e.cases.InstructorFeedbackReportPageE2ETest;
 import teammates.storage.entity.FeedbackResponseComment;
 import teammates.ui.webapi.UpdateFeedbackResponseCommentActionTest;
@@ -101,37 +98,10 @@ public class FeedbackResponseCommentAttributes extends EntityAttributes<Feedback
     }
 
     /**
-     * Returns a builder for {@link FeedbackResponseCommentAttributes}.
-     */
-    public static Builder builder() {
-        return new Builder();
-    }
-
-    /**
      * Returns true if the response comment is visible to the given participant type.
      */
     public boolean isVisibleTo(FeedbackParticipantType viewerType) {
         return showCommentTo.contains(viewerType);
-    }
-
-    public Long getId() {
-        return feedbackResponseCommentId;
-    }
-
-    public String getCourseId() {
-        return courseId;
-    }
-
-    public void setCourseId(String courseId) {
-        this.courseId = courseId;
-    }
-
-    public String getFeedbackSessionName() {
-        return feedbackSessionName;
-    }
-
-    public void setFeedbackSessionName(String feedbackSessionName) {
-        this.feedbackSessionName = feedbackSessionName;
     }
 
     public String getCommentGiver() {
@@ -158,10 +128,6 @@ public class FeedbackResponseCommentAttributes extends EntityAttributes<Feedback
         this.feedbackResponseId = feedbackResponseId;
     }
 
-    public String getFeedbackQuestionId() {
-        return feedbackQuestionId;
-    }
-
     public void setFeedbackQuestionId(String feedbackQuestionId) {
         this.feedbackQuestionId = feedbackQuestionId;
     }
@@ -174,24 +140,12 @@ public class FeedbackResponseCommentAttributes extends EntityAttributes<Feedback
         return showCommentTo;
     }
 
-    public void setShowGiverNameTo(List<FeedbackParticipantType> showGiverNameTo) {
-        this.showGiverNameTo = showGiverNameTo;
-    }
-
-    public List<FeedbackParticipantType> getShowGiverNameTo() {
-        return showGiverNameTo;
-    }
-
     public boolean isVisibilityFollowingFeedbackQuestion() {
         return isVisibilityFollowingFeedbackQuestion;
     }
 
     public void setVisibilityFollowingFeedbackQuestion(boolean visibilityFollowingFeedbackQuestion) {
         isVisibilityFollowingFeedbackQuestion = visibilityFollowingFeedbackQuestion;
-    }
-
-    public Instant getCreatedAt() {
-        return createdAt;
     }
 
     public void setCreatedAt(Instant createdAt) {
@@ -243,106 +197,6 @@ public class FeedbackResponseCommentAttributes extends EntityAttributes<Feedback
      */
     public void setId(Long id) {
         this.feedbackResponseCommentId = id;
-    }
-
-    @Override
-    public List<String> getInvalidityInfo() {
-        List<String> errors = new ArrayList<>();
-
-        addNonEmptyError(FieldValidator.getInvalidityInfoForCourseId(courseId), errors);
-
-        addNonEmptyError(FieldValidator.getInvalidityInfoForFeedbackSessionName(feedbackSessionName), errors);
-
-        addNonEmptyError(FieldValidator.getInvalidityInfoForCommentGiverType(commentGiverType), errors);
-
-        addNonEmptyError(FieldValidator.getInvalidityInfoForVisibilityOfFeedbackParticipantComments(
-                isCommentFromFeedbackParticipant, isVisibilityFollowingFeedbackQuestion), errors);
-
-        //TODO: handle the new attributes showCommentTo and showGiverNameTo
-
-        return errors;
-    }
-
-    @Override
-    public FeedbackResponseComment toEntity() {
-        return new FeedbackResponseComment(courseId, feedbackSessionName, feedbackQuestionId, commentGiver,
-                commentGiverType, feedbackResponseId, createdAt, commentText, giverSection, receiverSection,
-                showCommentTo, showGiverNameTo, lastEditorEmail, lastEditedAt, isCommentFromFeedbackParticipant,
-                isVisibilityFollowingFeedbackQuestion);
-    }
-
-    @Override
-    public void sanitizeForSaving() {
-        this.commentText = SanitizationHelper.sanitizeForRichText(this.commentText);
-    }
-
-    @Override
-    public String toString() {
-        return "FeedbackResponseCommentAttributes ["
-                + "feedbackResponseCommentId = " + feedbackResponseCommentId
-                + ", courseId = " + courseId
-                + ", feedbackSessionName = " + feedbackSessionName
-                + ", feedbackQuestionId = " + feedbackQuestionId
-                + ", commentGiver = " + commentGiver
-                + ", feedbackResponseId = " + feedbackResponseId
-                + ", commentText = " + commentText
-                + ", createdAt = " + createdAt
-                + ", lastEditorEmail = " + lastEditorEmail
-                + ", lastEditedAt = " + lastEditedAt
-                + ", giverSection = " + giverSection
-                + ", receiverSection = " + receiverSection
-                + ", showCommentTo = " + showCommentTo
-                + ", showGiverNameTo = " + showGiverNameTo
-                + ", commentGiverType = " + commentGiverType
-                + ", isVisibilityFollowingFeedbackQuestion = " + isVisibilityFollowingFeedbackQuestion
-                + ", isCommentFromFeedbackParticipant = " + isCommentFromFeedbackParticipant
-                + "]";
-    }
-
-    @Override
-    public int hashCode() {
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(this.feedbackSessionName).append(this.feedbackQuestionId)
-                .append(this.feedbackResponseId).append(this.courseId)
-                .append(this.commentGiver).append(this.commentText)
-                .append(this.giverSection).append(this.receiverSection);
-        return stringBuilder.toString().hashCode();
-    }
-
-    @Override
-    public boolean equals(Object other) {
-        if (other == null) {
-            return false;
-        } else if (this == other) {
-            return true;
-        } else if (this.getClass() == other.getClass()) {
-            FeedbackResponseCommentAttributes otherCommentAttributes =
-                    (FeedbackResponseCommentAttributes) other;
-            return Objects.equals(this.feedbackSessionName, otherCommentAttributes.feedbackSessionName)
-                    && Objects.equals(this.feedbackResponseId, otherCommentAttributes.feedbackResponseId)
-                    && Objects.equals(this.feedbackQuestionId, otherCommentAttributes.feedbackQuestionId)
-                    && Objects.equals(this.courseId, otherCommentAttributes.courseId)
-                    && Objects.equals(this.commentGiver, otherCommentAttributes.commentGiver)
-                    && Objects.equals(this.commentText, otherCommentAttributes.commentText)
-                    && Objects.equals(this.giverSection, otherCommentAttributes.giverSection)
-                    && Objects.equals(this.receiverSection, otherCommentAttributes.receiverSection);
-        } else {
-            return false;
-        }
-    }
-
-    /**
-     * Updates with {@link UpdateOptions}.
-     */
-    public void update(UpdateOptions updateOptions) {
-        updateOptions.feedbackResponseIdOption.ifPresent(s -> feedbackResponseId = s);
-        updateOptions.commentTextOption.ifPresent(s -> commentText = s);
-        updateOptions.showCommentToOption.ifPresent(s -> showCommentTo = s);
-        updateOptions.showGiverNameToOption.ifPresent(s -> showGiverNameTo = s);
-        updateOptions.lastEditorEmailOption.ifPresent(s -> lastEditorEmail = s);
-        updateOptions.lastEditedAtOption.ifPresent(s -> lastEditedAt = s);
-        updateOptions.giverSectionOption.ifPresent(s -> giverSection = s);
-        updateOptions.receiverSectionOption.ifPresent(s -> receiverSection = s);
     }
 
     public List<FeedbackResponseAttributes> getResponsesByQuestion(InstructorFeedbackReportPageE2ETest instructorFeedbackReportPageE2ETest, String courseId, int qnNum) {

@@ -1,17 +1,24 @@
 package teammates.ui.webapi;
 
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import org.testng.annotations.Test;
 
+import teammates.common.datatransfer.DataBundle;
+import teammates.common.datatransfer.attributes.CourseAttributes;
+import teammates.common.datatransfer.attributes.EntityAttributes;
+import teammates.common.datatransfer.attributes.FeedbackResponseAttributes;
+import teammates.common.datatransfer.attributes.FeedbackResponseCommentAttributes;
 import teammates.common.datatransfer.attributes.FeedbackSessionAttributes;
 import teammates.common.datatransfer.attributes.InstructorAttributes;
 import teammates.common.datatransfer.attributes.StudentAttributes;
+import teammates.common.datatransfer.attributes.StudentProfileAttributes;
 import teammates.common.util.Const;
 import teammates.common.util.TimeHelper;
+import teammates.storage.entity.Account;
+import teammates.storage.entity.FeedbackQuestion;
 import teammates.ui.output.FeedbackSessionData;
 import teammates.ui.output.FeedbackSessionPublishStatus;
 import teammates.ui.output.FeedbackSessionSubmissionStatus;
@@ -35,30 +42,6 @@ public class GetFeedbackSessionsActionTest extends BaseActionTest<GetFeedbackSes
     @Override
     protected String getRequestMethod() {
         return GET;
-    }
-
-    @Override
-    protected void prepareTestData() {
-        sessionsInCourse1 = new ArrayList<>();
-        sessionsInCourse1.add(typicalBundle.feedbackSessions.get("session2InCourse1"));
-        sessionsInCourse1.add(typicalBundle.feedbackSessions.get("gracePeriodSession"));
-        sessionsInCourse1.add(typicalBundle.feedbackSessions.get("closedSession"));
-        sessionsInCourse1.add(typicalBundle.feedbackSessions.get("empty.session"));
-        sessionsInCourse1.add(typicalBundle.feedbackSessions.get("awaiting.session"));
-
-        sessionsInCourse2 = new ArrayList<>();
-        sessionsInCourse2.add(typicalBundle.feedbackSessions.get("session1InCourse2"));
-        sessionsInCourse2.add(typicalBundle.feedbackSessions.get("session2InCourse2"));
-
-        FeedbackSessionAttributes session1InCourse1 = typicalBundle.feedbackSessions.get("session1InCourse1");
-        session1InCourse1.setDeletedTime(Instant.now());
-
-        // Make student2InCourse2 and instructor1OfCourse1 belong to the same account.
-        StudentAttributes student2InCourse2 = typicalBundle.students.get("student2InCourse2");
-        InstructorAttributes instructor1OfCourse1 = typicalBundle.instructors.get("instructor1OfCourse1");
-        student2InCourse2.setGoogleId(instructor1OfCourse1.getGoogleId());
-
-        removeAndRestoreDataBundle(typicalBundle);
     }
 
     @Test
@@ -470,4 +453,70 @@ public class GetFeedbackSessionsActionTest extends BaseActionTest<GetFeedbackSes
     	  sessionMatching(sessionsData, expectedSessions);
 
     }
+
+	@Override
+	protected EntityAttributes<Account> getAccount(EntityAttributes<Account> account) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected StudentProfileAttributes getStudentProfile(StudentProfileAttributes studentProfileAttributes) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected CourseAttributes getCourse(CourseAttributes course) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected EntityAttributes<FeedbackQuestion> getFeedbackQuestion(EntityAttributes<FeedbackQuestion> fq) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected FeedbackResponseCommentAttributes getFeedbackResponseComment(FeedbackResponseCommentAttributes frc) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected FeedbackResponseAttributes getFeedbackResponse(FeedbackResponseAttributes fr) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected FeedbackSessionAttributes getFeedbackSession(FeedbackSessionAttributes fs) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected InstructorAttributes getInstructor(InstructorAttributes instructor) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected StudentAttributes getStudent(StudentAttributes student) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected boolean doRemoveAndRestoreDataBundle(DataBundle testData) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	protected boolean doPutDocuments(DataBundle testData) {
+		// TODO Auto-generated method stub
+		return false;
+	}
 }

@@ -24,11 +24,6 @@ public class AdminTimezonePage extends AppPage {
         super(browser);
     }
 
-    @Override
-    protected boolean containsExpectedPageContents() {
-        return getPageSource().contains("Java timezones") && getPageSource().contains("Moment timezones");
-    }
-
     public String getJavaTimezoneOffsets() {
         return javaTimezoneOffsets.getText();
     }

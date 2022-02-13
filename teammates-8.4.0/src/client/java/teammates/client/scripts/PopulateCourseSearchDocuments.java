@@ -1,6 +1,5 @@
 package teammates.client.scripts;
 
-import java.time.Instant;
 import java.util.HashMap;
 import java.util.List;
 
@@ -10,8 +9,8 @@ import teammates.client.util.BackDoor;
 import teammates.common.datatransfer.DataBundle;
 import teammates.common.datatransfer.attributes.InstructorAttributes;
 import teammates.common.datatransfer.attributes.StudentAttributes;
-import teammates.common.util.TimeHelper;
 import teammates.logic.api.Logic;
+import teammates.storage.entity.Account;
 import teammates.storage.entity.Course;
 
 /**
@@ -31,21 +30,6 @@ public class PopulateCourseSearchDocuments extends DataMigrationEntitiesBaseScri
     public static void main(String[] args) {
         PopulateCourseSearchDocuments populator = new PopulateCourseSearchDocuments();
         populator.doOperationRemotely();
-    }
-
-    @Override
-    protected Query<Course> getFilterQuery() {
-        Instant createdAtUpperBound = Instant.now();
-        Instant createdAtLowerBound = TimeHelper.parseInstant("2020-12-31T16:00:00.00Z");
-        // To change the boundary of the createdAt timestamp, uncomment the next line and insert the appropriate timestamp.
-        // createdAtUpperBound = TimeHelper.parseInstant("2021-06-30T16:00:00.00Z");
-        // createdAtLowerBound = TimeHelper.parseInstant("2020-12-31T16:00:00.00Z");
-        Query<Course> query = ofy().load().type(Course.class)
-                .filter("createdAt <=", createdAtUpperBound);
-        if (createdAtLowerBound != null) {
-            query = query.filter("createdAt >=", createdAtLowerBound);
-        }
-        return query.order("-createdAt");
     }
 
     @Override
@@ -107,5 +91,17 @@ public class PopulateCourseSearchDocuments extends DataMigrationEntitiesBaseScri
         System.out.println("Search document insertion completed");
         System.out.println("---------");
     }
+
+	@Override
+	protected String generateNewGoogleId(Account oldAccount) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected boolean isMigrationOfGoogleIdNeeded(Account account) {
+		// TODO Auto-generated method stub
+		return false;
+	}
 
 }
