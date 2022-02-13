@@ -56,10 +56,17 @@ public class Browser {
         this.driver.manage().timeouts().setScriptTimeout(TestProperties.TEST_TIMEOUT, TimeUnit.SECONDS);
     }
 
-    public void addCookie(String name, String value, boolean isSecure, boolean isHttpOnly) {
-        Cookie cookie = new Cookie.Builder(name, value)
-                .isSecure(isSecure)
-                .isHttpOnly(isHttpOnly)
+    /**
+	 * @deprecated Use {@link #addCookie(AddCookieParameter)} instead
+	 */
+	public void addCookie(String name, String value, boolean isSecure, boolean isHttpOnly) {
+		addCookie(new AddCookieParameter(name, value, isSecure, isHttpOnly));
+	}
+
+	public void addCookie(AddCookieParameter parameterObject) {
+        Cookie cookie = new Cookie.Builder(parameterObject.name, parameterObject.value)
+                .parameterObject.isSecure(parameterObject.isSecure)
+                .parameterObject.isHttpOnly(parameterObject.isHttpOnly)
                 .build();
         this.driver.manage().addCookie(cookie);
     }

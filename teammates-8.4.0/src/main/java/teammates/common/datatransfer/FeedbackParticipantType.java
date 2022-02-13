@@ -1,5 +1,11 @@
 package teammates.common.datatransfer;
 
+import java.util.Collection;
+
+import teammates.common.datatransfer.attributes.InstructorAttributes;
+import teammates.common.datatransfer.attributes.StudentAttributes;
+import teammates.e2e.pageobjects.InstructorFeedbackResultsPage;
+
 /**
  * Represents the type of an entity that is involved in a feedback question or response.
  */
@@ -132,5 +138,53 @@ public enum FeedbackParticipantType {
             return super.toString();
         }
     }
+
+	public String getTeam(String participant, Collection<StudentAttributes> students) {
+	    if (equals(FeedbackParticipantType.NONE)) {
+	        return InstructorFeedbackResultsPage.NO_TEAM_LABEL;
+	    } else if (equals(FeedbackParticipantType.TEAMS)) {
+	        return participant;
+	    } else if (equals(FeedbackParticipantType.INSTRUCTORS)) {
+	        return "Instructors";
+	    }
+	    String teamName = students.stream()
+	            .filter(student -> student.getEmail().equals(participant))
+	            .findFirst()
+	            .map(StudentAttributes::getTeam)
+	            .orElse(null);
+	
+	    if (teamName == null) {
+	        throw new RuntimeException("cannot find section name for " + participant);
+	    }
+	
+	    return teamName;
+	}
+
+	public String getName(String participant, Collection<InstructorAttributes> instructors, Collection<StudentAttributes> students) {
+	    String name;
+	    if (equals(FeedbackParticipantType.NONE)) {
+	        name = InstructorFeedbackResultsPage.NO_USER_LABEL;
+	    } else if (equals(FeedbackParticipantType.TEAMS)) {
+	        name = participant;
+	    } else if (equals(FeedbackParticipantType.INSTRUCTORS)) {
+	        name = instructors.stream()
+	                .filter(instructor -> instructor.getEmail().equals(participant))
+	                .findFirst()
+	                .map(InstructorAttributes::getName)
+	                .orElse(null);
+	    } else {
+	        name = students.stream()
+	                .filter(student -> student.getEmail().equals(participant))
+	                .findFirst()
+	                .map(StudentAttributes::getName)
+	                .orElse(null);
+	    }
+	
+	    if (name == null) {
+	        throw new RuntimeException("Could not find name for : " + participant);
+	    }
+	
+	    return name;
+	}
 
 }

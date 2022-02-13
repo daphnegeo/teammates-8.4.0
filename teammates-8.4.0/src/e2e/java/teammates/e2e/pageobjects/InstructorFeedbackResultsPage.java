@@ -39,9 +39,9 @@ public class InstructorFeedbackResultsPage extends RankOptionSuper {
     private static final String RGQ_VIEW = "RGQ";
 
     private static final String NO_RESPONSE_LABEL = "No Response";
-    private static final String NO_TEAM_LABEL = "No Specific Team";
+    public static final String NO_TEAM_LABEL = "No Specific Team";
     private static final String NO_SECTION_LABEL = "No specific section";
-    private static final String NO_USER_LABEL = "No Specific User";
+    public static final String NO_USER_LABEL = "No Specific User";
 
     private static final String MCQ_OTHER = "Other";
 
@@ -1011,52 +1011,18 @@ public class InstructorFeedbackResultsPage extends RankOptionSuper {
         return sectionName;
     }
 
-    private String getTeam(FeedbackParticipantType type, String participant, Collection<StudentAttributes> students) {
-        if (type.equals(FeedbackParticipantType.NONE)) {
-            return NO_TEAM_LABEL;
-        } else if (type.equals(FeedbackParticipantType.TEAMS)) {
-            return participant;
-        } else if (type.equals(FeedbackParticipantType.INSTRUCTORS)) {
-            return "Instructors";
-        }
-        String teamName = students.stream()
-                .filter(student -> student.getEmail().equals(participant))
-                .findFirst()
-                .map(StudentAttributes::getTeam)
-                .orElse(null);
+    /**
+	 * @deprecated Use {@link teammates.common.datatransfer.FeedbackParticipantType#getTeam(String,Collection<StudentAttributes>)} instead
+	 */
+	private String getTeam(FeedbackParticipantType type, String participant, Collection<StudentAttributes> students) {
+		return type.getTeam(participant, students);
+	}
 
-        if (teamName == null) {
-            throw new RuntimeException("cannot find section name for " + participant);
-        }
-
-        return teamName;
-    }
-
-    private String getName(FeedbackParticipantType type, String participant, Collection<InstructorAttributes> instructors,
-                           Collection<StudentAttributes> students) {
-        String name;
-        if (type.equals(FeedbackParticipantType.NONE)) {
-            name = NO_USER_LABEL;
-        } else if (type.equals(FeedbackParticipantType.TEAMS)) {
-            name = participant;
-        } else if (type.equals(FeedbackParticipantType.INSTRUCTORS)) {
-            name = instructors.stream()
-                    .filter(instructor -> instructor.getEmail().equals(participant))
-                    .findFirst()
-                    .map(InstructorAttributes::getName)
-                    .orElse(null);
-        } else {
-            name = students.stream()
-                    .filter(student -> student.getEmail().equals(participant))
-                    .findFirst()
-                    .map(StudentAttributes::getName)
-                    .orElse(null);
-        }
-
-        if (name == null) {
-            throw new RuntimeException("Could not find name for : " + participant);
-        }
-
-        return name;
-    }
+    /**
+	 * @deprecated Use {@link teammates.common.datatransfer.FeedbackParticipantType#getName(String,Collection<InstructorAttributes>,Collection<StudentAttributes>)} instead
+	 */
+	private String getName(FeedbackParticipantType type, String participant, Collection<InstructorAttributes> instructors,
+	                       Collection<StudentAttributes> students) {
+							return type.getName(participant, instructors, students);
+						}
 }

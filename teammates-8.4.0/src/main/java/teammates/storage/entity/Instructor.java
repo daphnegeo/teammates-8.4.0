@@ -73,20 +73,55 @@ public class Instructor extends BaseEntity {
     public Instructor(String instructorGoogleId, String courseId, boolean isArchived, String instructorName,
                       String instructorEmail, String role, boolean isDisplayedToStudents, String displayedName,
                       String instructorPrivilegesAsText) {
-        this.setGoogleId(instructorGoogleId);
-        this.setCourseId(courseId);
-        this.setIsArchived(isArchived);
-        this.setName(instructorName);
-        this.setEmail(instructorEmail);
-        this.setRole(role);
-        this.setIsDisplayedToStudents(isDisplayedToStudents);
-        this.setDisplayedName(displayedName);
-        this.setInstructorPrivilegeAsText(instructorPrivilegesAsText);
+        instructorprameters1(instructorGoogleId, courseId, isArchived);
+        instructorparameter2(instructorName, instructorEmail, role);
+        instructorparameter3(isDisplayedToStudents, displayedName, instructorPrivilegesAsText);
         // setId should be called after setting email and courseId
-        this.setUniqueId(generateId(this.getEmail(), this.getCourseId()));
+        instructorparameter4();
+    }
+
+	/**
+	 * 
+	 */
+	private void instructorparameter4() {
+		this.setUniqueId(generateId(this.getEmail(), this.getCourseId()));
         this.setRegistrationKey(generateRegistrationKey());
         this.setCreatedAt(Instant.now());
-    }
+	}
+
+	/**
+	 * @param isDisplayedToStudents
+	 * @param displayedName
+	 * @param instructorPrivilegesAsText
+	 */
+	private void instructorparameter3(boolean isDisplayedToStudents, String displayedName,
+			String instructorPrivilegesAsText) {
+		this.setIsDisplayedToStudents(isDisplayedToStudents);
+        this.setDisplayedName(displayedName);
+        this.setInstructorPrivilegeAsText(instructorPrivilegesAsText);
+	}
+
+	/**
+	 * @param instructorName
+	 * @param instructorEmail
+	 * @param role
+	 */
+	private void instructorparameter2(String instructorName, String instructorEmail, String role) {
+		this.setName(instructorName);
+        this.setEmail(instructorEmail);
+        this.setRole(role);
+	}
+
+	/**
+	 * @param instructorGoogleId
+	 * @param courseId
+	 * @param isArchived
+	 */
+	private void instructorprameters1(String instructorGoogleId, String courseId, boolean isArchived) {
+		this.setGoogleId(instructorGoogleId);
+        this.setCourseId(courseId);
+        this.setIsArchived(isArchived);
+	}
 
     /**
      * Generates an unique ID for the instructor.

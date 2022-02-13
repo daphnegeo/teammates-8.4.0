@@ -2201,12 +2201,20 @@ public abstract class AppPage {
 	    assertDateEquals(getClosingTime(), feedbackSession.getEndTime(), feedbackSession.getTimeZone());
 	}
 
+	/**
+	 * @deprecated Use {@link #verifyResponseDetails(VerifyResponseDetailsParameter)} instead
+	 */
 	public void verifyResponseDetails(EntityAttributes<FeedbackQuestion> question, List<FeedbackResponseAttributes> givenResponses, List<FeedbackResponseAttributes> otherResponses, Set<String> visibleGivers, Set<String> visibleRecipients) {
-	    if (!hasDisplayedResponses(question)) {
+		verifyResponseDetails(new VerifyResponseDetailsParameter(question, givenResponses, otherResponses,
+				visibleGivers, visibleRecipients));
+	}
+
+	public void verifyResponseDetails(VerifyResponseDetailsParameter parameterObjectVerifyResponseDetailsParameter) {
+	    if (!hasDisplayedResponses(parameterObjectVerifyResponseDetailsParameter.question)) {
 	        return;
 	    }
-	    verifyGivenResponses(question, givenResponses);
-	    verifyOtherResponses(question, otherResponses, visibleGivers, visibleRecipients);
+	    verifyGivenResponses(parameterObjectVerifyResponseDetailsParameter.question, parameterObjectVerifyResponseDetailsParameter.givenResponses);
+	    verifyOtherResponses(parameterObjectVerifyResponseDetailsParameter.question, parameterObjectVerifyResponseDetailsParameter.otherResponses, parameterObjectVerifyResponseDetailsParameter.visibleGivers, parameterObjectVerifyResponseDetailsParameter.visibleRecipients);
 	}
 
 	public void verifyQuestionNotPresent(int questionNum) {

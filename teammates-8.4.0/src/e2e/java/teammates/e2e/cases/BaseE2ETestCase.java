@@ -21,6 +21,7 @@ import teammates.common.datatransfer.attributes.StudentProfileAttributes;
 import teammates.common.exception.HttpRequestFailedException;
 import teammates.common.util.AppUrl;
 import teammates.common.util.Const;
+import teammates.e2e.pageobjects.AddCookieParameter;
 import teammates.e2e.pageobjects.AppPage;
 import teammates.e2e.pageobjects.Browser;
 import teammates.e2e.pageobjects.DevServerLoginPage;
@@ -120,7 +121,7 @@ public abstract class BaseE2ETestCase extends BaseTestCaseWithDatabaseAccess {
             browser.goToUrl(TestProperties.TEAMMATES_URL);
 
             String cookieValue = BACKDOOR.getUserCookie(userId);
-            browser.addCookie(Const.SecurityConfig.AUTH_COOKIE_NAME, cookieValue, true, true);
+            browser.addCookie(new AddCookieParameter(Const.SecurityConfig.AUTH_COOKIE_NAME, cookieValue, true, true));
 
             return getNewPageInstance(url, typeOfPage);
         }

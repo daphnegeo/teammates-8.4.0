@@ -162,13 +162,31 @@ public class StudentProfilePage extends AppPage {
 
     public void ensureProfileContains(String shortName, String email, String institute, String nationality,
                                       StudentProfileAttributes.Gender gender, String moreInfo) {
-        assertEquals(shortName, shortNameBox.getAttribute("value"));
-        assertEquals(email, emailBox.getAttribute("value"));
-        assertEquals(institute, institutionBox.getAttribute("value"));
-        ensureNationalityIsSelectedAs(nationality);
+        profileParametersmethod(shortName, email, institute);
+        profileParametermethod1(nationality, gender, moreInfo);
+    }
+
+	/**
+	 * @param nationality
+	 * @param gender
+	 * @param moreInfo
+	 */
+	private void profileParametermethod1(String nationality, StudentProfileAttributes.Gender gender, String moreInfo) {
+		ensureNationalityIsSelectedAs(nationality);
         ensureGenderIsSelectedAs(gender);
         assertEquals(moreInfo, moreInfoBox.getAttribute("value"));
-    }
+	}
+
+	/**
+	 * @param shortName
+	 * @param email
+	 * @param institute
+	 */
+	private void profileParametersmethod(String shortName, String email, String institute) {
+		assertEquals(shortName, shortNameBox.getAttribute("value"));
+        assertEquals(email, emailBox.getAttribute("value"));
+        assertEquals(institute, institutionBox.getAttribute("value"));
+	}
 
     /**
      * Makes sure that the nationality is selected in the dropdown list.

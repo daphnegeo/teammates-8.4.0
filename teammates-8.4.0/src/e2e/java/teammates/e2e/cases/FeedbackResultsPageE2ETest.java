@@ -22,6 +22,7 @@ import teammates.common.datatransfer.attributes.StudentProfileAttributes;
 import teammates.common.datatransfer.questions.FeedbackRubricQuestionDetails;
 import teammates.common.util.Const;
 import teammates.e2e.pageobjects.AppPage;
+import teammates.e2e.pageobjects.VerifyResponseDetailsParameter;
 import teammates.storage.entity.Account;
 import teammates.storage.entity.FeedbackQuestion;
 
@@ -87,7 +88,7 @@ public class FeedbackResultsPageE2ETest extends BaseE2ETestCase {
         List<FeedbackResponseAttributes> otherResponses = getOtherResponses(currentStudent, question);
         Set<String> visibleGivers = getVisibleGivers(currentStudent, question);
         Set<String> visibleRecipients = getVisibleRecipients(currentStudent, question);
-        resultsPage.verifyResponseDetails(question, givenResponses, otherResponses, visibleGivers, visibleRecipients);
+        resultsPage.verifyResponseDetails(new VerifyResponseDetailsParameter(question, givenResponses, otherResponses, visibleGivers, visibleRecipients));
     }
 
     public void verifyResponseDetails(InstructorAttributes currentInstructor, EntityAttributes<FeedbackQuestion> question) {
@@ -95,7 +96,7 @@ public class FeedbackResultsPageE2ETest extends BaseE2ETestCase {
         List<FeedbackResponseAttributes> otherResponses = getOtherResponses(currentInstructor, question);
         Set<String> visibleGivers = getVisibleGivers(currentInstructor, question);
         Set<String> visibleRecipients = getVisibleRecipients(currentInstructor, question);
-        resultsPage.verifyResponseDetails(question, givenResponses, otherResponses, visibleGivers, visibleRecipients);
+        resultsPage.verifyResponseDetails(new VerifyResponseDetailsParameter(question, givenResponses, otherResponses, visibleGivers, visibleRecipients));
     }
 
     private void verifyCommentDetails(int questionNum, FeedbackResponseCommentAttributes comment,

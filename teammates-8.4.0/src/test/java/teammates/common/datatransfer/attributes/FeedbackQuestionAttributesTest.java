@@ -17,6 +17,7 @@ import teammates.common.util.JsonUtils;
 import teammates.common.util.StringHelper;
 import teammates.storage.entity.Account;
 import teammates.storage.entity.FeedbackQuestion;
+import teammates.storage.entity.FeedbackQuestionParameter;
 
 /**
  * SUT: {@link FeedbackQuestionAttributes}.
@@ -29,10 +30,8 @@ public class FeedbackQuestionAttributesTest extends BaseAttributesTest {
     @Test
     public void testToEntity() {
         EntityAttributes<FeedbackQuestion> fqa = getNewFeedbackQuestionAttributes();
-        FeedbackQuestion expectedQuestion = new FeedbackQuestion(fqa.getFeedbackSessionName(), fqa.getCourseId(),
-                fqa.getSerializedQuestionDetails(), fqa.getQuestionDescription(), fqa.getQuestionNumber(),
-                fqa.getQuestionType(), fqa.getGiverType(), fqa.getRecipientType(), fqa.getNumberOfEntitiesToGiveFeedbackTo(),
-                fqa.getShowResponsesTo(), fqa.getShowGiverNameTo(), fqa.getShowRecipientNameTo());
+        FeedbackQuestion expectedQuestion = new FeedbackQuestion(new FeedbackQuestionParameter(fqa.getFeedbackSessionName(), fqa.getCourseId(), fqa.getSerializedQuestionDetails(), fqa.getQuestionDescription(), fqa.getQuestionNumber(), fqa.getQuestionType(), fqa.getGiverType(),
+				fqa.getRecipientType(), fqa.getNumberOfEntitiesToGiveFeedbackTo(), fqa.getShowResponsesTo(), fqa.getShowGiverNameTo(), fqa.getShowRecipientNameTo()));
 
         FeedbackQuestion actualQuestion = fqa.toEntity();
 
@@ -56,10 +55,8 @@ public class FeedbackQuestionAttributesTest extends BaseAttributesTest {
     @Test
     public void testValueOf_withAllFieldPopulatedFeedbackQuestion_shouldGenerateAttributesCorrectly() {
         FeedbackTextQuestionDetails qnDetails = new FeedbackTextQuestionDetails("text");
-        FeedbackQuestion qn = new FeedbackQuestion("session", "course",
-                JsonUtils.toCompactJson(qnDetails), "description", 1, FeedbackQuestionType.TEXT,
-                FeedbackParticipantType.STUDENTS, FeedbackParticipantType.STUDENTS, Const.MAX_POSSIBLE_RECIPIENTS,
-                new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+        FeedbackQuestion qn = new FeedbackQuestion(new FeedbackQuestionParameter("session", "course", JsonUtils.toCompactJson(qnDetails), "description", 1, FeedbackQuestionType.TEXT, FeedbackParticipantType.STUDENTS, FeedbackParticipantType.STUDENTS,
+				Const.MAX_POSSIBLE_RECIPIENTS, new ArrayList<>(), new ArrayList<>(), new ArrayList<>()));
         qn.setFeedbackQuestionId(1L);
 
         EntityAttributes<FeedbackQuestion> feedbackQuestionAttributes = feedbackQuestionAttributesMethod(qn);
@@ -96,10 +93,8 @@ public class FeedbackQuestionAttributesTest extends BaseAttributesTest {
     @Test
     public void testValueOf_withSomeFieldsPopulatedAsNull_shouldUseDefaultValues() {
         FeedbackTextQuestionDetails qnDetails = new FeedbackTextQuestionDetails("text");
-        FeedbackQuestion qn = new FeedbackQuestion("session", "course",
-                JsonUtils.toCompactJson(qnDetails), "description", 1, FeedbackQuestionType.TEXT,
-                FeedbackParticipantType.STUDENTS, FeedbackParticipantType.STUDENTS, Const.MAX_POSSIBLE_RECIPIENTS,
-                null, null, null);
+        FeedbackQuestion qn = new FeedbackQuestion(new FeedbackQuestionParameter("session", "course", JsonUtils.toCompactJson(qnDetails), "description", 1, FeedbackQuestionType.TEXT, FeedbackParticipantType.STUDENTS, FeedbackParticipantType.STUDENTS,
+				Const.MAX_POSSIBLE_RECIPIENTS, null, null, null));
         qn.setFeedbackQuestionId(1L);
         qn.setCreatedAt(null);
         qn.setLastUpdate(null);
@@ -135,10 +130,8 @@ public class FeedbackQuestionAttributesTest extends BaseAttributesTest {
     @Test
     public void testValueOf_modificationInAttributes_shouldNotLeakStateToEntity() {
         FeedbackTextQuestionDetails qnDetails = new FeedbackTextQuestionDetails("text");
-        FeedbackQuestion qn = new FeedbackQuestion("session", "course",
-                JsonUtils.toCompactJson(qnDetails), "description", 1, FeedbackQuestionType.TEXT,
-                FeedbackParticipantType.STUDENTS, FeedbackParticipantType.STUDENTS, Const.MAX_POSSIBLE_RECIPIENTS,
-                new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+        FeedbackQuestion qn = new FeedbackQuestion(new FeedbackQuestionParameter("session", "course", JsonUtils.toCompactJson(qnDetails), "description", 1, FeedbackQuestionType.TEXT, FeedbackParticipantType.STUDENTS, FeedbackParticipantType.STUDENTS,
+				Const.MAX_POSSIBLE_RECIPIENTS, new ArrayList<>(), new ArrayList<>(), new ArrayList<>()));
 
         qn.setFeedbackQuestionId(1L);
 
@@ -189,10 +182,8 @@ public class FeedbackQuestionAttributesTest extends BaseAttributesTest {
 
     @Test
     public void testValueOf_textQuestions_shouldDeserializeCorrectly() {
-        FeedbackQuestion qn = new FeedbackQuestion("session", "course",
-                "singleWord", "description", 1, FeedbackQuestionType.TEXT,
-                FeedbackParticipantType.STUDENTS, FeedbackParticipantType.STUDENTS, Const.MAX_POSSIBLE_RECIPIENTS,
-                new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+        FeedbackQuestion qn = new FeedbackQuestion(new FeedbackQuestionParameter("session", "course", "singleWord", "description", 1, FeedbackQuestionType.TEXT, FeedbackParticipantType.STUDENTS, FeedbackParticipantType.STUDENTS,
+				Const.MAX_POSSIBLE_RECIPIENTS, new ArrayList<>(), new ArrayList<>(), new ArrayList<>()));
         qn.setFeedbackQuestionId(1L);
 
         ______TS("json text: should deserialize as json");

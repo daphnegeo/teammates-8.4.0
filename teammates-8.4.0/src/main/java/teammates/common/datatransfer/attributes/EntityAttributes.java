@@ -17,6 +17,7 @@ import teammates.common.util.SanitizationHelper;
 import teammates.storage.entity.Account;
 import teammates.storage.entity.BaseEntity;
 import teammates.storage.entity.FeedbackQuestion;
+import teammates.storage.entity.FeedbackQuestionParameter;
 
 /**
  * Base class for Attribute classes (Attribute classes represent attributes of
@@ -212,11 +213,8 @@ public abstract class EntityAttributes<E extends BaseEntity> {
 
 	@Override
 	public FeedbackQuestion toEntity() {
-	    return new FeedbackQuestion(feedbackSessionName, courseId,
-	                                getSerializedQuestionDetails(), questionDescription,
-	                                questionNumber, getQuestionType(), giverType,
-	                                recipientType, numberOfEntitiesToGiveFeedbackTo,
-	                                showResponsesTo, showGiverNameTo, showRecipientNameTo);
+	    return new FeedbackQuestion(new FeedbackQuestionParameter(feedbackSessionName, courseId, getSerializedQuestionDetails(), questionDescription, questionNumber, getQuestionType(), giverType, recipientType,
+				numberOfEntitiesToGiveFeedbackTo, showResponsesTo, showGiverNameTo, showRecipientNameTo));
 	}
 
 	/**
